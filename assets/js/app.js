@@ -225,12 +225,31 @@
     return el("section", { class: "fc-hero", id: "top" }, [
       el("div", { class: "fc-shell fc-hero__inner" }, [
         el("div", { class: "fc-hero__copy" }, [
-          h.eyebrow ? el("p", { class: "fc-hero__eyebrow", text: h.eyebrow }) : null,
+          h.eyebrow ? el("p", { class: "fc-eyebrow", text: h.eyebrow }) : null,
           el("h1", { class: "fc-hero__heading", text: h.heading }),
           el("p", { class: "fc-hero__sub", text: h.subheading }),
           actions
         ]),
         el("div", { class: "fc-hero__media" }, [imageWithFallback(h.image, content.business.name + " banner", "hero")])
+      ]),
+      // Decorative fruit. Purely ornamental, so hidden from screen readers.
+      el("img", { class: "fc-decor fc-decor--mango", src: "assets/img/deco-mango.svg", alt: "", "aria-hidden": "true" }),
+      el("img", { class: "fc-decor fc-decor--leaf", src: "assets/img/deco-leaf.svg", alt: "", "aria-hidden": "true" })
+    ]);
+  }
+
+  function renderValues(content) {
+    var values = content.values;
+    if (!values || !values.length) return null;
+    return el("section", { class: "fc-values" }, [
+      el("div", { class: "fc-shell" }, [
+        el("div", { class: "fc-values__grid" }, values.map(function (v) {
+          return el("article", { class: "fc-value" }, [
+            v.icon ? el("img", { class: "fc-value__icon", src: v.icon, alt: "", "aria-hidden": "true" }) : null,
+            el("h2", { class: "fc-value__title", text: v.title }),
+            el("p", { class: "fc-value__body", text: v.body })
+          ]);
+        }))
       ])
     ]);
   }
@@ -522,6 +541,7 @@
     var sections = [
       renderHeader(content),
       renderHero(content),
+      renderValues(content),
       renderMenu(content),
       renderCustomizations(content),
       renderLocations(content),

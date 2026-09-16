@@ -22,7 +22,7 @@ globalThis.SITE_CONTENT = {
   /* ---------------------------------------------------------------- business */
   business: {
     name: "Fruit Cow",
-    tagline: "Fresh fruit tea & milk tea, made to order",
+    tagline: "Small-batch fruit & milk tea, naturally sweetened",
     /* Drop your graphic at assets/img/fruit-cow-logo.png and it appears
        automatically. Until then the site shows a labelled placeholder. */
     logo: "assets/img/fruit-cow-logo.png",
@@ -35,17 +35,38 @@ globalThis.SITE_CONTENT = {
 
   /* -------------------------------------------------------------------- hero */
   hero: {
-    eyebrow: "Now open",
-    heading: "Fruit first. Always.",
+    eyebrow: "Brewed daily · Sourced responsibly",
+    heading: "Fruit, tea and nothing artificial.",
     subheading:
-      "Real fruit, brewed-in-house tea, and milk tea the way you like it — " +
-      "pick your sweetness, pick your ice, pick your toppings.",
+      "Single-origin leaves steeped in house, whole fruit pressed to order, " +
+      "and sweetness you control. No artificial syrups, no shortcuts.",
     /* Drop a wide banner at assets/img/hero.png (roughly 1600x900) and it
        appears automatically. Placeholder shows until you do. */
     image: "assets/img/hero.png",
-    primaryCta: { label: "See the menu", target: "#menu" },
+    primaryCta: { label: "View the menu", target: "#menu" },
     secondaryCta: { label: "Find a store", target: "#locations" }
   },
+
+  /* ------------------------------------------------------------------ values */
+  /* The strip under the hero. Delete the whole `values` block and the
+     section disappears. `icon` is any image path you like. */
+  values: [
+    {
+      icon: "assets/img/deco-leaf.svg",
+      title: "Single-origin tea",
+      body: "Assam, oolong and jasmine sourced from named estates and steeped to a timer, never held past its prime."
+    },
+    {
+      icon: "assets/img/deco-mango.svg",
+      title: "Whole fruit, pressed daily",
+      body: "Mango, lychee and passion fruit prepared each morning. If it isn't in season, it isn't on the board."
+    },
+    {
+      icon: "assets/img/deco-citrus.svg",
+      title: "Sweetness on your terms",
+      body: "Five sweetness levels, cane sugar only, and dairy-free milks at no penalty to flavour."
+    }
+  ],
 
   /* --------------------------------------------------------------- categories */
   /* `id` is what menu items point at. Reorder these to reorder the menu. */
