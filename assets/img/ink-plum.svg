@@ -1,0 +1,71 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 240" role="img" aria-label="Plum blossom branch, ink wash">
+  <defs>
+    <filter id="plumWash" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="10"/>
+    </filter>
+    <radialGradient id="petal" cx="42%" cy="36%" r="70%">
+      <stop offset="0%" stop-color="#F6EFE6"/>
+      <stop offset="100%" stop-color="#DCC9B8"/>
+    </radialGradient>
+    <radialGradient id="petalRed" cx="42%" cy="36%" r="70%">
+      <stop offset="0%" stop-color="#C4574A"/>
+      <stop offset="100%" stop-color="#8E2F26"/>
+    </radialGradient>
+  </defs>
+
+  <ellipse cx="150" cy="112" rx="118" ry="70" fill="#3A362F" opacity="0.07" filter="url(#plumWash)"/>
+
+  <!-- gnarled branch, drawn as tapered brush strokes -->
+  <path d="M-8 196 C 46 184, 82 160, 118 128 C 150 100, 186 74, 232 54
+           C 226 62, 214 70, 204 74
+           C 168 96, 134 122, 104 152
+           C 74 180, 38 194, -8 200 Z" fill="#241F1A" opacity="0.93"/>
+  <path d="M104 152 C 118 132, 124 106, 120 78 C 128 104, 130 132, 116 158 Z" fill="#241F1A" opacity="0.82"/>
+  <path d="M186 92 C 206 84, 226 84, 244 90 C 224 96, 204 100, 186 92 Z" fill="#241F1A" opacity="0.7"/>
+  <path d="M62 176 C 66 158, 62 140, 52 124 C 68 140, 76 160, 70 180 Z" fill="#241F1A" opacity="0.66"/>
+
+  <!-- blossoms -->
+  <g>
+    <g transform="translate(118 128)">
+      <g fill="url(#petal)" stroke="#8B7A68" stroke-width="0.7">
+        <ellipse cx="0" cy="-11" rx="7.5" ry="9.5"/>
+        <ellipse cx="10.5" cy="-3.4" rx="7.5" ry="9.5" transform="rotate(72 10.5 -3.4)"/>
+        <ellipse cx="6.5" cy="9" rx="7.5" ry="9.5" transform="rotate(144 6.5 9)"/>
+        <ellipse cx="-6.5" cy="9" rx="7.5" ry="9.5" transform="rotate(216 -6.5 9)"/>
+        <ellipse cx="-10.5" cy="-3.4" rx="7.5" ry="9.5" transform="rotate(288 -10.5 -3.4)"/>
+      </g>
+      <g stroke="#8E2F26" stroke-width="1.1" stroke-linecap="round">
+        <path d="M0 0 L0 -7"/><path d="M0 0 L6.6 -2.2"/><path d="M0 0 L4 5.6"/>
+        <path d="M0 0 L-4 5.6"/><path d="M0 0 L-6.6 -2.2"/>
+      </g>
+      <circle r="2.4" fill="#8E2F26"/>
+    </g>
+
+    <g transform="translate(196 74) scale(0.82)">
+      <g fill="url(#petalRed)" stroke="#6E231C" stroke-width="0.7" opacity="0.92">
+        <ellipse cx="0" cy="-11" rx="7.5" ry="9.5"/>
+        <ellipse cx="10.5" cy="-3.4" rx="7.5" ry="9.5" transform="rotate(72 10.5 -3.4)"/>
+        <ellipse cx="6.5" cy="9" rx="7.5" ry="9.5" transform="rotate(144 6.5 9)"/>
+        <ellipse cx="-6.5" cy="9" rx="7.5" ry="9.5" transform="rotate(216 -6.5 9)"/>
+        <ellipse cx="-10.5" cy="-3.4" rx="7.5" ry="9.5" transform="rotate(288 -10.5 -3.4)"/>
+      </g>
+      <circle r="2.2" fill="#F3E7DC"/>
+    </g>
+
+    <g transform="translate(64 172) scale(0.7)">
+      <g fill="url(#petal)" stroke="#8B7A68" stroke-width="0.8">
+        <ellipse cx="0" cy="-11" rx="7.5" ry="9.5"/>
+        <ellipse cx="10.5" cy="-3.4" rx="7.5" ry="9.5" transform="rotate(72 10.5 -3.4)"/>
+        <ellipse cx="6.5" cy="9" rx="7.5" ry="9.5" transform="rotate(144 6.5 9)"/>
+        <ellipse cx="-6.5" cy="9" rx="7.5" ry="9.5" transform="rotate(216 -6.5 9)"/>
+        <ellipse cx="-10.5" cy="-3.4" rx="7.5" ry="9.5" transform="rotate(288 -10.5 -3.4)"/>
+      </g>
+      <circle r="2.4" fill="#8E2F26"/>
+    </g>
+
+    <!-- buds -->
+    <circle cx="240" cy="58" r="5.4" fill="#8E2F26" opacity="0.85"/>
+    <circle cx="252" cy="70" r="3.6" fill="#8E2F26" opacity="0.6"/>
+    <circle cx="130" cy="96" r="4.2" fill="#3A3129" opacity="0.7"/>
+  </g>
+</svg>

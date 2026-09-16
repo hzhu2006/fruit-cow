@@ -179,8 +179,18 @@
     return el("span", { class: "fc-tag fc-tag--" + tag, text: tag.replace(/-/g, " ") });
   }
 
+  /** Decorative artwork from content.decor. Returns null when unset. */
+  function decorImg(src, className, label) {
+    if (!src) return null;
+    return el("img", {
+      class: className, src: src, alt: label || "",
+      "aria-hidden": label ? null : "true"
+    });
+  }
+
   function renderHeader(content) {
     var b = content.business;
+    var d = content.decor || {};
     var nav = el("nav", { class: "fc-nav", "aria-label": "Sections" },
       (content.categories || []).slice(0, 4).map(function (c) {
         return el("a", { class: "fc-nav__link", href: "#cat-" + c.id, text: c.name });
@@ -194,7 +204,8 @@
           el("span", { class: "fc-brand__text" }, [
             el("span", { class: "fc-brand__name", text: b.name }),
             el("span", { class: "fc-brand__tagline", text: b.tagline })
-          ])
+          ]),
+          decorImg(d.seal, "fc-seal")
         ]),
         el("div", { class: "fc-header__right" }, [
           nav,
@@ -215,6 +226,7 @@
 
   function renderHero(content) {
     var h = content.hero;
+    var d = content.decor || {};
     var actions = el("div", { class: "fc-hero__actions" });
     if (h.primaryCta) {
       actions.appendChild(el("a", { class: "fc-btn fc-btn--primary", href: h.primaryCta.target, text: h.primaryCta.label }));
@@ -232,9 +244,9 @@
         ]),
         el("div", { class: "fc-hero__media" }, [imageWithFallback(h.image, content.business.name + " banner", "hero")])
       ]),
-      // Decorative fruit. Purely ornamental, so hidden from screen readers.
-      el("img", { class: "fc-decor fc-decor--mango", src: "assets/img/deco-mango.svg", alt: "", "aria-hidden": "true" }),
-      el("img", { class: "fc-decor fc-decor--leaf", src: "assets/img/deco-leaf.svg", alt: "", "aria-hidden": "true" })
+      // Decorative ink artwork. Purely ornamental, so hidden from screen readers.
+      decorImg(d.heroArt, "fc-decor fc-decor--primary"),
+      decorImg(d.heroAccent, "fc-decor fc-decor--accent")
     ]);
   }
 
@@ -338,9 +350,12 @@
     return el("section", { class: "fc-menu", id: "menu" }, [
       el("div", { class: "fc-shell" }, [
         el("div", { class: "fc-menu__head" }, [
-          el("h2", { class: "fc-section-title", text: "Menu" }),
-          el("p", { class: "fc-section-sub", text: "Every drink is made to order. Adjust sweetness, ice and toppings at the counter." })
+          el("p", { class: "fc-eyebrow", text: "Made to order" }),
+          el("h2", { class: "fc-section-title", text: "The Menu" }),
+          decorImg((content.decor || {}).divider, "fc-divider"),
+          el("p", { class: "fc-section-sub", text: "Every drink is steeped and pressed to order. Sweetness, ice and toppings are yours to set." })
         ]),
+        decorImg((content.decor || {}).menuAccent, "fc-menu__ridge"),
         filters, grid, empty
       ])
     ]);
@@ -530,6 +545,16 @@
     if (!root) return;
 
     normalizeMenu(content);
+
+    // Wood patterns are chosen in content.js and handed to CSS as variables,
+    // so swapping the artwork needs no stylesheet edit.
+    var decor = content.decor || {};
+    if (decor.cardWood) {
+      document.documentElement.style.setProperty("--fc-card-wood", 'url("' + decor.cardWood + '")');
+    }
+    if (decor.optionsWood) {
+      document.documentElement.style.setProperty("--fc-options-wood", 'url("' + decor.optionsWood + '")');
+    }
 
     var problems = validateContent(content);
     if (problems.length) {

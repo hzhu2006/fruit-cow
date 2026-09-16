@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 180" role="img" aria-label="Mountains in mist, ink wash">
+  <defs>
+    <filter id="mtnMist" x="-20%" y="-40%" width="140%" height="180%">
+      <feGaussianBlur stdDeviation="7"/>
+    </filter>
+    <filter id="mtnSoft" x="-20%" y="-40%" width="140%" height="180%">
+      <feGaussianBlur stdDeviation="2.2"/>
+    </filter>
+    <linearGradient id="ridgeFar" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#4A463E" stop-opacity="0.30"/>
+      <stop offset="100%" stop-color="#4A463E" stop-opacity="0.05"/>
+    </linearGradient>
+    <linearGradient id="ridgeMid" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#332F28" stop-opacity="0.52"/>
+      <stop offset="100%" stop-color="#332F28" stop-opacity="0.10"/>
+    </linearGradient>
+    <linearGradient id="ridgeNear" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1D1A15" stop-opacity="0.82"/>
+      <stop offset="100%" stop-color="#1D1A15" stop-opacity="0.22"/>
+    </linearGradient>
+  </defs>
+
+  <!-- farthest range, dissolved in mist -->
+  <path d="M-10 128 C 40 96, 74 60, 118 74 C 152 84, 168 116, 208 104
+           C 250 92, 276 54, 322 66 C 364 78, 386 112, 430 104 C 456 99, 476 112, 490 124
+           L 490 180 L -10 180 Z" fill="url(#ridgeFar)" filter="url(#mtnMist)"/>
+
+  <!-- middle range -->
+  <path d="M-10 148 C 34 126, 62 104, 96 112 C 128 120, 146 146, 186 138
+           C 226 130, 252 96, 296 108 C 336 119, 356 148, 400 142 C 434 137, 462 150, 490 146
+           L 490 180 L -10 180 Z" fill="url(#ridgeMid)" filter="url(#mtnSoft)"/>
+
+  <!-- near ridge, crisp brush edge -->
+  <path d="M-10 168 C 30 156, 58 138, 92 146 C 124 154, 142 172, 182 166
+           C 222 160, 248 132, 292 144 C 330 154, 352 174, 396 168 C 432 163, 464 172, 490 168
+           L 490 180 L -10 180 Z" fill="url(#ridgeNear)"/>
+
+  <!-- mist bands -->
+  <g fill="#F7F3EA" opacity="0.55" filter="url(#mtnMist)">
+    <ellipse cx="130" cy="136" rx="120" ry="9"/>
+    <ellipse cx="360" cy="150" rx="140" ry="8"/>
+  </g>
+
+  <!-- single bird stroke -->
+  <path d="M306 44 C 312 38, 318 38, 322 43 C 326 38, 332 38, 338 44"
+        fill="none" stroke="#2A2620" stroke-width="1.8" stroke-linecap="round" opacity="0.5"/>
+</svg>

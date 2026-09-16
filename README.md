@@ -132,23 +132,40 @@ The pipeline copies only `index.html` and `assets/` — not tests or
 
 ## Look and feel
 
-Warm wood and natural paper, with mango and citrus held back as decoration
-rather than loud colour. The primary action is botanical green; the fruit tones
-only accent. Type is **Fraunces** (display serif) over **Inter** (body), with
-Georgia and system-ui fallbacks if the webfonts can't load.
+Chinese ink wash laid over wood. Rice paper, brushwork, a cinnabar seal, and
+brass hairlines — restrained, with one loud note used sparingly. Type is
+**Fraunces** (display serif) over **Inter** (body), falling back to Georgia and
+system-ui if the webfonts can't load.
 
-Everything is controlled from two places:
+Three places to change it:
 
-- **Colours and fonts** — the `:root` block at the top of
-  [`assets/css/styles.css`](assets/css/styles.css). Change `--wood-800`,
-  `--mango`, `--leaf` or the font stacks there and the whole site follows.
-- **Decorative fruit** — the SVGs in `assets/img/`: `deco-mango.svg`,
-  `deco-citrus.svg`, `deco-leaf.svg`, and `texture-grain.svg` (the faint paper
-  grain over the page). Replace any of them with your own artwork, same
-  filename, and it appears everywhere it's used.
+**1. Colours and fonts** — the `:root` block at the top of
+[`assets/css/styles.css`](assets/css/styles.css). The palette is grouped:
+`--paper`, `--ink`, `--cinnabar` (the seal red), `--brass`, `--wood`.
+
+**2. Artwork** — the `decor` block in `content.js`. Every entry is just a file
+path; replace the file at that path with your own drawing, same filename, and
+it appears everywhere. Set an entry to `""` to switch that piece off.
+
+```js
+decor: {
+  seal: "assets/img/seal.svg",                        // cinnabar stamp by the brand
+  heroArt: "assets/img/ink-bamboo.svg",               // large hero drawing
+  heroAccent: "assets/img/ink-plum.svg",              // smaller, opposite corner
+  menuAccent: "assets/img/ink-mountain.svg",          // misty ridge behind "The Menu"
+  divider: "assets/img/ink-stroke.svg",               // brush stroke under headings
+  cardWood: "assets/img/pattern-wood-oak.svg",        // grain under each menu card
+  optionsWood: "assets/img/pattern-wood-walnut.svg"   // grain under each drink option
+}
+```
+
+**3. Wood patterns** — `assets/img/pattern-wood-oak.svg` and
+`pattern-wood-walnut.svg` are tileable grain, generated with `feTurbulence` so
+they have no photo to licence. `cardWood` and `optionsWood` above point at them.
 
 The proof-point strip under the hero comes from the `values` block in
-`content.js`. Delete that block and the section disappears.
+`content.js`, and its icons are ink drawings too. Delete the block and the
+section disappears.
 
 ## Layout
 
@@ -157,8 +174,9 @@ index.html                       page shell, loads the three scripts below
 assets/js/content.js             ← YOUR CONTENT
 assets/js/app.js                 renders content.js into the page
 assets/js/cart.js                cart, customizer, checkout
-assets/css/styles.css            colours live in :root at the top
-assets/img/                      your graphics go here
+assets/css/styles.css            colours and fonts in :root at the top
+assets/img/                      your logo & hero go here, plus the ink
+                                 artwork and tileable wood patterns
 dev-server.js                    static server with live reload
 .github/workflows/deploy.yml     test + publish to GitHub Pages
 tests/                           boots the real page in jsdom and checks it

@@ -52,21 +52,42 @@ globalThis.SITE_CONTENT = {
      section disappears. `icon` is any image path you like. */
   values: [
     {
-      icon: "assets/img/deco-leaf.svg",
+      icon: "assets/img/ink-bamboo.svg",
       title: "Single-origin tea",
       body: "Assam, oolong and jasmine sourced from named estates and steeped to a timer, never held past its prime."
     },
     {
-      icon: "assets/img/deco-mango.svg",
+      icon: "assets/img/ink-mango.svg",
       title: "Whole fruit, pressed daily",
       body: "Mango, lychee and passion fruit prepared each morning. If it isn't in season, it isn't on the board."
     },
     {
-      icon: "assets/img/deco-citrus.svg",
+      icon: "assets/img/ink-plum.svg",
       title: "Sweetness on your terms",
       body: "Five sweetness levels, cane sugar only, and dairy-free milks at no penalty to flavour."
     }
   ],
+
+  /* ------------------------------------------------------------------- decor */
+  /* Decorative artwork. Every entry is just a file path — replace the file at
+     that path with your own drawing, same filename, and it appears everywhere.
+     Set any entry to "" to switch that piece off.
+       seal        the cinnabar stamp beside the brand and in the footer
+       heroArt     the large ink drawing in the hero
+       heroAccent  the smaller ink drawing, opposite corner
+       menuAccent  the misty ridge behind the menu heading
+       divider     the brush stroke under section headings
+       cardWood    wood grain laid beneath each menu card
+       optionsWood wood grain laid beneath each drink-option panel        */
+  decor: {
+    seal: "assets/img/seal.svg",
+    heroArt: "assets/img/ink-bamboo.svg",
+    heroAccent: "assets/img/ink-plum.svg",
+    menuAccent: "assets/img/ink-mountain.svg",
+    divider: "assets/img/ink-stroke.svg",
+    cardWood: "assets/img/pattern-wood-oak.svg",
+    optionsWood: "assets/img/pattern-wood-walnut.svg"
+  },
 
   /* --------------------------------------------------------------- categories */
   /* `id` is what menu items point at. Reorder these to reorder the menu. */
