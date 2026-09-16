@@ -66,6 +66,29 @@
     }).filter(function (group) { return group.items.length > 0; });
   }
 
+  /** Stable id for a menu item — the slug of its name unless one is given. */
+  function slugify(text) {
+    return String(text || "")
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-+|-+$/g, "");
+  }
+
+  function orderingEnabled(content) {
+    return !!(content && content.ordering && content.ordering.enabled !== false);
+  }
+
+  /** Assigns `id` to every menu item so the cart can reference it. */
+  function normalizeMenu(content) {
+    var seen = {};
+    (content.menu || []).forEach(function (item) {
+      if (!item.id) item.id = slugify(item.name);
+      if (seen[item.id]) item.id = item.id + "-" + Object.keys(seen).length;
+      seen[item.id] = true;
+    });
+    return content;
+  }
+
   /**
    * Validate SITE_CONTENT and return human-readable problem strings.
    * Runs on load so a bad edit is caught in the console instead of
@@ -104,6 +127,13 @@
         }
       } else {
         problems.push(where + ": needs either `prices` per size or a numeric `price`");
+      }
+    });
+
+    var names = (content.menu || []).map(function (m) { return m.name; }).filter(Boolean);
+    names.forEach(function (name, i) {
+      if (names.indexOf(name) !== i) {
+        problems.push("menu: \"" + name + "\" appears more than once — give one of them a distinct name");
       }
     });
 
@@ -166,7 +196,19 @@
             el("span", { class: "fc-brand__tagline", text: b.tagline })
           ])
         ]),
-        nav
+        el("div", { class: "fc-header__right" }, [
+          nav,
+          orderingEnabled(content)
+            ? el("button", {
+                class: "fc-cartbtn", type: "button", id: "fc-cart-toggle",
+                "aria-label": "Open your order"
+              }, [
+                el("span", { class: "fc-cartbtn__cup", "aria-hidden": "true", text: "🧋" }),
+                el("span", { class: "fc-cartbtn__label", text: "Order" }),
+                el("span", { class: "fc-cartbtn__count", id: "fc-cart-count", hidden: "hidden", text: "0" })
+              ])
+            : null
+        ])
       ])
     ]);
   }
@@ -215,9 +257,10 @@
       ]);
     }
 
-    return el("article", {
+    var card = el("article", {
       class: "fc-card" + (item.soldOut ? " fc-card--out" : "") + (item.featured ? " fc-card--featured" : ""),
-      "data-category": item.category
+      "data-category": item.category,
+      "data-item-id": item.id || slugify(item.name)
     }, [
       el("div", { class: "fc-card__head" }, [
         el("h3", { class: "fc-card__name" }, [
@@ -228,8 +271,17 @@
       ]),
       el("p", { class: "fc-card__desc", text: item.description }),
       (item.tags || []).length ? el("div", { class: "fc-card__tags" }, item.tags.map(tagChip)) : null,
-      priceNode
+      priceNode,
+      orderingEnabled(content) && !item.soldOut
+        ? el("button", {
+            class: "fc-add", type: "button", "data-add": item.id || slugify(item.name),
+            text: "Add to order"
+          })
+        : null
     ]);
+    // Carry the item itself so filtering and ordering never re-parse the DOM.
+    card.__item = item;
+    return card;
   }
 
   function renderMenu(content) {
@@ -358,7 +410,58 @@
     ]);
   }
 
+  function renderCartDrawer(content) {
+    if (!orderingEnabled(content)) return null;
+    return el("aside", {
+      class: "fc-drawer", id: "fc-cart", hidden: "hidden",
+      role: "dialog", "aria-modal": "true", "aria-label": "Your order"
+    }, [
+      el("div", { class: "fc-drawer__panel" }, [
+        el("header", { class: "fc-drawer__head" }, [
+          el("h2", { class: "fc-drawer__title", text: "Your order" }),
+          el("button", { class: "fc-modal__x", type: "button", "data-act": "close-cart", "aria-label": "Close order", text: "×" })
+        ]),
+        el("ul", { class: "fc-cart__lines", id: "fc-cart-lines" }),
+        el("div", { class: "fc-cart__total" }, [
+          el("span", { text: "Subtotal" }),
+          el("span", { class: "fc-cart__amount", id: "fc-cart-subtotal", text: content.business.currency + "0.00" })
+        ]),
+        el("form", { class: "fc-checkout", id: "fc-checkout", novalidate: "novalidate" }, [
+          el("ul", { class: "fc-errors", id: "fc-order-errors", hidden: "hidden" }),
+          el("label", { class: "fc-field fc-field--stack" }, [
+            el("span", { class: "fc-field__label", text: "Name for the order" }),
+            el("input", { class: "fc-input", name: "fc-name", type: "text", autocomplete: "name", required: "required" })
+          ]),
+          el("label", { class: "fc-field fc-field--stack" }, [
+            el("span", { class: "fc-field__label", text: "Phone or email" }),
+            el("input", { class: "fc-input", name: "fc-contact", type: "text", autocomplete: "tel", required: "required" })
+          ]),
+          el("label", { class: "fc-field fc-field--stack" }, [
+            el("span", { class: "fc-field__label", text: "Pickup time" }),
+            el("input", { class: "fc-input", name: "fc-pickup", type: "time" })
+          ]),
+          el("label", { class: "fc-field fc-field--stack" }, [
+            el("span", { class: "fc-field__label", text: "Payment" }),
+            el("select", { class: "fc-input", name: "fc-payment" })
+          ]),
+          el("button", { class: "fc-btn fc-btn--primary fc-checkout__go", type: "submit", text: "Place order" })
+        ])
+      ])
+    ]);
+  }
+
   /* --------------------------------------------------------------- wiring */
+
+  function wireAddButtons(content) {
+    var root = document.getElementById("fc-app");
+    root.addEventListener("click", function (event) {
+      var trigger = event.target.closest("[data-add]");
+      if (!trigger) return;
+      var id = trigger.getAttribute("data-add");
+      var item = (content.menu || []).filter(function (m) { return m.id === id; })[0];
+      if (item && global.FruitCowCart) global.FruitCowCart.openCustomizer(item);
+    });
+  }
 
   function wireFilters(content) {
     var cats = document.getElementById("fc-cats");
@@ -407,43 +510,45 @@
     var root = document.getElementById("fc-app");
     if (!root) return;
 
+    normalizeMenu(content);
+
     var problems = validateContent(content);
     if (problems.length) {
       problems.forEach(function (p) { console.warn("[fruit-cow content] " + p); });
     }
 
-    // Keep the raw item on each card so search can re-filter without re-render.
     document.title = content.business.name + " — " + content.business.tagline;
 
-    root.replaceChildren(
+    var sections = [
       renderHeader(content),
       renderHero(content),
       renderMenu(content),
       renderCustomizations(content),
       renderLocations(content),
-      renderFooter(content)
-    );
+      renderFooter(content),
+      renderCartDrawer(content)
+    ].filter(Boolean);
 
-    // Attach item references for search filtering.
-    var cards = root.querySelectorAll(".fc-card");
-    var searchable = [];
-    groupByCategory(content.menu, content.categories).forEach(function (g) {
-      g.items.forEach(function (item) { searchable.push(item); });
-    });
-    Array.prototype.forEach.call(cards, function (card, i) {
-      card.__item = searchable[i] || {};
-    });
+    root.replaceChildren.apply(root, sections);
 
     wireFilters(content);
+    if (orderingEnabled(content)) {
+      wireAddButtons(content);
+      if (global.FruitCowCart) global.FruitCowCart.mount(content);
+    }
   }
 
   global.FruitCow = {
+    el: el,
     formatPrice: formatPrice,
     sizeOptions: sizeOptions,
     fromPrice: fromPrice,
     filterMenu: filterMenu,
     groupByCategory: groupByCategory,
     validateContent: validateContent,
+    slugify: slugify,
+    normalizeMenu: normalizeMenu,
+    orderingEnabled: orderingEnabled,
     imageWithFallback: imageWithFallback,
     boot: boot
   };

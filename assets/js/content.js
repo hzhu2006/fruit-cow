@@ -213,6 +213,30 @@ globalThis.SITE_CONTENT = {
     ]
   },
 
+  /* ---------------------------------------------------------------- ordering */
+  /* Controls the cart and checkout.
+       enabled  : false hides every "Add" button and the cart — menu becomes
+                  browse-only again
+       mode     : "slip"     → shows a formatted order slip to copy / text / email
+                              (no server needed, works the moment you deploy)
+                  "endpoint" → POSTs the order as JSON to `endpoint`
+       endpoint : where orders are sent when mode is "endpoint" — a Formspree,
+                  Google Form, or your own backend URL
+     Per item, `options` can override which choices a drink offers, e.g.
+       options: ["sweetness", "ice"]
+     Items priced with `prices` (per size) get the full drink options by
+     default; single-`price` items get quantity and notes only.               */
+  ordering: {
+    enabled: true,
+    mode: "slip",
+    endpoint: "",
+    prepTime: "10–15 minutes",
+    confirmationMessage: "Thanks! Your order is in — have it ready at pickup.",
+    notesPlaceholder: "Allergies, extra ice, anything else we should know?",
+    paymentMethods: ["Cash at pickup", "Card at pickup"],
+    minOrder: 0
+  },
+
   /* ---------------------------------------------------------------- locations */
   locations: [
     {

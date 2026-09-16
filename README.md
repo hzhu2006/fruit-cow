@@ -7,8 +7,9 @@ No build step. Plain HTML, CSS and JavaScript — change a file, refresh the bro
 ## Run it
 
 ```bash
-npm start          # serves on http://0.0.0.0:8000
-npm test           # 12 checks against the real page
+npm start          # dev server on http://localhost:8000 — reloads itself when you save
+npm test           # 37 checks against the real page
+npm run serve      # plain static server, no file watching
 ```
 
 Or just open `index.html` in a browser.
@@ -17,13 +18,16 @@ Or just open `index.html` in a browser.
 
 **One file: [`assets/js/content.js`](assets/js/content.js).**
 
-Everything the site shows comes from there — business name, menu items, prices,
-descriptions, sizes, toppings, hours, locations. Edit it, save, refresh.
+Everything the site shows and sells comes from there — business name, menu
+items, prices, descriptions, sizes, sweetness levels, toppings, hours,
+locations, and how checkout behaves. Edit it, save, and the open page refreshes
+itself.
 
 The file is currently filled with **sample data**. Overwrite it with your real
 menu. The site validates the file on load and prints plain-English warnings to
 the browser console if an edit breaks something (wrong category, a quoted
-price, a size that doesn't exist), rather than rendering a blank page.
+price, a size that doesn't exist, a duplicate drink name), rather than
+rendering a blank page.
 
 ### Add a drink
 
@@ -44,7 +48,12 @@ Single-price items (snacks, food) use `price` instead of `prices`:
 { name: "Egg Waffle", category: "snack", description: "Made to order.", price: 5.50 }
 ```
 
-Add `soldOut: true` to grey an item out. Delete the whole block to remove a drink.
+Add `soldOut: true` to grey an item out — it also stops the item being
+orderable. Delete the whole block to remove a drink.
+
+Items priced with `prices` get the full drink customizer (size, sweetness, ice,
+milk, toppings). Single-`price` items get quantity and notes only. Override
+that per item with `options: ["sweetness", "ice"]`.
 
 ### Rules that cause a blank menu if broken
 
@@ -53,6 +62,33 @@ Add `soldOut: true` to grey an item out. Delete the whole block to remove a drin
 3. `category` must match an `id` in `categories`
 4. Prices are bare numbers: `6.5` — not `"$6.50"`, not `"6.50"`
 5. Size keys must match the `id`s in `customizations.sizes`
+6. Two items can't share a name
+
+## Taking orders
+
+The `ordering` block in `content.js` controls checkout:
+
+```js
+ordering: {
+  enabled: true,        // false hides every Add button and the cart
+  mode: "slip",         // "slip" or "endpoint"
+  endpoint: "",         // used when mode is "endpoint"
+  prepTime: "10–15 minutes",
+  paymentMethods: ["Cash at pickup", "Card at pickup"]
+}
+```
+
+Two ways orders reach you:
+
+- **`"slip"`** — no server needed. The customer gets a formatted order slip they
+  can copy, email, or show at the counter. Works the moment you deploy.
+- **`"endpoint"`** — the order is POSTed as JSON to `endpoint`. Drop in a
+  Formspree or Google Form URL, or your own backend. Set the URL or checkout
+  will say so out loud instead of silently losing the order.
+
+Prices are always recomputed from `content.js`, so changing a price never
+leaves a customer's saved cart at a stale total, and a drink you delete
+disappears from anyone's cart.
 
 ## Your graphic
 
@@ -69,15 +105,43 @@ to drop it into. Replace the file and the placeholder disappears on its own.
 Any path works too — point `business.logo` or `hero.image` in `content.js` at
 whatever file you have, e.g. `"assets/img/my-logo.webp"`.
 
+## Keeping the live site up to date
+
+Two layers, both already set up:
+
+**While editing** — `npm start` runs [`dev-server.js`](dev-server.js), which
+watches `index.html` and `assets/`. Save a file and any open browser reloads
+itself within a second. Nothing to remember.
+
+**Publishing** — [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml)
+runs the tests and publishes the site to GitHub Pages on every push to `main`.
+So the path is:
+
+```bash
+# edit assets/js/content.js, save, watch it change in the browser
+git add -A && git commit -m "Spring menu"
+git push origin main
+```
+
+…the live site updates itself a minute later. Nothing to upload.
+
+One-time GitHub setup: **Settings → Pages → Source → GitHub Actions**.
+
+The pipeline copies only `index.html` and `assets/` — not tests or
+`node_modules` — and refuses to deploy if a test fails.
+
 ## Layout
 
 ```
-index.html                  page shell, loads the two scripts below
-assets/js/content.js        ← YOUR CONTENT
-assets/js/app.js            renders content.js into the page
-assets/css/styles.css       colours live in :root at the top
-assets/img/                 your graphics go here
-tests/site.test.mjs         boots the real page in jsdom and checks it
+index.html                       page shell, loads the three scripts below
+assets/js/content.js             ← YOUR CONTENT
+assets/js/app.js                 renders content.js into the page
+assets/js/cart.js                cart, customizer, checkout
+assets/css/styles.css            colours live in :root at the top
+assets/img/                      your graphics go here
+dev-server.js                    static server with live reload
+.github/workflows/deploy.yml     test + publish to GitHub Pages
+tests/                           boots the real page in jsdom and checks it
 ```
 
 ## Colours
