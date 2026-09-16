@@ -130,6 +130,26 @@ One-time GitHub setup: **Settings → Pages → Source → GitHub Actions**.
 The pipeline copies only `index.html` and `assets/` — not tests or
 `node_modules` — and refuses to deploy if a test fails.
 
+## Look and feel
+
+Warm wood and natural paper, with mango and citrus held back as decoration
+rather than loud colour. The primary action is botanical green; the fruit tones
+only accent. Type is **Fraunces** (display serif) over **Inter** (body), with
+Georgia and system-ui fallbacks if the webfonts can't load.
+
+Everything is controlled from two places:
+
+- **Colours and fonts** — the `:root` block at the top of
+  [`assets/css/styles.css`](assets/css/styles.css). Change `--wood-800`,
+  `--mango`, `--leaf` or the font stacks there and the whole site follows.
+- **Decorative fruit** — the SVGs in `assets/img/`: `deco-mango.svg`,
+  `deco-citrus.svg`, `deco-leaf.svg`, and `texture-grain.svg` (the faint paper
+  grain over the page). Replace any of them with your own artwork, same
+  filename, and it appears everywhere it's used.
+
+The proof-point strip under the hero comes from the `values` block in
+`content.js`. Delete that block and the section disappears.
+
 ## Layout
 
 ```
@@ -143,8 +163,3 @@ dev-server.js                    static server with live reload
 .github/workflows/deploy.yml     test + publish to GitHub Pages
 tests/                           boots the real page in jsdom and checks it
 ```
-
-## Colours
-
-Change the palette in one place — the `:root` block at the top of
-[`assets/css/styles.css`](assets/css/styles.css).
