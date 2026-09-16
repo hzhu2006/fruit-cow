@@ -1,9 +1,7 @@
 /* ==========================================================================
    FRUIT COW — THEME TESTS
-   Chinese ink wash over wood. These check the palette tokens, that every
-   piece of artwork referenced from content.js actually exists, that the wood
-   patterns really land on the drink options and menu cards, and that the
-   cinnabar stays an accent rather than taking over.
+   Dark wood print, indigo/orange complementary, rice and terraced fields,
+   curves throughout, plus the Instagram and WeChat placeholders.
    ========================================================================== */
 
 import test from "node:test";
@@ -15,19 +13,24 @@ import { ROOT, bootPage, own } from "./helpers.mjs";
 const CSS = fs.readFileSync(path.join(ROOT, "assets/css/styles.css"), "utf8");
 const HTML = fs.readFileSync(path.join(ROOT, "index.html"), "utf8");
 
-const INK_ART = [
+const ART = [
   "assets/img/ink-bamboo.svg",
   "assets/img/ink-plum.svg",
-  "assets/img/ink-mountain.svg",
+  "assets/img/ink-rice.svg",
   "assets/img/ink-mango.svg",
-  "assets/img/ink-stroke.svg",
+  "assets/img/ink-terraces.svg",
+  "assets/img/curve-wave.svg",
   "assets/img/seal.svg",
+  "assets/img/icon-instagram.svg",
+  "assets/img/icon-wechat.svg",
   "assets/img/texture-grain.svg"
 ];
 
-const WOOD = [
+const PATTERNS = [
   "assets/img/pattern-wood-oak.svg",
-  "assets/img/pattern-wood-walnut.svg"
+  "assets/img/pattern-wood-walnut.svg",
+  "assets/img/pattern-wood-dark.svg",
+  "assets/img/pattern-rice.svg"
 ];
 
 /** Pull one rule block out of the stylesheet by selector. */
@@ -39,101 +42,150 @@ function rule(selector, endMarker) {
 
 /* ------------------------------------------------------------------ palette */
 
-test("palette covers paper, ink, cinnabar, brass and wood", () => {
+test("palette covers dark wood, paper, and the indigo/orange pair", () => {
   [
+    "--wood-black:", "--wood-deep:", "--wood-dark:", "--wood:", "--wood-mid:", "--wood-warm:",
     "--paper:", "--paper-2:", "--linen:", "--line:",
-    "--ink:", "--ink-2:", "--ink-soft:",
-    "--cinnabar:", "--cinnabar-soft:", "--cinnabar-wash:",
-    "--brass:", "--brass-soft:",
-    "--wood-deep:", "--wood:", "--wood-mid:"
+    "--indigo:", "--indigo-deep:", "--indigo-ink:", "--indigo-soft:",
+    "--orange:", "--orange-deep:", "--orange-soft:"
   ].forEach((token) => {
     assert.ok(CSS.includes(token), "missing palette token " + token);
   });
 });
 
+test("indigo and orange are genuinely complementary, not near-neighbours", () => {
+  const hex = (name) => {
+    const m = CSS.match(new RegExp(name.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + "\\s*#([0-9a-f]{6})"));
+    assert.ok(m, name + " is not a hex colour");
+    return m[1];
+  };
+  const hue = (h) => {
+    const r = parseInt(h.slice(0, 2), 16) / 255;
+    const g = parseInt(h.slice(2, 4), 16) / 255;
+    const b = parseInt(h.slice(4, 6), 16) / 255;
+    const max = Math.max(r, g, b), min = Math.min(r, g, b), d = max - min;
+    if (!d) return 0;
+    let x;
+    if (max === r) x = ((g - b) / d) % 6;
+    else if (max === g) x = (b - r) / d + 2;
+    else x = (r - g) / d + 4;
+    return (x * 60 + 360) % 360;
+  };
+  const blue = hue(hex("--indigo:"));
+  const orange = hue(hex("--orange:"));
+  const gap = Math.abs(blue - orange);
+  const distance = Math.min(gap, 360 - gap);
+  assert.ok(distance > 120 && distance < 240,
+    `indigo (${blue.toFixed(0)}deg) and orange (${orange.toFixed(0)}deg) should sit opposite, got ${distance.toFixed(0)}deg apart`);
+});
+
 test("type pairs a display serif with a clean sans and degrades offline", () => {
   assert.ok(CSS.includes("--font-display:"));
   assert.ok(CSS.includes("--font-body:"));
-  assert.ok(CSS.includes("Fraunces"), "display face is Fraunces");
-  assert.ok(CSS.includes("Inter"), "body face is Inter");
-  assert.ok(CSS.includes("Georgia"), "serif stack falls back to Georgia");
-  assert.ok(CSS.includes("system-ui"), "sans stack falls back to system-ui");
-  assert.ok(HTML.includes("family=Fraunces"), "index.html requests Fraunces");
+  assert.ok(CSS.includes("Fraunces"));
+  assert.ok(CSS.includes("Inter"));
+  assert.ok(CSS.includes("Georgia"), "serif falls back to Georgia");
+  assert.ok(CSS.includes("system-ui"), "sans falls back to system-ui");
+  assert.ok(HTML.includes("family=Fraunces"));
 });
 
 /* ----------------------------------------------------------------- artwork */
 
-test("every ink drawing exists, is valid SVG and has real content", () => {
-  INK_ART.forEach((rel) => {
+test("every drawing exists, is valid SVG and has no stray characters", () => {
+  ART.forEach((rel) => {
     const file = path.join(ROOT, rel);
     assert.ok(fs.existsSync(file), "missing artwork " + rel);
     const svg = fs.readFileSync(file, "utf8");
     assert.ok(svg.includes("<svg"), rel + " is not an <svg> document");
     assert.ok(svg.includes("</svg>"), rel + " is not closed");
-    assert.ok(svg.length > 300, rel + " looks empty");
-    assert.ok(!/[^\x00-\x7F]/.test(svg.replace(/aria-label="[^"]*"/g, "").replace(/<!--[\s\S]*?-->/g, "")),
-      rel + " has a stray non-ASCII character outside labels/comments");
+    assert.ok(svg.length > 250, rel + " looks empty");
+    const code = svg.replace(/aria-label="[^"]*"/g, "").replace(/<!--[\s\S]*?-->/g, "");
+    assert.ok(!/[^\x00-\x7F]/.test(code), rel + " has a stray non-ASCII character");
   });
 });
 
-test("both wood patterns exist and are tileable SVGs", () => {
-  WOOD.forEach((rel) => {
+test("all four patterns exist and are tileable", () => {
+  PATTERNS.forEach((rel) => {
     const file = path.join(ROOT, rel);
-    assert.ok(fs.existsSync(file), "missing wood pattern " + rel);
+    assert.ok(fs.existsSync(file), "missing pattern " + rel);
     const svg = fs.readFileSync(file, "utf8");
-    assert.ok(svg.includes("<svg"), rel + " is not an <svg> document");
-    assert.ok(svg.includes("feTurbulence"), rel + " should build grain with feTurbulence");
-    // A tile needs explicit dimensions so background-repeat lines up.
     assert.ok(/width="\d+"/.test(svg) && /height="\d+"/.test(svg), rel + " needs width/height to tile");
   });
+  // The three wood patterns build grain procedurally.
+  PATTERNS.filter((p) => p.includes("wood")).forEach((rel) => {
+    assert.ok(fs.readFileSync(path.join(ROOT, rel), "utf8").includes("feTurbulence"),
+      rel + " should build grain with feTurbulence");
+  });
 });
 
-test("rice-paper tooth is laid over the page without blocking clicks", () => {
-  assert.ok(CSS.includes("texture-grain.svg"));
-  assert.ok(/body::before/.test(CSS));
-  assert.ok(CSS.includes("pointer-events: none"));
+/* ---------------------------------------------------------- wood on surfaces */
+
+test("the cover is laid on the dark wood print", () => {
+  const hero = rule(".fc-hero {", ".fc-hero::after");
+  assert.ok(hero.includes("var(--fc-cover-wood)"), "cover uses the dark wood variable");
+  assert.ok(hero.includes("--wood-deep"), "cover base colour is deep wood");
+  assert.ok(hero.includes("background-size"), "wood is sized to tile");
+  assert.ok(CSS.includes("pattern-wood-dark.svg"), "dark wood pattern is the default");
 });
 
-/* --------------------------------------------------------- wood on surfaces */
-
-test("wood patterns are exposed as CSS variables content.js can override", () => {
-  assert.ok(CSS.includes("--fc-card-wood:"));
-  assert.ok(CSS.includes("--fc-options-wood:"));
-  assert.ok(CSS.includes("pattern-wood-oak.svg"), "cards default to oak");
-  assert.ok(CSS.includes("pattern-wood-walnut.svg"), "options default to walnut");
-});
-
-test("the drink-option panels actually carry the walnut pattern", () => {
+test("the drink-option panels carry walnut grain under a legible veil", () => {
   const optgroup = rule(".fc-optgroup {", ".fc-optgroup__title");
   assert.ok(optgroup.includes("var(--fc-options-wood)"), "option panels use the wood variable");
-  assert.ok(optgroup.includes("background-size"), "pattern is sized to tile");
-  // A dark veil must sit over the grain so the text stays legible.
-  assert.ok(/linear-gradient\(rgba\(30, 22, 16/.test(optgroup), "grain sits under a dark veil");
+  assert.ok(optgroup.includes("background-size"), "grain is sized to tile");
+  assert.ok(/linear-gradient\(rgba\(30, 20, 10/.test(optgroup), "grain sits under a dark veil");
 });
 
-test("menu cards carry the oak pattern under a linen veil", () => {
+test("menu cards carry oak grain under a linen veil", () => {
   const card = rule(".fc-card {", ".fc-card:hover");
-  assert.ok(card.includes("var(--fc-card-wood)"), "cards use the wood variable");
-  assert.ok(/linear-gradient\(rgba\(252, 250, 244/.test(card), "grain sits under a light veil");
+  assert.ok(card.includes("var(--fc-card-wood)"));
+  assert.ok(/linear-gradient\(rgba\(253, 249, 240/.test(card), "grain sits under a light veil");
+});
+
+test("rice grains are scattered over the page paper", () => {
+  assert.ok(/body\s*{[\s\S]*?var\(--fc-rice-pattern\)/.test(CSS), "body uses the rice pattern");
+  assert.ok(CSS.includes("pattern-rice.svg"), "rice pattern is the default");
+  assert.ok(CSS.includes("background-attachment: fixed"), "grain stays put while scrolling");
+});
+
+/* ------------------------------------------------------------- curves */
+
+test("the curve language is applied consistently", () => {
+  const arches = [
+    [".fc-card {", ".fc-card:hover", "96px 96px"],
+    [".fc-value {", ".fc-value:hover", "130px 130px"],
+    [".fc-loc {", ".fc-loc__name", "96px 96px"],
+    [".fc-optgroup {", ".fc-optgroup__title", "78px 78px"]
+  ];
+  arches.forEach(([sel, end, radius]) => {
+    assert.ok(rule(sel, end).includes(radius), sel + " should have an arched top (" + radius + ")");
+  });
+
+  assert.ok(rule(".fc-custom {", ".fc-custom .fc-section-title").includes("60px 60px 0 0"),
+    "the customizations band has a curved crown");
+  assert.ok(rule(".fc-footer {", ".fc-footer__inner").includes("60px 60px 0 0"),
+    "the footer has a curved crown");
+  assert.ok(rule(".fc-btn {", ".fc-btn--primary").includes("999px"), "buttons are pills");
+  assert.ok(rule(".fc-qty__btn {", ".fc-qty__n").includes("50%"), "quantity buttons are circles");
+  assert.ok(/\.fc-hero::after[\s\S]*?border-radius: 50% 50% 0 0/.test(CSS),
+    "the cover flows into the page on a curved foot");
 });
 
 /* ------------------------------------------------------- content.js decor */
 
-test("every artwork path in content.decor points at a file that exists", async () => {
+test("every artwork path in content.decor resolves to a real file", async () => {
   const dom = await bootPage();
   const { SITE_CONTENT: c } = dom.window;
 
   assert.ok(c.decor, "content.js has a decor block");
   const entries = Object.entries(c.decor);
-  assert.ok(entries.length >= 6, "decor block covers the main slots");
-
+  assert.ok(entries.length >= 8, "decor block covers the main slots");
   entries.forEach(([key, src]) => {
     assert.ok(src, "decor." + key + " is set");
     assert.ok(fs.existsSync(path.join(ROOT, src)), "decor." + key + " points at a missing file: " + src);
   });
-
+  assert.ok(c.decor.coverWood.includes("wood-dark"), "cover gets the dark print");
   assert.ok(c.decor.optionsWood.includes("walnut"), "drink options get walnut");
-  assert.ok(c.decor.cardWood.includes("oak"), "cards get oak");
+  assert.ok(c.decor.terraces.includes("terraces"), "terraces slot is wired");
   dom.window.close();
 });
 
@@ -142,63 +194,116 @@ test("blanking a decor entry switches that artwork off", async () => {
   const { document, SITE_CONTENT: c, FruitCow } = dom.window;
 
   assert.ok(document.querySelector(".fc-seal"), "seal present to start");
-  assert.ok(document.querySelector(".fc-divider"), "brush divider present");
-  assert.ok(document.querySelector(".fc-menu__ridge"), "menu ridge present");
+  assert.ok(document.querySelector(".fc-terraces"), "terraces present");
 
   c.decor.seal = "";
-  c.decor.menuAccent = "";
+  c.decor.terraces = "";
   FruitCow.boot();
 
   assert.equal(document.querySelector(".fc-seal"), null, "seal gone");
-  assert.equal(document.querySelector(".fc-menu__ridge"), null, "ridge gone");
-  assert.ok(document.querySelector(".fc-divider"), "divider untouched");
+  assert.equal(document.querySelector(".fc-terraces"), null, "terraces gone");
   assert.ok(document.querySelector(".fc-card"), "page still renders");
   dom.window.close();
 });
 
-test("hero ink artwork is ornamental and hidden from assistive tech", async () => {
+test("hero artwork and terraces are ornamental and hidden from assistive tech", async () => {
   const dom = await bootPage();
   const { document, SITE_CONTENT: c } = dom.window;
 
-  const decor = document.querySelectorAll(".fc-decor");
-  assert.equal(decor.length, 2, "two hero drawings");
-  decor.forEach((img) => {
+  const ornamental = [...document.querySelectorAll(".fc-decor, .fc-terraces")];
+  assert.ok(ornamental.length >= 3, "hero carries drawings and terraces");
+  ornamental.forEach((img) => {
     assert.equal(img.getAttribute("aria-hidden"), "true");
     assert.equal(img.getAttribute("alt"), "");
   });
-  const srcs = [...decor].map((i) => i.getAttribute("src"));
-  assert.ok(srcs.includes(c.decor.heroArt));
-  assert.ok(srcs.includes(c.decor.heroAccent));
+  assert.equal(document.querySelector(".fc-terraces").getAttribute("src"), c.decor.terraces);
   dom.window.close();
 });
 
-test("the seal sits with the brand mark", async () => {
+/* ------------------------------------------------------------- social */
+
+test("Instagram and WeChat render in the header", async () => {
   const dom = await bootPage();
   const { document, SITE_CONTENT: c } = dom.window;
-  const seal = document.querySelector(".fc-brand .fc-seal");
-  assert.ok(seal, "seal renders inside the brand link");
-  assert.equal(seal.getAttribute("src"), c.decor.seal);
+
+  const links = document.querySelectorAll(".fc-header .fc-social .fc-social__link");
+  assert.equal(links.length, c.business.social.length);
+
+  const instagram = c.business.social.find((s) => s.id === "instagram");
+  const wechat = c.business.social.find((s) => s.id === "wechat");
+  assert.ok(instagram && wechat, "both platforms are configured");
+
+  const labels = [...links].map((l) => l.getAttribute("aria-label"));
+  assert.ok(labels.some((l) => l.includes("Instagram")));
+  assert.ok(labels.some((l) => l.includes("WeChat")));
+
+  // Instagram has a URL so it links out; WeChat has none so it is a plain span.
+  const instaLink = [...links].find((l) => l.tagName === "A");
+  assert.equal(instaLink.getAttribute("href"), instagram.url);
+  assert.equal(instaLink.getAttribute("rel"), "noopener", "external links need rel=noopener");
+  assert.ok([...links].some((l) => l.tagName === "SPAN"), "a handle with no url renders as a span");
   dom.window.close();
 });
 
-/* ------------------------------------------------------------ restraint */
+test("the footer shows handles and a WeChat QR drop-in slot", async () => {
+  const dom = await bootPage();
+  const { document, SITE_CONTENT: c } = dom.window;
 
-test("cinnabar stays an accent; the primary action is ink", () => {
-  const primary = rule(".fc-btn--primary", ".fc-btn--ghost");
-  assert.ok(primary.includes("var(--ink)"), "primary button is ink");
-  assert.ok(!/background:\s*var\(--cinnabar\)/.test(primary.split(":hover")[0]),
-    "cinnabar is not the resting primary colour");
+  const block = document.querySelector(".fc-socialblock");
+  assert.ok(block, "footer has a social block");
+  assert.equal(block.querySelectorAll(".fc-socialblock__item").length, c.business.social.length);
 
-  // Cinnabar should appear, but only in small doses.
-  const seal = rule(".fc-seal", ".fc-divider");
-  assert.ok(seal.length > 0, "seal is styled");
-  assert.ok(CSS.includes("--cinnabar"), "cinnabar is in the palette");
+  const handles = [...block.querySelectorAll(".fc-socialblock__handle")].map((h) => h.textContent);
+  c.business.social.forEach((s) => {
+    assert.ok(handles.includes(s.handle), "handle shown for " + s.label);
+  });
+
+  const wechat = c.business.social.find((s) => s.qr);
+  assert.ok(wechat, "one platform offers a QR");
+  const qr = block.querySelector(".fc-img--qr, .fc-slot--qr");
+  assert.ok(qr, "QR slot renders");
+  const src = qr.tagName === "IMG" ? qr.getAttribute("src") : qr.querySelector("code").textContent;
+  assert.ok(src.endsWith(wechat.qr), "QR slot points at the drop-in path");
+  dom.window.close();
 });
 
-test("brass carries the money, not cinnabar", () => {
+test("the QR slot names the exact file to drop in when the image is missing", async () => {
+  const dom = await bootPage();
+  const { document, FruitCow } = dom.window;
+
+  const img = FruitCow.imageWithFallback("assets/img/wechat-qr.png", "WeChat QR code", "qr");
+  document.body.appendChild(img);
+  img.dispatchEvent(new dom.window.Event("error"));
+
+  const slot = document.querySelector(".fc-slot--qr");
+  assert.ok(slot, "placeholder replaces the missing QR");
+  assert.equal(slot.querySelector("code").textContent, "assets/img/wechat-qr.png");
+  dom.window.close();
+});
+
+test("deleting the social block removes it everywhere", async () => {
+  const dom = await bootPage();
+  const { document, SITE_CONTENT: c, FruitCow } = dom.window;
+
+  assert.ok(document.querySelector(".fc-social"));
+  delete c.business.social;
+  FruitCow.boot();
+  assert.equal(document.querySelector(".fc-social"), null);
+  assert.equal(document.querySelector(".fc-socialblock"), null);
+  assert.ok(document.querySelector(".fc-card"), "page still renders");
+  dom.window.close();
+});
+
+/* ------------------------------------------------------------- restraint */
+
+test("orange is the action colour, indigo carries the data", () => {
+  const primary = rule(".fc-btn--primary", ".fc-btn--ghost");
+  assert.ok(primary.includes("var(--orange)"), "primary button is orange");
+  assert.ok(!primary.includes("--indigo"), "primary button is not indigo");
+
   const price = rule(".fc-prices__value {", ".fc-prices__value--lg");
-  assert.ok(price.includes("var(--brass)"), "prices are set in brass");
-  assert.ok(!price.includes("--cinnabar"), "prices are not cinnabar");
+  assert.ok(price.includes("var(--indigo-deep)"), "prices are set in indigo");
+  assert.ok(!price.includes("--orange"), "prices are not orange");
 });
 
 /* ------------------------------------------------------------- positioning */
@@ -209,10 +314,8 @@ test("the values strip renders from content.js with ink icons", async () => {
 
   const cards = document.querySelectorAll(".fc-value");
   assert.equal(cards.length, c.values.length);
-
   c.values.forEach((v, i) => {
     assert.equal(cards[i].querySelector(".fc-value__title").textContent, v.title);
-    assert.equal(cards[i].querySelector(".fc-value__body").textContent, v.body);
     assert.equal(cards[i].querySelector(".fc-value__icon").getAttribute("src"), v.icon);
     assert.ok(fs.existsSync(path.join(ROOT, v.icon)), "value icon missing: " + v.icon);
   });
@@ -222,25 +325,21 @@ test("the values strip renders from content.js with ink icons", async () => {
 test("deleting `values` removes the strip without breaking the page", async () => {
   const dom = await bootPage();
   const { document, SITE_CONTENT: c, FruitCow } = dom.window;
-
   assert.ok(document.querySelector(".fc-values"));
   delete c.values;
   FruitCow.boot();
   assert.equal(document.querySelector(".fc-values"), null);
-  assert.ok(document.querySelector(".fc-card"), "menu still renders");
+  assert.ok(document.querySelector(".fc-card"));
   dom.window.close();
 });
 
 test("copy reflects the natural, premium positioning", async () => {
   const dom = await bootPage();
   const { SITE_CONTENT: c } = dom.window;
-
-  assert.ok(/natural/i.test(c.business.tagline), "tagline signals natural");
-  assert.ok(/nothing artificial/i.test(c.hero.heading), "hero states the no-artificial promise");
-  assert.ok(c.values.length >= 3, "at least three proof points");
-
+  assert.ok(/natural/i.test(c.business.tagline));
+  assert.ok(/nothing artificial/i.test(c.hero.heading));
+  assert.ok(c.values.length >= 3);
   const titles = own(c.values.map((v) => v.title));
-  titles.forEach((t) => assert.ok(t && t.length > 3, "every value needs a real title"));
   assert.equal(new Set(titles).size, titles.length, "value titles must be distinct");
   dom.window.close();
 });

@@ -188,6 +188,42 @@
     });
   }
 
+  /** Compact icon row for the header. */
+  function renderSocialIcons(content) {
+    var social = content.business.social;
+    if (!social || !social.length) return null;
+    return el("div", { class: "fc-social" }, social.map(function (s) {
+      var glyph = el("img", { class: "fc-social__icon", src: s.icon, alt: "" });
+      return s.url
+        ? el("a", {
+            class: "fc-social__link", href: s.url, target: "_blank", rel: "noopener",
+            "aria-label": content.business.name + " on " + s.label, title: s.label
+          }, [glyph])
+        : el("span", {
+            class: "fc-social__link fc-social__link--static",
+            "aria-label": content.business.name + " on " + s.label, title: s.label
+          }, [glyph]);
+    }));
+  }
+
+  /** Full block for the footer: handles, plus a QR image where one is given. */
+  function renderSocialBlock(content) {
+    var social = content.business.social;
+    if (!social || !social.length) return null;
+    return el("div", { class: "fc-socialblock" }, social.map(function (s) {
+      return el("div", { class: "fc-socialblock__item" }, [
+        el("div", { class: "fc-socialblock__head" }, [
+          el("img", { class: "fc-social__icon", src: s.icon, alt: "" }),
+          el("span", { class: "fc-socialblock__label", text: s.label }),
+          s.url
+            ? el("a", { class: "fc-socialblock__handle", href: s.url, target: "_blank", rel: "noopener", text: s.handle })
+            : el("span", { class: "fc-socialblock__handle fc-socialblock__handle--static", text: s.handle })
+        ]),
+        s.qr ? imageWithFallback(s.qr, s.label + " QR code", "qr") : null
+      ]);
+    }));
+  }
+
   function renderHeader(content) {
     var b = content.business;
     var d = content.decor || {};
@@ -209,6 +245,7 @@
         ]),
         el("div", { class: "fc-header__right" }, [
           nav,
+          renderSocialIcons(content),
           orderingEnabled(content)
             ? el("button", {
                 class: "fc-cartbtn", type: "button", id: "fc-cart-toggle",
@@ -246,7 +283,8 @@
       ]),
       // Decorative ink artwork. Purely ornamental, so hidden from screen readers.
       decorImg(d.heroArt, "fc-decor fc-decor--primary"),
-      decorImg(d.heroAccent, "fc-decor fc-decor--accent")
+      decorImg(d.heroAccent, "fc-decor fc-decor--accent"),
+      decorImg(d.terraces, "fc-terraces")
     ]);
   }
 
@@ -436,9 +474,9 @@
         ]),
         el("div", { class: "fc-footer__contact" }, [
           b.phone ? el("p", {}, [el("a", { href: "tel:" + b.phone.replace(/[^\d+]/g, ""), text: b.phone })]) : null,
-          b.email ? el("p", {}, [el("a", { href: "mailto:" + b.email, text: b.email })]) : null,
-          b.instagram ? el("p", { text: b.instagram }) : null
+          b.email ? el("p", {}, [el("a", { href: "mailto:" + b.email, text: b.email })]) : null
         ]),
+        renderSocialBlock(content),
         el("p", { class: "fc-footer__copy", text: "© " + new Date().getFullYear() + " " + content.footer.copyright })
       ])
     ]);
@@ -549,12 +587,16 @@
     // Wood patterns are chosen in content.js and handed to CSS as variables,
     // so swapping the artwork needs no stylesheet edit.
     var decor = content.decor || {};
-    if (decor.cardWood) {
-      document.documentElement.style.setProperty("--fc-card-wood", 'url("' + decor.cardWood + '")');
-    }
-    if (decor.optionsWood) {
-      document.documentElement.style.setProperty("--fc-options-wood", 'url("' + decor.optionsWood + '")');
-    }
+    [
+      ["cardWood", "--fc-card-wood"],
+      ["optionsWood", "--fc-options-wood"],
+      ["coverWood", "--fc-cover-wood"],
+      ["ricePattern", "--fc-rice-pattern"]
+    ].forEach(function (pair) {
+      if (decor[pair[0]]) {
+        document.documentElement.style.setProperty(pair[1], 'url("' + decor[pair[0]] + '")');
+      }
+    });
 
     var problems = validateContent(content);
     if (problems.length) {

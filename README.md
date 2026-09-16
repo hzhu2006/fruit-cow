@@ -130,40 +130,72 @@ One-time GitHub setup: **Settings → Pages → Source → GitHub Actions**.
 The pipeline copies only `index.html` and `assets/` — not tests or
 `node_modules` — and refuses to deploy if a test fails.
 
+## Social placeholders
+
+The `business.social` list in `content.js` drives both the header icons and the
+footer block:
+
+```js
+social: [
+  {
+    id: "instagram",
+    label: "Instagram",
+    handle: "@fruitcow",
+    url: "https://instagram.com/yourhandle",   // "" = show the handle, no link
+    icon: "assets/img/icon-instagram.svg"
+  },
+  {
+    id: "wechat",
+    label: "WeChat",
+    handle: "FruitCowCN",
+    url: "",
+    qr: "assets/img/wechat-qr.png",            // optional, shown large in the footer
+    icon: "assets/img/icon-wechat.svg"
+  }
+]
+```
+
+Add a third platform by copying a block. **Drop your WeChat QR code at
+`assets/img/wechat-qr.png`** and it appears in the footer; until then that slot
+shows a dashed placeholder naming the exact file to drop in. Delete the whole
+`social` list and both the icons and the footer block disappear.
+
 ## Look and feel
 
-Chinese ink wash laid over wood. Rice paper, brushwork, a cinnabar seal, and
-brass hairlines — restrained, with one loud note used sparingly. Type is
-**Fraunces** (display serif) over **Inter** (body), falling back to Georgia and
-system-ui if the webfonts can't load.
+Dark wood print, rice paper, and terraced fields. **Indigo and orange** as a
+complementary pair — blue in the paddy water, orange in the grain and the
+actions. Curves throughout: arched card tops, pill buttons, circular steppers,
+and a cover that flows into the page on a curved foot. Type is **Fraunces**
+(display serif) over **Inter** (body), falling back to Georgia and system-ui.
 
 Three places to change it:
 
 **1. Colours and fonts** — the `:root` block at the top of
 [`assets/css/styles.css`](assets/css/styles.css). The palette is grouped:
-`--paper`, `--ink`, `--cinnabar` (the seal red), `--brass`, `--wood`.
+`--wood-*` (espresso to warm mid-brown), `--paper`, `--indigo-*`, `--orange-*`.
 
-**2. Artwork** — the `decor` block in `content.js`. Every entry is just a file
-path; replace the file at that path with your own drawing, same filename, and
-it appears everywhere. Set an entry to `""` to switch that piece off.
+**2. Artwork** — the `decor` block in `content.js`. Every entry is a file path;
+replace the file at that path with your own drawing, same filename, and it
+appears everywhere. Set an entry to `""` to switch that piece off.
 
 ```js
 decor: {
-  seal: "assets/img/seal.svg",                        // cinnabar stamp by the brand
-  heroArt: "assets/img/ink-bamboo.svg",               // large hero drawing
+  seal: "assets/img/seal.svg",                        // stamp beside the brand
+  heroArt: "assets/img/ink-rice.svg",                 // large drawing in the cover
   heroAccent: "assets/img/ink-plum.svg",              // smaller, opposite corner
-  menuAccent: "assets/img/ink-mountain.svg",          // misty ridge behind "The Menu"
-  divider: "assets/img/ink-stroke.svg",               // brush stroke under headings
+  terraces: "assets/img/ink-terraces.svg",            // 梯田 across the cover's foot
+  divider: "assets/img/curve-wave.svg",               // long double curve between sections
+  ricePattern: "assets/img/pattern-rice.svg",         // grains scattered over the paper
+  coverWood: "assets/img/pattern-wood-dark.svg",      // dark print behind the cover
   cardWood: "assets/img/pattern-wood-oak.svg",        // grain under each menu card
   optionsWood: "assets/img/pattern-wood-walnut.svg"   // grain under each drink option
 }
 ```
 
-**3. Wood patterns** — `assets/img/pattern-wood-oak.svg` and
-`pattern-wood-walnut.svg` are tileable grain, generated with `feTurbulence` so
-they have no photo to licence. `cardWood` and `optionsWood` above point at them.
+**3. Patterns** — the wood prints and the rice scatter are tileable and
+generated with `feTurbulence`, so there is no photo to licence.
 
-The proof-point strip under the hero comes from the `values` block in
+The proof-point strip under the cover comes from the `values` block in
 `content.js`, and its icons are ink drawings too. Delete the block and the
 section disappears.
 

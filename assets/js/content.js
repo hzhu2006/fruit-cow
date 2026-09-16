@@ -29,8 +29,33 @@ globalThis.SITE_CONTENT = {
     logoAlt: "Fruit Cow logo",
     phone: "(000) 000-0000",
     email: "hello@fruitcow.example",
-    instagram: "@fruitcow",
-    currency: "$"
+    currency: "$",
+
+    /* Social handles. Add or remove entries freely — the header and footer
+       render whatever is here.
+         handle : what's shown
+         url    : where the icon links ("" = no link, just shows the handle)
+         icon   : the glyph
+         qr     : optional image shown large in the footer. Drop your WeChat
+                  QR at that path and it appears; until then a placeholder
+                  names the exact file to drop in.                      */
+    social: [
+      {
+        id: "instagram",
+        label: "Instagram",
+        handle: "@fruitcow",
+        url: "https://instagram.com/yourhandle",
+        icon: "assets/img/icon-instagram.svg"
+      },
+      {
+        id: "wechat",
+        label: "WeChat",
+        handle: "FruitCowCN",
+        url: "",
+        qr: "assets/img/wechat-qr.png",
+        icon: "assets/img/icon-wechat.svg"
+      }
+    ]
   },
 
   /* -------------------------------------------------------------------- hero */
@@ -62,7 +87,7 @@ globalThis.SITE_CONTENT = {
       body: "Mango, lychee and passion fruit prepared each morning. If it isn't in season, it isn't on the board."
     },
     {
-      icon: "assets/img/ink-plum.svg",
+      icon: "assets/img/ink-rice.svg",
       title: "Sweetness on your terms",
       body: "Five sweetness levels, cane sugar only, and dairy-free milks at no penalty to flavour."
     }
@@ -72,19 +97,23 @@ globalThis.SITE_CONTENT = {
   /* Decorative artwork. Every entry is just a file path — replace the file at
      that path with your own drawing, same filename, and it appears everywhere.
      Set any entry to "" to switch that piece off.
-       seal        the cinnabar stamp beside the brand and in the footer
-       heroArt     the large ink drawing in the hero
-       heroAccent  the smaller ink drawing, opposite corner
-       menuAccent  the misty ridge behind the menu heading
-       divider     the brush stroke under section headings
-       cardWood    wood grain laid beneath each menu card
-       optionsWood wood grain laid beneath each drink-option panel        */
+       seal         the cinnabar-orange stamp beside the brand
+       heroArt      the large ink drawing in the cover
+       heroAccent   the smaller ink drawing, opposite corner
+       terraces     the 梯田 terraced fields across the bottom of the cover
+       divider      the long double curve between sections
+       ricePattern  scattered rice grains, laid faintly over the paper
+       coverWood    dark wood print behind the cover
+       cardWood     wood grain laid beneath each menu card
+       optionsWood  wood grain laid beneath each drink-option panel        */
   decor: {
     seal: "assets/img/seal.svg",
-    heroArt: "assets/img/ink-bamboo.svg",
+    heroArt: "assets/img/ink-rice.svg",
     heroAccent: "assets/img/ink-plum.svg",
-    menuAccent: "assets/img/ink-mountain.svg",
-    divider: "assets/img/ink-stroke.svg",
+    terraces: "assets/img/ink-terraces.svg",
+    divider: "assets/img/curve-wave.svg",
+    ricePattern: "assets/img/pattern-rice.svg",
+    coverWood: "assets/img/pattern-wood-dark.svg",
     cardWood: "assets/img/pattern-wood-oak.svg",
     optionsWood: "assets/img/pattern-wood-walnut.svg"
   },
