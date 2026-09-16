@@ -284,8 +284,28 @@
       // Decorative ink artwork. Purely ornamental, so hidden from screen readers.
       decorImg(d.heroArt, "fc-decor fc-decor--primary"),
       decorImg(d.heroAccent, "fc-decor fc-decor--accent"),
-      decorImg(d.terraces, "fc-terraces")
-    ]);
+      decorImg(d.heroFruit, "fc-decor fc-decor--fruit"),
+      decorImg(d.terraces, "fc-terraces"),
+      decorImg(d.woodring, "fc-slice")
+    ].concat(renderStickers(content, "cover")));
+  }
+
+  /**
+   * Decorative stickers for one named area. Driven by decor.stickers[] in
+   * content.js — add an entry with the area you want it in and it appears.
+   */
+  function renderStickers(content, area) {
+    var stickers = (content.decor && content.decor.stickers) || [];
+    return stickers
+      .filter(function (s) { return s && s.src && s.area === area; })
+      .map(function (s, i) {
+        var img = el("img", {
+          class: "fc-sticker fc-sticker--" + area + (i > 0 ? " fc-sticker--alt" : ""),
+          src: s.src, alt: "", "aria-hidden": "true",
+          style: "transform: rotate(" + (s.rotate || 0) + "deg)"
+        });
+        return img;
+      });
   }
 
   function renderValues(content) {
@@ -301,7 +321,7 @@
           ]);
         }))
       ])
-    ]);
+    ].concat(renderStickers(content, "values")));
   }
 
   function renderMenuItem(item, content) {
@@ -393,10 +413,9 @@
           decorImg((content.decor || {}).divider, "fc-divider"),
           el("p", { class: "fc-section-sub", text: "Every drink is steeped and pressed to order. Sweetness, ice and toppings are yours to set." })
         ]),
-        decorImg((content.decor || {}).menuAccent, "fc-menu__ridge"),
         filters, grid, empty
       ])
-    ]);
+    ].concat(renderStickers(content, "menu")));
   }
 
   function renderOptionGroup(title, options, currency, note) {
@@ -461,7 +480,7 @@
           ]);
         }))
       ])
-    ]);
+    ].concat(renderStickers(content, "locations")));
   }
 
   function renderFooter(content) {
@@ -591,7 +610,8 @@
       ["cardWood", "--fc-card-wood"],
       ["optionsWood", "--fc-options-wood"],
       ["coverWood", "--fc-cover-wood"],
-      ["ricePattern", "--fc-rice-pattern"]
+      ["ricePattern", "--fc-rice-pattern"],
+      ["ringPattern", "--fc-ring-pattern"]
     ].forEach(function (pair) {
       if (decor[pair[0]]) {
         document.documentElement.style.setProperty(pair[1], 'url("' + decor[pair[0]] + '")');

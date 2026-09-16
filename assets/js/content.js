@@ -87,7 +87,7 @@ globalThis.SITE_CONTENT = {
       body: "Mango, lychee and passion fruit prepared each morning. If it isn't in season, it isn't on the board."
     },
     {
-      icon: "assets/img/ink-rice.svg",
+      icon: "assets/img/ink-citrus.svg",
       title: "Sweetness on your terms",
       body: "Five sweetness levels, cane sugar only, and dairy-free milks at no penalty to flavour."
     }
@@ -103,19 +103,34 @@ globalThis.SITE_CONTENT = {
        terraces     the 梯田 terraced fields across the bottom of the cover
        divider      the long double curve between sections
        ricePattern  scattered rice grains, laid faintly over the paper
+       ringPattern  wood cross-section (end grain) printed on section backgrounds
+       woodring     one large timber slice, used as a motif on the cover
        coverWood    dark wood print behind the cover
        cardWood     wood grain laid beneath each menu card
-       optionsWood  wood grain laid beneath each drink-option panel        */
+       optionsWood  wood grain laid beneath each drink-option panel
+       stickers     little paper stickers; `area` is one of
+                    "cover" | "values" | "menu" | "locations", and `rotate`
+                    is degrees. Add as many as you like.                 */
   decor: {
     seal: "assets/img/seal.svg",
     heroArt: "assets/img/ink-rice.svg",
     heroAccent: "assets/img/ink-plum.svg",
+    heroFruit: "assets/img/ink-peach.svg",
     terraces: "assets/img/ink-terraces.svg",
     divider: "assets/img/curve-wave.svg",
     ricePattern: "assets/img/pattern-rice.svg",
+    ringPattern: "assets/img/pattern-woodring.svg",
+    woodring: "assets/img/ink-woodring.svg",
     coverWood: "assets/img/pattern-wood-dark.svg",
     cardWood: "assets/img/pattern-wood-oak.svg",
-    optionsWood: "assets/img/pattern-wood-walnut.svg"
+    optionsWood: "assets/img/pattern-wood-walnut.svg",
+    stickers: [
+      { src: "assets/img/sticker-rice.svg",   area: "cover",     rotate: -12 },
+      { src: "assets/img/sticker-citrus.svg", area: "cover",     rotate: 14 },
+      { src: "assets/img/sticker-lychee.svg", area: "values",    rotate: -8 },
+      { src: "assets/img/sticker-rice.svg",   area: "menu",      rotate: 10 },
+      { src: "assets/img/sticker-citrus.svg", area: "locations", rotate: -14 }
+    ]
   },
 
   /* --------------------------------------------------------------- categories */

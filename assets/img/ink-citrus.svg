@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" role="img" aria-label="Citrus, ink wash">
+  <defs>
+    <filter id="ciWash" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="8"/>
+    </filter>
+    <filter id="ciSoft" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="1.4"/>
+    </filter>
+    <radialGradient id="ciFlesh" cx="46%" cy="42%" r="62%">
+      <stop offset="0%" stop-color="#F6DE9C" stop-opacity="0.95"/>
+      <stop offset="100%" stop-color="#D9A03A" stop-opacity="0.85"/>
+    </radialGradient>
+  </defs>
+
+  <ellipse cx="100" cy="104" rx="64" ry="60" fill="#8A6A2A" opacity="0.13" filter="url(#ciWash)"/>
+
+  <!-- rind -->
+  <circle cx="100" cy="100" r="66" fill="#D98E2B" opacity="0.5"/>
+  <circle cx="100" cy="100" r="60" fill="#F7EFDC"/>
+  <circle cx="100" cy="100" r="53" fill="url(#ciFlesh)" filter="url(#ciSoft)"/>
+
+  <!-- segments -->
+  <g fill="#FCF4DF" opacity="0.92">
+    <ellipse cx="100" cy="72" rx="11" ry="23"/>
+    <ellipse cx="100" cy="72" rx="11" ry="23" transform="rotate(45 100 100)"/>
+    <ellipse cx="100" cy="72" rx="11" ry="23" transform="rotate(90 100 100)"/>
+    <ellipse cx="100" cy="72" rx="11" ry="23" transform="rotate(135 100 100)"/>
+    <ellipse cx="100" cy="72" rx="11" ry="23" transform="rotate(180 100 100)"/>
+    <ellipse cx="100" cy="72" rx="11" ry="23" transform="rotate(225 100 100)"/>
+    <ellipse cx="100" cy="72" rx="11" ry="23" transform="rotate(270 100 100)"/>
+    <ellipse cx="100" cy="72" rx="11" ry="23" transform="rotate(315 100 100)"/>
+  </g>
+
+  <circle cx="100" cy="100" r="7" fill="#F7EFDC"/>
+
+  <!-- brush outline, broken like a real stroke -->
+  <circle cx="100" cy="100" r="66" fill="none" stroke="#2A2620" stroke-width="3.2" opacity="0.8"
+          stroke-linecap="round" stroke-dasharray="150 12 90 10 200 14"/>
+  <circle cx="100" cy="100" r="53" fill="none" stroke="#B07A26" stroke-width="1.4" opacity="0.45"/>
+
+  <!-- one leaf tucked at the top -->
+  <path d="M128 30 C 150 18, 174 24, 174 40 C 174 56, 150 62, 132 54 C 122 49, 120 36, 128 30 Z"
+        fill="#2A2119" opacity="0.8"/>
+</svg>

@@ -18,9 +18,16 @@ const ART = [
   "assets/img/ink-plum.svg",
   "assets/img/ink-rice.svg",
   "assets/img/ink-mango.svg",
+  "assets/img/ink-lychee.svg",
+  "assets/img/ink-citrus.svg",
+  "assets/img/ink-peach.svg",
   "assets/img/ink-terraces.svg",
+  "assets/img/ink-woodring.svg",
   "assets/img/curve-wave.svg",
   "assets/img/seal.svg",
+  "assets/img/sticker-rice.svg",
+  "assets/img/sticker-citrus.svg",
+  "assets/img/sticker-lychee.svg",
   "assets/img/icon-instagram.svg",
   "assets/img/icon-wechat.svg",
   "assets/img/texture-grain.svg"
@@ -30,7 +37,8 @@ const PATTERNS = [
   "assets/img/pattern-wood-oak.svg",
   "assets/img/pattern-wood-walnut.svg",
   "assets/img/pattern-wood-dark.svg",
-  "assets/img/pattern-rice.svg"
+  "assets/img/pattern-rice.svg",
+  "assets/img/pattern-woodring.svg"
 ];
 
 /** Pull one rule block out of the stylesheet by selector. */
@@ -79,6 +87,21 @@ test("indigo and orange are genuinely complementary, not near-neighbours", () =>
     `indigo (${blue.toFixed(0)}deg) and orange (${orange.toFixed(0)}deg) should sit opposite, got ${distance.toFixed(0)}deg apart`);
 });
 
+test("the wider blue and yellow families are defined", () => {
+  [
+    "--turquoise:", "--turquoise-deep:", "--turquoise-soft:",
+    "--azure:", "--azure-soft:", "--slate:",
+    "--saffron:", "--amber:", "--straw:", "--gold:", "--gold-soft:"
+  ].forEach((token) => {
+    assert.ok(CSS.includes(token), "missing palette token " + token);
+  });
+  // The extras must actually be used, not just declared.
+  ["--turquoise", "--saffron", "--gold", "--azure"].forEach((token) => {
+    const uses = CSS.split(token).length - 1;
+    assert.ok(uses >= 2, token + " is declared but never used (" + uses + " occurrence)");
+  });
+});
+
 test("type pairs a display serif with a clean sans and degrades offline", () => {
   assert.ok(CSS.includes("--font-display:"));
   assert.ok(CSS.includes("--font-body:"));
@@ -104,18 +127,25 @@ test("every drawing exists, is valid SVG and has no stray characters", () => {
   });
 });
 
-test("all four patterns exist and are tileable", () => {
+test("every pattern exists and is tileable", () => {
   PATTERNS.forEach((rel) => {
     const file = path.join(ROOT, rel);
     assert.ok(fs.existsSync(file), "missing pattern " + rel);
     const svg = fs.readFileSync(file, "utf8");
     assert.ok(/width="\d+"/.test(svg) && /height="\d+"/.test(svg), rel + " needs width/height to tile");
   });
-  // The three wood patterns build grain procedurally.
-  PATTERNS.filter((p) => p.includes("wood")).forEach((rel) => {
-    assert.ok(fs.readFileSync(path.join(ROOT, rel), "utf8").includes("feTurbulence"),
+
+  // The straight-grain prints build their texture procedurally.
+  ["pattern-wood-oak.svg", "pattern-wood-walnut.svg", "pattern-wood-dark.svg"].forEach((rel) => {
+    assert.ok(fs.readFileSync(path.join(ROOT, "assets/img/" + rel), "utf8").includes("feTurbulence"),
       rel + " should build grain with feTurbulence");
   });
+
+  // The end-grain print is drawn as concentric rings instead — filters would
+  // break the tile seam, so it uses corner-centred ellipses.
+  const ring = fs.readFileSync(path.join(ROOT, "assets/img/pattern-woodring.svg"), "utf8");
+  assert.ok(ring.includes("<ellipse"), "end grain is drawn with rings");
+  assert.ok(!ring.includes("feDisplacementMap"), "end grain must not warp, or the tile would not seam");
 });
 
 /* ---------------------------------------------------------- wood on surfaces */
@@ -139,6 +169,51 @@ test("menu cards carry oak grain under a linen veil", () => {
   const card = rule(".fc-card {", ".fc-card:hover");
   assert.ok(card.includes("var(--fc-card-wood)"));
   assert.ok(/linear-gradient\(rgba\(253, 249, 240/.test(card), "grain sits under a light veil");
+});
+
+test("the wood cross section is printed behind the values and locations bands", () => {
+  const values = rule(".fc-values {", ".fc-values__grid");
+  assert.ok(values.includes("var(--fc-ring-pattern)"), "values band uses the end-grain print");
+  assert.ok(/linear-gradient\(rgba\(253, 249, 240/.test(values), "grain sits under a light veil");
+
+  const loc = rule(".fc-locations {", ".fc-locations .fc-shell");
+  assert.ok(loc.includes("var(--fc-ring-pattern)"), "locations band uses the end-grain print");
+
+  assert.ok(CSS.includes("pattern-woodring.svg"), "end-grain pattern is the default");
+  const ring = fs.readFileSync(path.join(ROOT, "assets/img/pattern-woodring.svg"), "utf8");
+  // Corner-centred rings are what make the tile seamless.
+  assert.ok(ring.includes('transform="translate(400 0)"'), "rings are centred on the corners so it tiles");
+});
+
+test("stickers render into the areas content.js asks for", async () => {
+  const dom = await bootPage();
+  const { document, SITE_CONTENT: c } = dom.window;
+
+  c.decor.stickers.forEach((s) => {
+    const placed = document.querySelector(".fc-sticker--" + s.area);
+    assert.ok(placed, "expected a sticker in the " + s.area + " area");
+  });
+
+  const rendered = [...document.querySelectorAll(".fc-sticker")];
+  assert.equal(rendered.length, c.decor.stickers.length, "one sticker per entry");
+  rendered.forEach((img) => {
+    assert.equal(img.getAttribute("aria-hidden"), "true", "stickers are ornamental");
+    assert.equal(img.getAttribute("alt"), "");
+    assert.ok(img.getAttribute("style").includes("rotate"), "rotation comes from content.js");
+  });
+  dom.window.close();
+});
+
+test("removing the sticker list clears them all", async () => {
+  const dom = await bootPage();
+  const { document, SITE_CONTENT: c, FruitCow } = dom.window;
+
+  assert.ok(document.querySelector(".fc-sticker"));
+  c.decor.stickers = [];
+  FruitCow.boot();
+  assert.equal(document.querySelector(".fc-sticker"), null);
+  assert.ok(document.querySelector(".fc-card"), "page still renders");
+  dom.window.close();
 });
 
 test("rice grains are scattered over the page paper", () => {
@@ -177,15 +252,36 @@ test("every artwork path in content.decor resolves to a real file", async () => 
   const { SITE_CONTENT: c } = dom.window;
 
   assert.ok(c.decor, "content.js has a decor block");
-  const entries = Object.entries(c.decor);
-  assert.ok(entries.length >= 8, "decor block covers the main slots");
+  const entries = Object.entries(c.decor).filter(([k]) => k !== "stickers");
+  assert.ok(entries.length >= 10, "decor block covers the main slots");
   entries.forEach(([key, src]) => {
     assert.ok(src, "decor." + key + " is set");
     assert.ok(fs.existsSync(path.join(ROOT, src)), "decor." + key + " points at a missing file: " + src);
   });
   assert.ok(c.decor.coverWood.includes("wood-dark"), "cover gets the dark print");
   assert.ok(c.decor.optionsWood.includes("walnut"), "drink options get walnut");
+  assert.ok(c.decor.ringPattern.includes("woodring"), "end-grain print is wired");
   assert.ok(c.decor.terraces.includes("terraces"), "terraces slot is wired");
+  dom.window.close();
+});
+
+test("every sticker points at a real file and names a valid area", async () => {
+  const dom = await bootPage();
+  const { SITE_CONTENT: c } = dom.window;
+
+  const stickers = c.decor.stickers;
+  assert.ok(Array.isArray(stickers) && stickers.length >= 3, "sticker list is populated");
+
+  const areas = ["cover", "values", "menu", "locations"];
+  stickers.forEach((s, i) => {
+    assert.ok(s.src, "sticker[" + i + "] needs a src");
+    assert.ok(fs.existsSync(path.join(ROOT, s.src)), "sticker[" + i + "] is a missing file: " + s.src);
+    assert.ok(areas.includes(s.area), "sticker[" + i + "] has an unknown area: " + s.area);
+    assert.equal(typeof s.rotate, "number", "sticker[" + i + "] rotate must be a number of degrees");
+  });
+
+  const hasRice = stickers.some((s) => s.src.includes("rice"));
+  assert.ok(hasRice, "the rice sticker the brief asked for is in use");
   dom.window.close();
 });
 
@@ -210,8 +306,8 @@ test("hero artwork and terraces are ornamental and hidden from assistive tech", 
   const dom = await bootPage();
   const { document, SITE_CONTENT: c } = dom.window;
 
-  const ornamental = [...document.querySelectorAll(".fc-decor, .fc-terraces")];
-  assert.ok(ornamental.length >= 3, "hero carries drawings and terraces");
+  const ornamental = [...document.querySelectorAll(".fc-decor, .fc-terraces, .fc-slice")];
+  assert.ok(ornamental.length >= 4, "hero carries drawings, terraces and the timber slice");
   ornamental.forEach((img) => {
     assert.equal(img.getAttribute("aria-hidden"), "true");
     assert.equal(img.getAttribute("alt"), "");

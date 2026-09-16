@@ -162,9 +162,12 @@ shows a dashed placeholder naming the exact file to drop in. Delete the whole
 
 ## Look and feel
 
-Dark wood print, rice paper, and terraced fields. **Indigo and orange** as a
-complementary pair — blue in the paddy water, orange in the grain and the
-actions. Curves throughout: arched card tops, pill buttons, circular steppers,
+Dark wood print, rice paper, and terraced fields, with **wood cross sections**
+(end grain) printed behind the middle bands. The palette runs a full
+complementary range — **indigo, azure, turquoise** against **orange, saffron,
+straw and gold** — but stays disciplined: orange carries the actions, indigo
+carries prices, and the rest appear only in tags, hairlines and the long curve
+divider. Curves throughout: arched card tops, pill buttons, circular steppers,
 and a cover that flows into the page on a curved foot. Type is **Fraunces**
 (display serif) over **Inter** (body), falling back to Georgia and system-ui.
 
@@ -172,7 +175,8 @@ Three places to change it:
 
 **1. Colours and fonts** — the `:root` block at the top of
 [`assets/css/styles.css`](assets/css/styles.css). The palette is grouped:
-`--wood-*` (espresso to warm mid-brown), `--paper`, `--indigo-*`, `--orange-*`.
+`--wood-*`, `--paper`, `--indigo-*`, `--turquoise-*`, `--azure-*`,
+`--orange-*`, `--saffron`, `--amber`, `--straw`, `--gold`.
 
 **2. Artwork** — the `decor` block in `content.js`. Every entry is a file path;
 replace the file at that path with your own drawing, same filename, and it
@@ -183,21 +187,38 @@ decor: {
   seal: "assets/img/seal.svg",                        // stamp beside the brand
   heroArt: "assets/img/ink-rice.svg",                 // large drawing in the cover
   heroAccent: "assets/img/ink-plum.svg",              // smaller, opposite corner
+  heroFruit: "assets/img/ink-peach.svg",              // third cover drawing
   terraces: "assets/img/ink-terraces.svg",            // 梯田 across the cover's foot
-  divider: "assets/img/curve-wave.svg",               // long double curve between sections
-  ricePattern: "assets/img/pattern-rice.svg",         // grains scattered over the paper
+  woodring: "assets/img/ink-woodring.svg",            // one large timber slice
+  divider: "assets/img/curve-wave.svg",               // long curve between sections
+  ricePattern: "assets/img/pattern-rice.svg",         // grains over the page paper
+  ringPattern: "assets/img/pattern-woodring.svg",     // end grain behind sections
   coverWood: "assets/img/pattern-wood-dark.svg",      // dark print behind the cover
   cardWood: "assets/img/pattern-wood-oak.svg",        // grain under each menu card
-  optionsWood: "assets/img/pattern-wood-walnut.svg"   // grain under each drink option
+  optionsWood: "assets/img/pattern-wood-walnut.svg",  // grain under each drink option
+  stickers: [
+    { src: "assets/img/sticker-rice.svg",   area: "cover",     rotate: -12 },
+    { src: "assets/img/sticker-citrus.svg", area: "cover",     rotate: 14 },
+    { src: "assets/img/sticker-lychee.svg", area: "values",    rotate: -8 },
+    { src: "assets/img/sticker-rice.svg",   area: "menu",      rotate: 10 },
+    { src: "assets/img/sticker-citrus.svg", area: "locations", rotate: -14 }
+  ]
 }
 ```
 
-**3. Patterns** — the wood prints and the rice scatter are tileable and
-generated with `feTurbulence`, so there is no photo to licence.
+**3. Stickers** — `area` is one of `cover`, `values`, `menu`, `locations`, and
+`rotate` is degrees. Add as many as you like; the second one in any area is
+offset automatically. Empty the list and they all disappear.
 
-The proof-point strip under the cover comes from the `values` block in
-`content.js`, and its icons are ink drawings too. Delete the block and the
-section disappears.
+**4. Patterns** — the wood prints, the end grain and the rice scatter are all
+tileable. The straight-grain prints are generated with `feTurbulence`; the end
+grain is drawn as corner-centred rings instead, because a filter warp would
+break the tile seam. No photos, so nothing to licence.
+
+Available fruit, if you want to swap any of them in: `ink-mango`, `ink-lychee`,
+`ink-citrus`, `ink-peach`, `ink-plum`, plus `ink-rice`, `ink-bamboo` and
+`ink-terraces`. The proof-point strip under the cover comes from the `values`
+block in `content.js`; delete it and the section disappears.
 
 ## Layout
 

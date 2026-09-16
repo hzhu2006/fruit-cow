@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" role="img" aria-label="Citrus sticker">
+  <defs>
+    <filter id="csEdge" x="-10%" y="-10%" width="120%" height="120%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.5" numOctaves="3" seed="12" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="1.6" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+    <radialGradient id="csFlesh" cx="46%" cy="42%" r="62%">
+      <stop offset="0%" stop-color="#F8E2A4"/>
+      <stop offset="100%" stop-color="#DFA33C"/>
+    </radialGradient>
+  </defs>
+
+  <g filter="url(#csEdge)">
+    <circle cx="60" cy="60" r="54" fill="#FCF6E8"/>
+    <circle cx="60" cy="60" r="54" fill="none" stroke="#D9CBAE" stroke-width="2"/>
+    <circle cx="60" cy="60" r="46" fill="none" stroke="#2F8F94" stroke-width="1.4" opacity="0.6"
+            stroke-dasharray="5 6"/>
+  </g>
+
+  <circle cx="60" cy="62" r="32" fill="#D98E2B" opacity="0.55"/>
+  <circle cx="60" cy="62" r="28" fill="#F9F1DE"/>
+  <circle cx="60" cy="62" r="24" fill="url(#csFlesh)"/>
+
+  <g fill="#FDF6E4" opacity="0.95">
+    <ellipse cx="60" cy="50" rx="5" ry="10.5"/>
+    <ellipse cx="60" cy="50" rx="5" ry="10.5" transform="rotate(45 60 62)"/>
+    <ellipse cx="60" cy="50" rx="5" ry="10.5" transform="rotate(90 60 62)"/>
+    <ellipse cx="60" cy="50" rx="5" ry="10.5" transform="rotate(135 60 62)"/>
+    <ellipse cx="60" cy="50" rx="5" ry="10.5" transform="rotate(180 60 62)"/>
+    <ellipse cx="60" cy="50" rx="5" ry="10.5" transform="rotate(225 60 62)"/>
+    <ellipse cx="60" cy="50" rx="5" ry="10.5" transform="rotate(270 60 62)"/>
+    <ellipse cx="60" cy="50" rx="5" ry="10.5" transform="rotate(315 60 62)"/>
+  </g>
+  <circle cx="60" cy="62" r="3.2" fill="#F9F1DE"/>
+
+  <path d="M74 26 C 86 20, 98 24, 98 32 C 98 42, 86 46, 76 41 C 70 38, 70 30, 74 26 Z" fill="#2A2119" opacity="0.75"/>
+</svg>

@@ -3,8 +3,9 @@
   <defs>
     <linearGradient id="waveFade" x1="0" y1="0" x2="1" y2="0">
       <stop offset="0%" stop-color="#D97B29" stop-opacity="0"/>
-      <stop offset="22%" stop-color="#D97B29" stop-opacity="0.55"/>
-      <stop offset="55%" stop-color="#2C5282" stop-opacity="0.5"/>
+      <stop offset="20%" stop-color="#D97B29" stop-opacity="0.6"/>
+      <stop offset="44%" stop-color="#E8B23C" stop-opacity="0.55"/>
+      <stop offset="68%" stop-color="#2F8F94" stop-opacity="0.55"/>
       <stop offset="100%" stop-color="#2C5282" stop-opacity="0"/>
     </linearGradient>
   </defs>
