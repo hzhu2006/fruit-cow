@@ -221,9 +221,13 @@ meadow are all tileable. The straight-grain prints are generated with
 `feTurbulence`; the end grain and the grass are drawn instead, because a filter
 warp would break the tile seam. No photos, so nothing to licence.
 
-**5. Brand** — `business.logo` points at `assets/img/logo-emblem.svg`, and
-`hero.image` shows the same emblem in the cover slot. Drop your own file in and
-point either one at it to swap.
+**5. Brand** — `business.logo` and `hero.image` both point at
+`assets/img/fruit-cow-logo.jpg`, the original artwork. **Drop your file at that
+path and it appears in the header and the cover with no code change.** Until it
+is there, `logoFallback` / `imageFallback` show `assets/img/logo-emblem.svg`,
+the vector stand-in that ships with the repo, so the brand is never broken. A
+missing stand-in still falls back to the labelled placeholder. Use a different
+filename by changing `logo` / `image`.
 
 Available fruit, if you want to swap any of them in: `ink-mango`, `ink-lychee`,
 `ink-citrus`, `ink-peach`, `ink-plum`, plus `ink-rice`, `ink-bamboo`,

@@ -191,12 +191,17 @@ test("the grass tile keeps the logo's swirls and tufts", () => {
   assert.ok(!grass.includes("feDisplacementMap"), "the tile must not warp, or it would not seam");
 });
 
-test("the emblem is the brand mark and fills the cover slot", () => {
+test("the emblem is the stand-in mark and fills the cover slot", () => {
   const content = fs.readFileSync(path.join(ROOT, "assets/js/content.js"), "utf8");
-  assert.ok(/logo:\s*"assets\/img\/logo-emblem\.svg"/.test(content),
-    "business.logo points at the emblem");
-  assert.ok(/image:\s*"assets\/img\/logo-emblem\.svg"/.test(content),
-    "the cover slot shows the emblem");
+  // The original artwork is primary; the vector emblem is the shipped stand-in.
+  assert.ok(/logo:\s*"assets\/img\/fruit-cow-logo\.jpg"/.test(content),
+    "business.logo points at the original artwork");
+  assert.ok(/logoFallback:\s*"assets\/img\/logo-emblem\.svg"/.test(content),
+    "the emblem is the brand stand-in");
+  assert.ok(/image:\s*"assets\/img\/fruit-cow-logo\.jpg"/.test(content),
+    "the cover slot shows the original artwork");
+  assert.ok(/imageFallback:\s*"assets\/img\/logo-emblem\.svg"/.test(content),
+    "the emblem is the cover stand-in");
 
   const emblem = fs.readFileSync(path.join(ROOT, "assets/img/logo-emblem.svg"), "utf8");
   assert.ok(emblem.includes("<circle"), "emblem is a circular badge, like the logo");

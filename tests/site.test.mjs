@@ -219,32 +219,59 @@ test("topping and milk add-on prices come straight from content.js", async () =>
   dom.window.close();
 });
 
-test("missing graphic shows a placeholder; the shipped emblem resolves", async () => {
+test("missing graphic shows a placeholder naming the exact drop-in path", async () => {
   const dom = await bootPage();
   const { document, FruitCow } = dom.window;
 
-  // The logo file does not exist yet, so the slot must be a placeholder.
+  const host = document.createElement("div");
+  document.body.appendChild(host);
+
+  // No stand-in configured, so a broken image must become a placeholder slot
+  // that tells the owner exactly where to put their file.
   const img = FruitCow.imageWithFallback("assets/img/fruit-cow-logo.png", "logo", "logo");
-  document.body.appendChild(img);
+  host.appendChild(img);
   img.dispatchEvent(new dom.window.Event("error"));
 
-  const slot = document.querySelector(".fc-slot");
+  const slot = host.querySelector(".fc-slot");
   assert.ok(slot, "placeholder slot should replace the broken image");
   assert.equal(slot.querySelector("code").textContent, "assets/img/fruit-cow-logo.png");
+  dom.window.close();
+});
 
-  // The emblem ships with the repo now, so the header brand must resolve to a
-  // file that actually exists rather than naming a drop-in path.
-  const brand = document.querySelector(".fc-brand");
-  const brandImg = brand.querySelector("img.fc-img--logo");
-  const brandSlot = brand.querySelector(".fc-slot--logo");
-  assert.ok(brandImg || brandSlot, "brand shows either the logo image or its placeholder");
-  const referenced = brandImg ? brandImg.getAttribute("src") : brandSlot.querySelector("code").textContent;
-  const logoPath = referenced.slice(referenced.indexOf("assets/img/"));
-  assert.ok(
-    fs.existsSync(path.join(ROOT, logoPath)),
-    "expected the brand mark to ship as a real file, got " + referenced
+test("the original artwork wins, with the vector emblem as stand-in", async () => {
+  const dom = await bootPage();
+  const { document, FruitCow, SITE_CONTENT } = dom.window;
+
+  // A stand-in means the broken image is swapped, not placeholdered.
+  const host = document.createElement("div");
+  document.body.appendChild(host);
+  const img = FruitCow.imageWithFallback(
+    "assets/img/fruit-cow-logo.jpg", "logo", "logo", "assets/img/logo-emblem.svg"
   );
-  assert.equal(logoPath, "assets/img/logo-emblem.svg", "the emblem is the default brand mark");
+  host.appendChild(img);
+  img.dispatchEvent(new dom.window.Event("error"));
+  assert.ok(img.isConnected, "the image survives when a stand-in is configured");
+  assert.ok(img.getAttribute("src").endsWith("assets/img/logo-emblem.svg"),
+    "falls back to the emblem, got " + img.getAttribute("src"));
+  assert.ok(!host.querySelector(".fc-slot"), "no placeholder while the stand-in holds");
+
+  // And if the stand-in is missing too, it must still degrade to a placeholder
+  // rather than loop on the error handler.
+  img.dispatchEvent(new dom.window.Event("error"));
+  assert.ok(host.querySelector(".fc-slot"), "a broken stand-in still shows a placeholder");
+
+  // The brand points at the original file; the stand-in must actually ship.
+  const b = SITE_CONTENT.business;
+  assert.equal(b.logo, "assets/img/fruit-cow-logo.jpg", "the original artwork is the brand mark");
+  assert.ok(
+    fs.existsSync(path.join(ROOT, b.logoFallback)),
+    "the stand-in emblem must ship so the brand is never broken"
+  );
+  assert.equal(SITE_CONTENT.hero.image, b.logo, "the cover slot shows the same original artwork");
+  assert.ok(
+    fs.existsSync(path.join(ROOT, SITE_CONTENT.hero.imageFallback)),
+    "the cover slot has a stand-in too"
+  );
   dom.window.close();
 });
 

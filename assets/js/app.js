@@ -162,9 +162,16 @@
    * Image with a placeholder fallback. When the file is missing the slot shows
    * a dashed placeholder naming the exact path to drop the graphic into.
    */
-  function imageWithFallback(src, alt, variant) {
+  function imageWithFallback(src, alt, variant, fallbackSrc) {
     var img = el("img", { src: src, alt: alt || "", class: "fc-img fc-img--" + (variant || "default") });
     img.addEventListener("error", function () {
+      // Prefer a stand-in image over the placeholder slot, so a real logo can
+      // be dropped in at `src` later with no code change. The guard stops the
+      // error handler looping when the stand-in is missing too.
+      if (fallbackSrc && img.getAttribute("src") !== fallbackSrc) {
+        img.setAttribute("src", fallbackSrc);
+        return;
+      }
       var box = el("div", { class: "fc-slot fc-slot--" + (variant || "default") }, [
         el("img", { src: "assets/img/placeholder.svg", alt: "", class: "fc-slot__art", "aria-hidden": "true" }),
         el("p", { class: "fc-slot__path" }, [document.createElement("code")]),
@@ -236,7 +243,7 @@
     return el("header", { class: "fc-header" }, [
       el("div", { class: "fc-shell fc-header__inner" }, [
         el("a", { class: "fc-brand", href: "#top" }, [
-          imageWithFallback(b.logo, b.logoAlt, "logo"),
+          imageWithFallback(b.logo, b.logoAlt, "logo", b.logoFallback),
           el("span", { class: "fc-brand__text" }, [
             el("span", { class: "fc-brand__name", text: b.name }),
             el("span", { class: "fc-brand__tagline", text: b.tagline })
@@ -279,7 +286,7 @@
           el("p", { class: "fc-hero__sub", text: h.subheading }),
           actions
         ]),
-        el("div", { class: "fc-hero__media" }, [imageWithFallback(h.image, content.business.name + " banner", "hero")])
+        el("div", { class: "fc-hero__media" }, [imageWithFallback(h.image, content.business.name + " banner", "hero", h.imageFallback)])
       ]),
       // Decorative ink artwork. Purely ornamental, so hidden from screen readers.
       decorImg(d.heroArt, "fc-decor fc-decor--primary"),

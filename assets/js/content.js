@@ -23,9 +23,11 @@ globalThis.SITE_CONTENT = {
   business: {
     name: "Fruit Cow",
     tagline: "Small-batch fruit & milk tea, naturally sweetened",
-    /* The hand-drawn emblem is the default mark. Drop in your own file (PNG,
-       JPG or SVG) and point this at it to swap. */
-    logo: "assets/img/logo-emblem.svg",
+    /* The original artwork is the brand mark: drop the file in at this exact
+       path and it appears everywhere, no code change. The vector emblem is
+       the stand-in that ships in the meantime so the brand is never broken. */
+    logo: "assets/img/fruit-cow-logo.jpg",
+    logoFallback: "assets/img/logo-emblem.svg",
     logoAlt: "Fruit Cow logo",
     phone: "(000) 000-0000",
     email: "hello@fruitcow.example",
@@ -65,9 +67,11 @@ globalThis.SITE_CONTENT = {
     subheading:
       "Single-origin leaves steeped in house, whole fruit pressed to order, " +
       "and sweetness you control. No artificial syrups, no shortcuts.",
-    /* The emblem fills the cover slot. Drop a wide banner at
-       assets/img/hero.png (roughly 1600x900) and point this at it to swap. */
-    image: "assets/img/logo-emblem.svg",
+    /* The original artwork fills the cover slot too; the vector emblem stands
+       in until the file is there. A wide banner (roughly 1600x900) works
+       equally well — point this at it instead. */
+    image: "assets/img/fruit-cow-logo.jpg",
+    imageFallback: "assets/img/logo-emblem.svg",
     primaryCta: { label: "View the menu", target: "#menu" },
     secondaryCta: { label: "Find a store", target: "#locations" }
   },
