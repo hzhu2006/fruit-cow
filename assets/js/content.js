@@ -29,9 +29,9 @@ globalThis.SITE_CONTENT = {
     logo: "assets/img/fruit-cow-logo.jpg",
     logoFallback: "assets/img/logo-emblem.svg",
     logoAlt: "Fruit Cow logo",
-    phone: "(718) 555-0148",
-    email: "hello@fruitcow.nyc",
-    address: "136-20 38th Ave, Flushing, NY 11354",
+    phone: "(408) 555-0148",
+    email: "hello@fruitcow-bayarea.com",
+    address: "19500 Vallco Pkwy, Cupertino, CA 95014",
     hours: "Open daily · 10:00 AM – 9:30 PM",
     currency: "$",
 
@@ -47,14 +47,14 @@ globalThis.SITE_CONTENT = {
       {
         id: "instagram",
         label: "Instagram",
-        handle: "@fruitcow.nyc",
+        handle: "@fruitcow.bayarea",
         url: "https://instagram.com/yourhandle",
         icon: "assets/img/icon-instagram.svg"
       },
       {
         id: "wechat",
         label: "WeChat",
-        handle: "FruitCowNYC",
+        handle: "FruitCowBayArea",
         url: "",
         qr: "assets/img/wechat-qr.png",
         icon: "assets/img/icon-wechat.svg"
@@ -170,42 +170,42 @@ globalThis.SITE_CONTENT = {
        soldOut     : optional — true greys it out and shows "Sold out"       */
   menu: [
     /* ------------------------------------------------------------ fruit */
-    { name: "Signature Organic Kale & Rice Yogurt Smoothie", category: "fruit", price: 9.99,  featured: true, image: "assets/img/menu/fruit.jpg" },
-    { name: "Signature Honey Peach & Rice Yogurt",           category: "fruit", price: 11.99, featured: true, image: "assets/img/menu/fruit.jpg" },
-    { name: "Peach Apricot Gardenia & Rice Yogurt Smoothie", category: "fruit", price: 12.99, image: "assets/img/menu/fruit.jpg" },
-    { name: "Special Peach & Rice Yogurt Smoothie",          category: "fruit", price: 12.99, image: "assets/img/menu/fruit.jpg" },
-    { name: "Avocado and Honeydew Melon & Rice Smoothie",    category: "fruit", price: 11.99, image: "assets/img/menu/fruit.jpg" },
-    { name: "Avocado and Almond & Rice Yogurt Smoothie",     category: "fruit", price: 11.99, image: "assets/img/menu/fruit.jpg" },
+    { name: "Signature Organic Kale & Rice Yogurt Smoothie", category: "fruit", price: 9.99,  featured: true, image: "assets/img/menu/signature-organic-kale-rice-yogurt-smoothie.jpg" },
+    { name: "Signature Honey Peach & Rice Yogurt",           category: "fruit", price: 11.99, featured: true, image: "assets/img/menu/signature-honey-peach-rice-yogurt.jpg" },
+    { name: "Peach Apricot Gardenia & Rice Yogurt Smoothie", category: "fruit", price: 12.99, image: "assets/img/menu/peach-apricot-gardenia-rice-yogurt-smoothie.jpg" },
+    { name: "Special Peach & Rice Yogurt Smoothie",          category: "fruit", price: 12.99, image: "assets/img/menu/special-peach-rice-yogurt-smoothie.jpg" },
+    { name: "Avocado and Honeydew Melon & Rice Smoothie",    category: "fruit", price: 11.99, image: "assets/img/menu/avocado-and-honeydew-melon-rice-smoothie.jpg" },
+    { name: "Avocado and Almond & Rice Yogurt Smoothie",     category: "fruit", price: 11.99, image: "assets/img/menu/avocado-and-almond-rice-yogurt-smoothie.jpg" },
 
     /* ----------------------------------------------------------- yogurt */
-    { name: "Peach Yogurt Ice Cheese", category: "yogurt", price: 13.99, image: "assets/img/menu/yogurt.jpg" },
-    { name: "Kale Yogurt Ice Cheese",  category: "yogurt", price: 13.99, image: "assets/img/menu/yogurt.jpg" },
+    { name: "Peach Yogurt Ice Cheese", category: "yogurt", price: 13.99, image: "assets/img/menu/peach-yogurt-ice-cheese.jpg" },
+    { name: "Kale Yogurt Ice Cheese",  category: "yogurt", price: 13.99, image: "assets/img/menu/kale-yogurt-ice-cheese.jpg" },
 
     /* ------------------------------------------------------------- kale */
-    { name: "Kale & Cucumber White Glutinous Rice Yogurt Smoothie",                category: "kale", price: 10.99, image: "assets/img/menu/kale.jpg" },
-    { name: "Kale & Chia Seed, Cucumber & White Glutinous Rice Yogurt Smoothie",   category: "kale", price: 10.99, image: "assets/img/menu/kale.jpg" },
-    { name: "Kale & Rice Vine White Glutinous Rice Yogurt Smoothie",               category: "kale", price: 10.99, image: "assets/img/menu/kale.jpg" },
-    { name: "Countryside White Glutinous Rice Yogurt Smoothie",                    category: "kale", price: 10.99, image: "assets/img/menu/kale.jpg" },
+    { name: "Kale & Cucumber White Glutinous Rice Yogurt Smoothie",                category: "kale", price: 10.99, image: "assets/img/menu/kale-cucumber-white-glutinous-rice-yogurt-smoothie.jpg" },
+    { name: "Kale & Chia Seed, Cucumber & White Glutinous Rice Yogurt Smoothie",   category: "kale", price: 10.99, image: "assets/img/menu/kale-chia-seed-cucumber-white-glutinous-rice-yogurt-smoothie.jpg" },
+    { name: "Kale & Rice Vine White Glutinous Rice Yogurt Smoothie",               category: "kale", price: 10.99, image: "assets/img/menu/kale-rice-vine-white-glutinous-rice-yogurt-smoothie.jpg" },
+    { name: "Countryside White Glutinous Rice Yogurt Smoothie",                    category: "kale", price: 10.99, image: "assets/img/menu/countryside-white-glutinous-rice-yogurt-smoothie.jpg" },
 
     /* -------------------------------------------------------------- nut */
-    { name: "Pistachio White Glutinous Rice Yogurt Smoothie",              category: "nut", price: 11.99, image: "assets/img/menu/nut.jpg" },
-    { name: "Walnut White Glutinous Rice Yogurt Smoothie",                 category: "nut", price: 11.99, image: "assets/img/menu/nut.jpg" },
-    { name: "Snow Mountain Pine Nut White Glutinous Rice Yogurt Smoothie", category: "nut", price: 11.99, image: "assets/img/menu/nut.jpg" },
-    { name: "Sea Salt Hazelnut White Glutinous Rice Yogurt Smoothie",      category: "nut", price: 11.99, image: "assets/img/menu/nut.jpg" },
+    { name: "Pistachio White Glutinous Rice Yogurt Smoothie",              category: "nut", price: 11.99, image: "assets/img/menu/pistachio-white-glutinous-rice-yogurt-smoothie.jpg" },
+    { name: "Walnut White Glutinous Rice Yogurt Smoothie",                 category: "nut", price: 11.99, image: "assets/img/menu/walnut-white-glutinous-rice-yogurt-smoothie.jpg" },
+    { name: "Snow Mountain Pine Nut White Glutinous Rice Yogurt Smoothie", category: "nut", price: 11.99, image: "assets/img/menu/snow-mountain-pine-nut-white-glutinous-rice-yogurt-smoothie.jpg" },
+    { name: "Sea Salt Hazelnut White Glutinous Rice Yogurt Smoothie",      category: "nut", price: 11.99, image: "assets/img/menu/sea-salt-hazelnut-white-glutinous-rice-yogurt-smoothie.jpg" },
 
     /* ---------------------------------------------------------- burrito */
-    { name: "Salted Egg Yolk Rice Burrito",                 category: "burrito", price: 16, image: "assets/img/menu/burrito.jpg" },
-    { name: "Lava Cheese Ham Rice Burrito",                 category: "burrito", price: 17, image: "assets/img/menu/burrito.jpg" },
-    { name: "Boneless Chicken Cutlet Rice Burrito",         category: "burrito", price: 18, image: "assets/img/menu/burrito.jpg" },
-    { name: "Spicy Pepper Chicken Tender Rice Burrito",     category: "burrito", price: 16, image: "assets/img/menu/burrito.jpg" },
-    { name: "Crab Stick & Ham Rice Burrito",                category: "burrito", price: 14, image: "assets/img/menu/burrito.jpg" },
-    { name: "Corn & Cheese Rice Burrito",                   category: "burrito", price: 15, image: "assets/img/menu/burrito.jpg" },
-    { name: "Classic Ham Rice Burrito",                     category: "burrito", price: 15, image: "assets/img/menu/burrito.jpg" },
-    { name: "Classic Original Rice Burrito",                category: "burrito", price: 12, image: "assets/img/menu/burrito.jpg" },
-    { name: "Orleans Chicken Cutlet Rice Burrito",          category: "burrito", price: 15, image: "assets/img/menu/burrito.jpg" },
-    { name: "Teriyaki Sauce Stir-Fried Sausage Rice Burrito", category: "burrito", price: 18, image: "assets/img/menu/burrito.jpg" },
-    { name: "Korean Kimchi Rice Burrito",                   category: "burrito", price: 13, image: "assets/img/menu/burrito.jpg" },
-    { name: "Japanese Chashu Rice Burrito",                 category: "burrito", price: 16, image: "assets/img/menu/burrito.jpg" }
+    { name: "Salted Egg Yolk Rice Burrito",                 category: "burrito", price: 16, image: "assets/img/menu/salted-egg-yolk-rice-burrito.jpg" },
+    { name: "Lava Cheese Ham Rice Burrito",                 category: "burrito", price: 17, image: "assets/img/menu/lava-cheese-ham-rice-burrito.jpg" },
+    { name: "Boneless Chicken Cutlet Rice Burrito",         category: "burrito", price: 18, image: "assets/img/menu/boneless-chicken-cutlet-rice-burrito.jpg" },
+    { name: "Spicy Pepper Chicken Tender Rice Burrito",     category: "burrito", price: 16, image: "assets/img/menu/spicy-pepper-chicken-tender-rice-burrito.jpg" },
+    { name: "Crab Stick & Ham Rice Burrito",                category: "burrito", price: 14, image: "assets/img/menu/crab-stick-ham-rice-burrito.jpg" },
+    { name: "Corn & Cheese Rice Burrito",                   category: "burrito", price: 15, image: "assets/img/menu/corn-cheese-rice-burrito.jpg" },
+    { name: "Classic Ham Rice Burrito",                     category: "burrito", price: 15, image: "assets/img/menu/classic-ham-rice-burrito.jpg" },
+    { name: "Classic Original Rice Burrito",                category: "burrito", price: 12, image: "assets/img/menu/classic-original-rice-burrito.jpg" },
+    { name: "Orleans Chicken Cutlet Rice Burrito",          category: "burrito", price: 15, image: "assets/img/menu/orleans-chicken-cutlet-rice-burrito.jpg" },
+    { name: "Teriyaki Sauce Stir-Fried Sausage Rice Burrito", category: "burrito", price: 18, image: "assets/img/menu/teriyaki-sauce-stir-fried-sausage-rice-burrito.jpg" },
+    { name: "Korean Kimchi Rice Burrito",                   category: "burrito", price: 13, image: "assets/img/menu/korean-kimchi-rice-burrito.jpg" },
+    { name: "Japanese Chashu Rice Burrito",                 category: "burrito", price: 16, image: "assets/img/menu/japanese-chashu-rice-burrito.jpg" }
   ],
 
   /* ----------------------------------------------------------- customizations */
@@ -275,10 +275,10 @@ globalThis.SITE_CONTENT = {
      present the address links out. */
   locations: [
     {
-      name: "Flushing · Main Street (Flagship)",
-      address: "136-20 38th Ave, Flushing, NY 11354 — 1F, New World Mall",
-      phone: "(718) 555-0148",
-      mapsUrl: "https://maps.google.com/?q=136-20+38th+Ave+Flushing+NY+11354",
+      name: "Cupertino · Vallco (Flagship)",
+      address: "19500 Vallco Pkwy, Cupertino, CA 95014 — Level 1, Vallco Mall",
+      phone: "(408) 555-0148",
+      mapsUrl: "https://maps.google.com/?q=19500+Vallco+Pkwy+Cupertino+CA+95014",
       hours: {
         mon: "10:00 AM – 9:30 PM",
         tue: "10:00 AM – 9:30 PM",
@@ -290,10 +290,10 @@ globalThis.SITE_CONTENT = {
       }
     },
     {
-      name: "Manhattan · Koreatown",
-      address: "25 W 32nd St, New York, NY 10001 — near Broadway",
-      phone: "(212) 555-0160",
-      mapsUrl: "https://maps.google.com/?q=25+W+32nd+St+New+York+NY+10001",
+      name: "San Francisco · Inner Sunset",
+      address: "1240 Irving St, San Francisco, CA 94122 — near Golden Gate Park",
+      phone: "(415) 555-0162",
+      mapsUrl: "https://maps.google.com/?q=1240+Irving+St+San+Francisco+CA+94122",
       hours: {
         mon: "11:00 AM – 9:00 PM",
         tue: "11:00 AM – 9:00 PM",
