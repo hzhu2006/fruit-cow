@@ -78,6 +78,30 @@
     return !!(content && content.ordering && content.ordering.enabled !== false);
   }
 
+  /* The five choice groups a drink can offer, in the order they are shown.
+     `key` is what a category's (or item's) `options` list names. */
+  var OPTION_GROUPS = [
+    { key: "size",      list: "sizes",     title: "Sizes",     note: "Prices shown per drink above" },
+    { key: "sweetness", list: "sweetness", title: "Sweetness", note: "" },
+    { key: "ice",       list: "ice",       title: "Ice",       note: "" },
+    { key: "toppings",  list: "toppings",  title: "Toppings",  note: "Add to any drink" },
+    { key: "milk",      list: "milks",     title: "Milk",      note: "Dairy-free options available" }
+  ];
+
+  /**
+   * The option groups this menu actually offers — a group with no entries in
+   * `customizations` is skipped, so deleting a list (say, toppings) removes it
+   * from the page and the customiser with no other edit.
+   */
+  function availableOptionGroups(content) {
+    var c = (content && content.customizations) || {};
+    return OPTION_GROUPS.filter(function (g) {
+      return Array.isArray(c[g.list]) && c[g.list].length > 0;
+    }).map(function (g) {
+      return { key: g.key, title: g.title, note: g.note, options: c[g.list] };
+    });
+  }
+
   /** Assigns `id` to every menu item so the cart can reference it. */
   function normalizeMenu(content) {
     var seen = {};
@@ -234,8 +258,9 @@
   function renderHeader(content) {
     var b = content.business;
     var d = content.decor || {};
+    // Every series gets a nav link, so adding one to content.js is enough.
     var nav = el("nav", { class: "fc-nav", "aria-label": "Sections" },
-      (content.categories || []).slice(0, 4).map(function (c) {
+      (content.categories || []).map(function (c) {
         return el("a", { class: "fc-nav__link", href: "#cat-" + c.id, text: c.name });
       }).concat([el("a", { class: "fc-nav__link", href: "#locations", text: "Locations" })])
     );
@@ -365,7 +390,9 @@
         ]),
         item.soldOut ? el("span", { class: "fc-tag fc-tag--out", text: "Sold out" }) : null
       ]),
-      el("p", { class: "fc-card__desc", text: item.description }),
+      // The board carries no blurbs, so a card with no description gets no
+      // empty paragraph — the price is pushed to the foot by CSS instead.
+      item.description ? el("p", { class: "fc-card__desc", text: item.description }) : null,
       (item.tags || []).length ? el("div", { class: "fc-card__tags" }, item.tags.map(tagChip)) : null,
       priceNode,
       orderingEnabled(content) && !item.soldOut
@@ -418,11 +445,27 @@
           el("p", { class: "fc-eyebrow", text: "Made to order" }),
           el("h2", { class: "fc-section-title", text: "The Menu" }),
           decorImg((content.decor || {}).divider, "fc-divider"),
-          el("p", { class: "fc-section-sub", text: "Every drink is steeped and pressed to order. Sweetness, ice and toppings are yours to set." })
+          // Names only the choices this menu actually offers, so the promise
+          // can never outrun what content.js lists.
+          el("p", { class: "fc-section-sub", text: menuSubcopy(content) })
         ]),
         filters, grid, empty
       ])
     ].concat(renderStickers(content, "menu")));
+  }
+
+  /**
+   * The line under "The Menu". It names the free choices the menu really has,
+   * so deleting toppings from content.js never leaves the page promising them.
+   */
+  function menuSubcopy(content) {
+    var titles = availableOptionGroups(content)
+      .filter(function (g) { return g.key !== "size"; })
+      .map(function (g) { return g.title.toLowerCase(); });
+    if (!titles.length) return "Blended and rolled to order.";
+    return "Blended and rolled to order. " +
+      joinTitles(titles.map(function (t, i) { return i === 0 ? t.charAt(0).toUpperCase() + t.slice(1) : t; })) +
+      (titles.length > 1 ? " are yours to set." : " is yours to set.");
   }
 
   function renderOptionGroup(title, options, currency, note) {
@@ -443,21 +486,32 @@
     ]);
   }
 
+  /** "Sweetness and ice", "Sizes, sweetness and toppings" — for the sub copy. */
+  function joinTitles(titles) {
+    if (titles.length <= 1) return titles.join("");
+    return titles.slice(0, -1).join(", ") + " and " + titles[titles.length - 1];
+  }
+
   function renderCustomizations(content) {
-    var c = content.customizations;
     var cur = content.business.currency;
-    var groups = [
-      renderOptionGroup("Sizes", c.sizes, cur, "Prices shown per drink above"),
-      renderOptionGroup("Sweetness", c.sweetness, cur),
-      renderOptionGroup("Ice", c.ice, cur),
-      renderOptionGroup("Toppings", c.toppings, cur, "Add to any drink"),
-      renderOptionGroup("Milk", c.milks, cur, "Dairy-free options available")
-    ];
+    var groups = availableOptionGroups(content);
+    // No choice lists at all? Then there is nothing to build — skip the band.
+    if (!groups.length) return null;
+
+    // Only promise "free" when nothing here actually carries a price.
+    var free = groups.every(function (g) {
+      return g.key !== "size" && g.options.every(function (o) { return typeof o.addPrice !== "number"; });
+    });
+    var titles = groups.map(function (g) { return g.title.toLowerCase(); });
+    var sub = "Choose your " + joinTitles(titles) + "." + (free ? " Every choice is free." : "");
+
     return el("section", { class: "fc-custom", id: "customize" }, [
       el("div", { class: "fc-shell" }, [
         el("h2", { class: "fc-section-title", text: "Build your drink" }),
-        el("p", { class: "fc-section-sub", text: "Five sweetness levels, five ice levels, and toppings by the scoop." }),
-        el("div", { class: "fc-custom__grid" }, groups)
+        el("p", { class: "fc-section-sub", text: sub }),
+        el("div", { class: "fc-custom__grid" }, groups.map(function (g) {
+          return renderOptionGroup(g.title, g.options, cur, g.note);
+        }))
       ])
     ]);
   }

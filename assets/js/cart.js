@@ -24,13 +24,49 @@
     };
   }
 
-  /** Which option groups apply to an item. `item.options` overrides the default. */
+  /* Which list in `customizations` backs each option group. A group whose list
+     is empty or missing is dropped, so deleting toppings from content.js
+     removes them from every item with no other edit. */
+  var OPTION_LISTS = {
+    size: "sizes", sweetness: "sweetness", ice: "ice", toppings: "toppings", milk: "milks"
+  };
+
+  function groupIsOffered(key, content) {
+    if (key === "size") {
+      var sizes = (content.customizations || {}).sizes;
+      return Array.isArray(sizes) && sizes.length > 0;
+    }
+    var list = (content.customizations || {})[OPTION_LISTS[key]];
+    return Array.isArray(list) && list.length > 0;
+  }
+
+  /**
+   * Which option groups apply to an item, most specific first:
+   *   1. the item's own `options`
+   *   2. its category's `options`
+   *   3. the default — per-size pricing means a made-to-order drink, a single
+   *      price means food
+   * Whatever wins is then filtered down to the groups this menu actually has.
+   */
   function optionsFor(item, content) {
     if (!item) return [];
-    if (item.options && Array.isArray(item.options)) return item.options.slice();
-    // Per-size pricing means it's a made-to-order drink; single price means food.
-    var isDrink = !!(item.prices && typeof item.prices === "object");
-    return isDrink ? ["size", "sweetness", "ice", "toppings", "milk"] : [];
+
+    var chosen;
+    if (item.options && Array.isArray(item.options)) {
+      chosen = item.options;
+    } else {
+      var category = ((content && content.categories) || []).filter(function (c) {
+        return c.id === item.category;
+      })[0];
+      if (category && Array.isArray(category.options)) {
+        chosen = category.options;
+      } else {
+        var isDrink = !!(item.prices && typeof item.prices === "object");
+        chosen = isDrink ? ["size", "sweetness", "ice", "toppings", "milk"] : [];
+      }
+    }
+
+    return chosen.filter(function (key) { return groupIsOffered(key, content); });
   }
 
   function findById(list, id) {

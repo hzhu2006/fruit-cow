@@ -1,6 +1,7 @@
 # Fruit Cow
 
-Editable online milk tea ordering website for Fruit Cow.
+Editable online ordering website for Fruit Cow — handmade rice yogurt
+smoothies and rice burritos.
 
 No build step. Plain HTML, CSS and JavaScript — change a file, refresh the browser.
 
@@ -8,7 +9,7 @@ No build step. Plain HTML, CSS and JavaScript — change a file, refresh the bro
 
 ```bash
 npm start          # dev server on http://localhost:8000 — reloads itself when you save
-npm test           # 37 checks against the real page
+npm test           # 74 checks against the real page
 npm run serve      # plain static server, no file watching
 ```
 
@@ -23,37 +24,62 @@ items, prices, descriptions, sizes, sweetness levels, toppings, hours,
 locations, and how checkout behaves. Edit it, save, and the open page refreshes
 itself.
 
-The file is currently filled with **sample data**. Overwrite it with your real
-menu. The site validates the file on load and prints plain-English warnings to
-the browser console if an edit breaks something (wrong category, a quoted
-price, a size that doesn't exist, a duplicate drink name), rather than
+The file now holds the **real Fruit Cow menu**, transcribed from the printed
+board: 28 items across five series — Fruit, Yogurt, Kale, Nut and Burrito — at
+one price each. The site validates the file on load and prints plain-English
+warnings to the browser console if an edit breaks something (wrong category, a
+quoted price, a size that doesn't exist, a duplicate name), rather than
 rendering a blank page.
 
-### Add a drink
+### Add an item
 
 ```js
 {
-  name: "Strawberry Cow",
-  category: "signature",              // must match an id in categories[]
-  description: "What's in it.",
-  prices: { S: 5.75, M: 6.50, L: 7.25 },  // per size — keys match customizations.sizes
-  tags: ["new"],                      // optional: vegan, gf, dairy-free, new
-  featured: true                      // optional: floats to the top of its category
+  name: "Signature Honey Peach & Rice Yogurt",
+  category: "fruit",          // must match an id in categories[]
+  price: 11.99,               // a plain number — no $ and no quotes
+  description: "What's in it.",  // optional
+  tags: ["new"],              // optional: vegan, gf, dairy-free, new
+  featured: true              // optional: floats to the top of its series
 }
 ```
 
-Single-price items (snacks, food) use `price` instead of `prices`:
+If you ever sell by size again, use `prices` instead of `price` and add the
+tiers back under `customizations.sizes`:
 
 ```js
-{ name: "Egg Waffle", category: "snack", description: "Made to order.", price: 5.50 }
+{ name: "Iced Peach", category: "fruit", prices: { S: 5.75, M: 6.50, L: 7.25 } }
 ```
 
 Add `soldOut: true` to grey an item out — it also stops the item being
-orderable. Delete the whole block to remove a drink.
+orderable. Delete the whole block to remove an item.
 
-Items priced with `prices` get the full drink customizer (size, sweetness, ice,
-milk, toppings). Single-`price` items get quantity and notes only. Override
-that per item with `options: ["sweetness", "ice"]`.
+### Which choices an item offers
+
+Each series sets this once, with `options` in `categories`:
+
+```js
+{ id: "fruit",   name: "Fruit Series",   blurb: "…", options: ["sweetness", "ice"] },
+{ id: "burrito", name: "Burrito Series", blurb: "…", options: [] }
+```
+
+So every drink offers sweetness and ice, and the burritos offer neither — they
+open straight to quantity and notes. A single item can override its series with
+its own `options: [...]`.
+
+The names you can use are `size`, `sweetness`, `ice`, `toppings` and `milk`.
+A group is only offered if the matching list under `customizations` actually
+has entries, so **deleting a list removes it everywhere** — from the item
+customizer, from the "Build your drink" band, and from the copy above the menu.
+Add the list back and the panel returns on its own:
+
+```js
+customizations: {
+  sweetness: [ … ],
+  ice: [ … ],
+  toppings: [{ id: "boba", label: "Tapioca boba", addPrice: 0.75 }]  // now on offer
+}
+```
 
 ### Rules that cause a blank menu if broken
 
@@ -119,7 +145,7 @@ So the path is:
 
 ```bash
 # edit assets/js/content.js, save, watch it change in the browser
-git add -A && git commit -m "Spring menu"
+git add -A && git commit -m "New menu"
 git push origin main
 ```
 

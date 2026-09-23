@@ -34,23 +34,28 @@ test("formatPrice renders currency and ignores non-numbers", async () => {
   dom.window.close();
 });
 
-test("sizeOptions handles both per-size prices and single prices", async () => {
+test("sizeOptions handles single prices, and per-size prices if ever added", async () => {
   const dom = await bootPage();
   const { SITE_CONTENT: c, FruitCow } = dom.window;
-  const sizes = c.customizations.sizes;
+  const sizes = c.customizations.sizes || [];
 
-  const multi = c.menu.find((m) => m.name === "Classic Black Milk Tea");
-  assert.deepEqual(own(FruitCow.sizeOptions(multi, sizes)).map((o) => o.price), [4.5, 5.25, 6.0]);
-  assert.equal(FruitCow.fromPrice(multi, sizes), 4.5);
-
-  const single = c.menu.find((m) => m.name === "Egg Waffle");
+  // The board prices one cup per item, so every shipped item is single-price.
+  const single = c.menu.find((m) => m.name === "Signature Organic Kale & Rice Yogurt Smoothie");
   assert.deepEqual(own(FruitCow.sizeOptions(single, sizes)), [
-    { id: null, label: null, detail: null, price: 5.5 }
+    { id: null, label: null, detail: null, price: 9.99 }
   ]);
+  assert.equal(FruitCow.fromPrice(single, sizes), 9.99);
 
-  // A drink that omits a size must not render an empty price row.
-  const noSmall = c.menu.find((m) => m.name === "Mango Slush");
-  assert.deepEqual(own(FruitCow.sizeOptions(noSmall, sizes)).map((o) => o.id), ["M", "L"]);
+  c.menu.forEach((item) => {
+    assert.equal(own(FruitCow.sizeOptions(item, sizes)).length, 1,
+      item.name + " should show exactly one price");
+  });
+
+  // Per-size pricing still works, for the day the shop sells sizes again.
+  const sized = { prices: { S: 5, L: 7 } };
+  const tiers = [{ id: "S", label: "Small" }, { id: "M", label: "Medium" }, { id: "L", label: "Large" }];
+  assert.deepEqual(own(FruitCow.sizeOptions(sized, tiers)).map((o) => o.id), ["S", "L"],
+    "a size the item does not price is skipped, not shown blank");
 
   assert.deepEqual(own(FruitCow.sizeOptions({})), []);
   dom.window.close();
@@ -62,11 +67,12 @@ test("filterMenu and groupByCategory drive the category chips", async () => {
 
   assert.equal(FruitCow.filterMenu(c.menu, {}).length, c.menu.length);
   assert.equal(
-    FruitCow.filterMenu(c.menu, { category: "milktea" }).length,
-    c.menu.filter((m) => m.category === "milktea").length
+    FruitCow.filterMenu(c.menu, { category: "burrito" }).length,
+    c.menu.filter((m) => m.category === "burrito").length
   );
-  assert.equal(FruitCow.filterMenu(c.menu, { query: "matcha" }).length, 2);
-  assert.equal(FruitCow.filterMenu(c.menu, { category: "milktea", query: "matcha" }).length, 1);
+  // Search reads the name and the series, so "kale" also catches the kale series.
+  assert.equal(FruitCow.filterMenu(c.menu, { query: "avocado" }).length, 2);
+  assert.equal(FruitCow.filterMenu(c.menu, { category: "fruit", query: "kale" }).length, 1);
   assert.equal(FruitCow.filterMenu(c.menu, { query: "zzzznotathing" }).length, 0);
 
   const groups = FruitCow.groupByCategory(c.menu, c.categories);
@@ -76,8 +82,8 @@ test("filterMenu and groupByCategory drive the category chips", async () => {
     "groups keep the order declared in categories[]"
   );
   // featured items sort to the front of their group
-  const milktea = groups.find((g) => g.category.id === "milktea");
-  assert.equal(milktea.items[0].name, "Classic Black Milk Tea");
+  const fruit = groups.find((g) => g.category.id === "fruit");
+  assert.equal(fruit.items[0].name, "Signature Organic Kale & Rice Yogurt Smoothie");
   dom.window.close();
 });
 
@@ -130,48 +136,51 @@ test("the real page renders every menu item from content.js", async () => {
   dom.window.close();
 });
 
-test("multi-size drinks show every price; single-price items show one", async () => {
+test("every card shows the one price printed on the board", async () => {
   const dom = await bootPage();
   const { document, SITE_CONTENT: c } = dom.window;
 
-  const card = [...document.querySelectorAll(".fc-card")].find((el) =>
-    el.querySelector(".fc-card__name").textContent.includes("Classic Black Milk Tea")
-  );
-  const rows = [...card.querySelectorAll(".fc-prices__row")];
-  assert.equal(rows.length, 3);
-  assert.deepEqual(
-    rows.map((r) => r.querySelector(".fc-prices__value").textContent),
-    ["$4.50", "$5.25", "$6.00"]
-  );
+  const money = (n) => "$" + n.toFixed(2);
 
-  const waffle = [...document.querySelectorAll(".fc-card")].find((el) =>
-    el.querySelector(".fc-card__name").textContent.includes("Egg Waffle")
-  );
-  assert.equal(waffle.querySelector(".fc-prices__value").textContent, "$5.50");
-  assert.equal(waffle.querySelectorAll(".fc-prices__row").length, 0);
+  c.menu.forEach((item) => {
+    const card = [...document.querySelectorAll(".fc-card")].find((el) =>
+      el.querySelector(".fc-card__name").textContent.includes(item.name)
+    );
+    assert.ok(card, "no card for " + item.name);
+    assert.equal(card.querySelectorAll(".fc-prices__row").length, 0, item.name + " has no size rows");
+    assert.equal(
+      card.querySelector(".fc-prices__value").textContent,
+      money(item.price),
+      item.name + " should print " + money(item.price)
+    );
+  });
 
-  const soldOut = [...document.querySelectorAll(".fc-card")].find((el) =>
-    el.querySelector(".fc-card__name").textContent.includes("Peach Blossom Tea")
+  // Spot-check the extremes of the board.
+  const cheapest = [...document.querySelectorAll(".fc-card")].find((el) =>
+    el.querySelector(".fc-card__name").textContent.includes("Classic Original Rice Burrito")
   );
-  assert.ok(soldOut.classList.contains("fc-card--out"));
+  assert.equal(cheapest.querySelector(".fc-prices__value").textContent, "$12.00");
   dom.window.close();
 });
 
 test("search box filters the rendered cards live", async () => {
   const dom = await bootPage();
-  const { document } = dom.window;
+  const { document, SITE_CONTENT: c } = dom.window;
 
   const search = document.getElementById("fc-search");
-  const visible = () => [...document.querySelectorAll(".fc-card")].filter((c) => !c.hidden).length;
+  const visible = () => [...document.querySelectorAll(".fc-card")].filter((x) => !x.hidden).length;
 
-  assert.equal(visible(), 15);
+  assert.equal(visible(), c.menu.length);
 
-  // 3 hits, not 2: search matches descriptions too, and "Mochi Bites"
-  // describes itself as "Choose mango, strawberry or matcha".
-  search.value = "mango";
+  search.value = "avocado";
   search.dispatchEvent(new dom.window.Event("input", { bubbles: true }));
-  assert.equal(visible(), 3);
+  assert.equal(visible(), 2);
   assert.equal(document.getElementById("fc-empty").hidden, true);
+
+  // 12 burritos, matched by name and by their series.
+  search.value = "burrito";
+  search.dispatchEvent(new dom.window.Event("input", { bubbles: true }));
+  assert.equal(visible(), c.menu.filter((m) => m.category === "burrito").length);
 
   search.value = "zzzznotathing";
   search.dispatchEvent(new dom.window.Event("input", { bubbles: true }));
@@ -180,7 +189,7 @@ test("search box filters the rendered cards live", async () => {
 
   search.value = "";
   search.dispatchEvent(new dom.window.Event("input", { bubbles: true }));
-  assert.equal(visible(), 15);
+  assert.equal(visible(), c.menu.length);
   dom.window.close();
 });
 
@@ -188,34 +197,52 @@ test("category chip narrows the menu and hides empty groups", async () => {
   const dom = await bootPage();
   const { document, SITE_CONTENT: c } = dom.window;
 
-  const chip = [...document.querySelectorAll(".fc-chip")].find((b) => b.dataset.cat === "milktea");
+  const chip = [...document.querySelectorAll(".fc-chip")].find((b) => b.dataset.cat === "burrito");
   chip.dispatchEvent(new dom.window.MouseEvent("click", { bubbles: true }));
 
   const visibleGroups = [...document.querySelectorAll(".fc-group")].filter((g) => !g.hidden);
   assert.equal(visibleGroups.length, 1);
-  assert.equal(visibleGroups[0].id, "cat-milktea");
+  assert.equal(visibleGroups[0].id, "cat-burrito");
   assert.equal(
     visibleGroups[0].querySelectorAll(".fc-card:not([hidden])").length,
-    c.menu.filter((m) => m.category === "milktea").length
+    c.menu.filter((m) => m.category === "burrito").length
   );
 
   const all = [...document.querySelectorAll(".fc-chip")].find((b) => b.dataset.cat === "all");
   all.dispatchEvent(new dom.window.MouseEvent("click", { bubbles: true }));
-  assert.equal([...document.querySelectorAll(".fc-card")].filter((x) => !x.hidden).length, 15);
+  assert.equal([...document.querySelectorAll(".fc-card")].filter((x) => !x.hidden).length, c.menu.length);
   dom.window.close();
 });
 
-test("topping and milk add-on prices come straight from content.js", async () => {
+test("the build-your-drink band shows only the choices the menu stocks", async () => {
   const dom = await bootPage();
   const { document, SITE_CONTENT: c } = dom.window;
 
-  const boba = c.customizations.toppings.find((t) => t.id === "boba");
-  const cream = c.customizations.toppings.find((t) => t.id === "cream");
-  const text = document.getElementById("customize").textContent;
-  assert.ok(text.includes(boba.label));
-  assert.ok(text.includes("+$" + boba.addPrice.toFixed(2)));
-  assert.ok(text.includes("+$" + cream.addPrice.toFixed(2)));
-  assert.ok(text.includes("Oat milk"));
+  const band = document.getElementById("customize");
+  const titles = [...band.querySelectorAll(".fc-optgroup__title")].map((h) => h.textContent);
+  assert.deepEqual(titles, ["Sweetness", "Ice"], "the board sells no sizes, toppings or milks");
+
+  // Every level listed comes straight from content.js, and none carries a price.
+  const text = band.textContent;
+  c.customizations.sweetness.forEach((s2) => assert.ok(text.includes(s2.label)));
+  c.customizations.ice.forEach((i) => assert.ok(text.includes(i.label)));
+  assert.equal(band.querySelectorAll(".fc-opt__price").length, 0, "free choices show no add-on price");
+  assert.ok(!text.includes("Oat milk"), "milks were removed from the menu");
+  assert.ok(!text.includes("boba"), "toppings were removed from the menu");
+  dom.window.close();
+});
+
+test("adding a choice list back in content.js brings its panel back", async () => {
+  const dom = await bootPage();
+  const { document, SITE_CONTENT: c, FruitCow } = dom.window;
+
+  c.customizations.toppings = [{ id: "boba", label: "Tapioca boba", addPrice: 0.75 }];
+  c.categories.find((cat) => cat.id === "fruit").options = ["sweetness", "ice", "toppings"];
+  FruitCow.boot();
+
+  const titles = [...document.querySelectorAll(".fc-optgroup__title")].map((h) => h.textContent);
+  assert.deepEqual(titles, ["Sweetness", "Ice", "Toppings"]);
+  assert.ok(document.getElementById("customize").textContent.includes("+$0.75"));
   dom.window.close();
 });
 
@@ -283,5 +310,140 @@ test("locations render hours for every day declared in content.js", async () => 
   assert.equal(block.querySelector(".fc-loc__name").textContent, loc.name);
   assert.equal(block.querySelectorAll(".fc-hours__row").length, Object.keys(loc.hours).length);
   assert.ok(block.textContent.includes("11:00 AM – 9:00 PM"));
+  dom.window.close();
+});
+
+/* ------------------------------------------------------- the board itself */
+
+/**
+ * The menu exactly as printed on the Fruit Cow board: five series, 28 items,
+ * one price each. This is the transcription — if a name or price here ever
+ * disagrees with content.js, one of the two is wrong.
+ */
+const BOARD = {
+  fruit: [
+    ["Signature Organic Kale & Rice Yogurt Smoothie", 9.99],
+    ["Signature Honey Peach & Rice Yogurt", 11.99],
+    ["Peach Apricot Gardenia & Rice Yogurt Smoothie", 12.99],
+    ["Special Peach & Rice Yogurt Smoothie", 12.99],
+    ["Avocado and Honeydew Melon & Rice Smoothie", 11.99],
+    ["Avocado and Almond & Rice Yogurt Smoothie", 11.99]
+  ],
+  yogurt: [
+    ["Peach Yogurt Ice Cheese", 13.99],
+    ["Kale Yogurt Ice Cheese", 13.99]
+  ],
+  kale: [
+    ["Kale & Cucumber White Glutinous Rice Yogurt Smoothie", 10.99],
+    ["Kale & Chia Seed, Cucumber & White Glutinous Rice Yogurt Smoothie", 10.99],
+    ["Kale & Rice Vine White Glutinous Rice Yogurt Smoothie", 10.99],
+    ["Countryside White Glutinous Rice Yogurt Smoothie", 10.99]
+  ],
+  nut: [
+    ["Pistachio White Glutinous Rice Yogurt Smoothie", 11.99],
+    ["Walnut White Glutinous Rice Yogurt Smoothie", 11.99],
+    ["Snow Mountain Pine Nut White Glutinous Rice Yogurt Smoothie", 11.99],
+    ["Sea Salt Hazelnut White Glutinous Rice Yogurt Smoothie", 11.99]
+  ],
+  burrito: [
+    ["Salted Egg Yolk Rice Burrito", 16],
+    ["Lava Cheese Ham Rice Burrito", 17],
+    ["Boneless Chicken Cutlet Rice Burrito", 18],
+    ["Spicy Pepper Chicken Tender Rice Burrito", 16],
+    ["Crab Stick & Ham Rice Burrito", 14],
+    ["Corn & Cheese Rice Burrito", 15],
+    ["Classic Ham Rice Burrito", 15],
+    ["Classic Original Rice Burrito", 12],
+    ["Orleans Chicken Cutlet Rice Burrito", 15],
+    ["Teriyaki Sauce Stir-Fried Sausage Rice Burrito", 18],
+    ["Korean Kimchi Rice Burrito", 13],
+    ["Japanese Chashu Rice Burrito", 16]
+  ]
+};
+
+test("content.js matches the printed board, item for item and price for price", async () => {
+  const dom = await bootPage();
+  const { SITE_CONTENT: c } = dom.window;
+
+  assert.deepEqual(
+    own(c.categories.map((cat) => cat.id)),
+    Object.keys(BOARD),
+    "the five series, in board order"
+  );
+
+  Object.entries(BOARD).forEach(([catId, items]) => {
+    const shipped = c.menu.filter((m) => m.category === catId);
+    assert.deepEqual(
+      own(shipped.map((m) => [m.name, m.price])),
+      items,
+      catId + " series does not match the board"
+    );
+  });
+
+  const total = Object.values(BOARD).reduce((n, items) => n + items.length, 0);
+  assert.equal(c.menu.length, total, "the menu holds the board and nothing else");
+  dom.window.close();
+});
+
+test("the old sample drinks are gone for good", async () => {
+  const dom = await bootPage();
+  const { document, SITE_CONTENT: c } = dom.window;
+
+  const retired = [
+    "Strawberry Cow", "Mango Cow Swirl", "Lychee Rose Milk Tea",
+    "Classic Black Milk Tea", "Brown Sugar Boba Milk", "Jasmine Green Milk Tea",
+    "Taro Milk Tea", "Matcha Milk Tea", "Passion Fruit Green Tea",
+    "Grapefruit Oolong", "Peach Blossom Tea", "Strawberry Banana Smoothie",
+    "Mango Slush", "Mochi Bites (3 pc)", "Egg Waffle"
+  ];
+  const names = c.menu.map((m) => m.name);
+  const page = document.getElementById("fc-app").textContent;
+
+  retired.forEach((name) => {
+    assert.ok(!names.includes(name), name + " is still in content.js");
+    assert.ok(!page.includes(name), name + " is still rendered on the page");
+  });
+
+  const retiredCategories = ["signature", "milktea", "fruittea", "frozen", "snack"];
+  retiredCategories.forEach((id) => {
+    assert.ok(!c.categories.some((cat) => cat.id === id), "sample category " + id + " is still here");
+    assert.equal(document.getElementById("cat-" + id), null, "sample section " + id + " still renders");
+  });
+  dom.window.close();
+});
+
+test("a card with no description renders no empty paragraph", async () => {
+  const dom = await bootPage();
+  const { document, SITE_CONTENT: c, FruitCow } = dom.window;
+
+  // The board carries no blurbs, so no card should ship a hollow <p>.
+  assert.ok(c.menu.every((m) => !m.description), "the board has no descriptions");
+  assert.equal(document.querySelectorAll(".fc-card__desc").length, 0);
+
+  // Add one back and it appears, on that card only.
+  c.menu[0].description = "Organic kale blended with white glutinous rice yogurt.";
+  FruitCow.boot();
+  const descs = [...document.querySelectorAll(".fc-card__desc")];
+  assert.equal(descs.length, 1);
+  assert.equal(descs[0].textContent, c.menu[0].description);
+  dom.window.close();
+});
+
+test("every item prices as one cup, and every series reaches the nav", async () => {
+  const dom = await bootPage();
+  const { document, SITE_CONTENT: c } = dom.window;
+
+  c.menu.forEach((item) => {
+    assert.equal(typeof item.price, "number", item.name + " needs a plain numeric price");
+    assert.ok(item.price > 0, item.name + " needs a real price");
+    assert.ok(!item.prices, item.name + " should not carry size tiers the board does not sell");
+  });
+
+  // The header links every series, not just the first four.
+  const navLinks = [...document.querySelectorAll(".fc-nav__link")].map((a) => a.textContent);
+  c.categories.forEach((cat) => {
+    assert.ok(navLinks.includes(cat.name), "nav is missing " + cat.name);
+  });
+  assert.ok(navLinks.includes("Locations"));
   dom.window.close();
 });

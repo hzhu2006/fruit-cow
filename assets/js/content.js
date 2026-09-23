@@ -22,7 +22,7 @@ globalThis.SITE_CONTENT = {
   /* ---------------------------------------------------------------- business */
   business: {
     name: "Fruit Cow",
-    tagline: "Small-batch fruit & milk tea, naturally sweetened",
+    tagline: "Handmade rice yogurt smoothies, naturally sweetened",
     /* The original artwork is the brand mark: drop the file in at this exact
        path and it appears everywhere, no code change. The vector emblem is
        the stand-in that ships in the meantime so the brand is never broken. */
@@ -62,11 +62,11 @@ globalThis.SITE_CONTENT = {
 
   /* -------------------------------------------------------------------- hero */
   hero: {
-    eyebrow: "Brewed daily · Sourced responsibly",
-    heading: "Fruit, tea and nothing artificial.",
+    eyebrow: "Blended daily · Sourced responsibly",
+    heading: "Fruit, rice and nothing artificial.",
     subheading:
-      "Single-origin leaves steeped in house, whole fruit pressed to order, " +
-      "and sweetness you control. No artificial syrups, no shortcuts.",
+      "White glutinous rice and live yogurt blended with whole fruit, kale and " +
+      "nuts, plus rice burritos rolled to order. No artificial syrups, no shortcuts.",
     /* The original artwork fills the cover slot too; the vector emblem stands
        in until the file is there. A wide banner (roughly 1600x900) works
        equally well — point this at it instead. */
@@ -81,19 +81,19 @@ globalThis.SITE_CONTENT = {
      section disappears. `icon` is any image path you like. */
   values: [
     {
-      icon: "assets/img/ink-bamboo.svg",
-      title: "Single-origin tea",
-      body: "Assam, oolong and jasmine sourced from named estates and steeped to a timer, never held past its prime."
+      icon: "assets/img/ink-rice.svg",
+      title: "White glutinous rice, cooked in house",
+      body: "Rice steamed each morning and folded through live yogurt — the body in every cup comes from the grain, not from powder."
     },
     {
       icon: "assets/img/ink-mango.svg",
-      title: "Whole fruit, pressed daily",
-      body: "Mango, lychee and passion fruit prepared each morning. If it isn't in season, it isn't on the board."
+      title: "Whole fruit, kale and nuts",
+      body: "Honey peach, avocado, organic kale and pistachio prepared daily. If it isn't in season, it isn't on the board."
     },
     {
       icon: "assets/img/ink-citrus.svg",
       title: "Sweetness on your terms",
-      body: "Five sweetness levels, cane sugar only, and dairy-free milks at no penalty to flavour."
+      body: "Five sweetness levels and four ice levels, cane sugar only, set on any cup at no extra cost."
     }
   ],
 
@@ -141,141 +141,80 @@ globalThis.SITE_CONTENT = {
   },
 
   /* --------------------------------------------------------------- categories */
-  /* `id` is what menu items point at. Reorder these to reorder the menu. */
+  /* `id` is what menu items point at. Reorder these to reorder the menu.
+     `options` (optional) sets which choices every item in that series offers.
+     A single item can still override it with its own `options`.
+     The drink series get sweetness and ice; the burritos get neither. */
   categories: [
-    { id: "signature", name: "Fruit Cow Signature", blurb: "The drinks we're known for" },
-    { id: "milktea",   name: "Classic Milk Tea",    blurb: "Slow-steeped black, green & oolong" },
-    { id: "fruittea",  name: "Fruit Tea",           blurb: "Fresh fruit, brewed tea, zero dairy" },
-    { id: "frozen",    name: "Smoothies & Slushes", blurb: "Blended to order" },
-    { id: "snack",     name: "Snacks",              blurb: "Small bites" }
+    { id: "fruit",   name: "Fruit Series",   blurb: "Fruit and rice yogurt smoothies",        options: ["sweetness", "ice"] },
+    { id: "yogurt",  name: "Yogurt Series",  blurb: "Yogurt ice cheese",                      options: ["sweetness", "ice"] },
+    { id: "kale",    name: "Kale Series",    blurb: "Kale with white glutinous rice yogurt",  options: ["sweetness", "ice"] },
+    { id: "nut",     name: "Nut Series",     blurb: "Nuts with white glutinous rice yogurt",  options: ["sweetness", "ice"] },
+    { id: "burrito", name: "Burrito Series", blurb: "Rice burritos",                          options: [] }
   ],
 
   /* -------------------------------------------------------------------- menu */
-  /* Add a drink by copying any block below and changing the values.
-       prices      : one entry per size id from customizations.sizes
-       price       : use this INSTEAD of `prices` for single-price items
+  /* Transcribed from the Fruit Cow menu board. Every name and price is as
+     printed there — one cup, one price, so each item uses `price` rather than
+     per-size `prices`.
+
+     Add an item by copying any block below and changing the values.
+       price       : a plain number, no $ and no quotes
+       prices      : use this INSTEAD of `price` if you ever sell by size
+       description : optional — the board carries none, so none are invented
        tags        : optional — "vegan" "gf" "dairy-free" "spicy" "new"
-       featured    : optional — true promotes it to the top of its category
+       featured    : optional — true promotes it to the top of its series
        soldOut     : optional — true greys it out and shows "Sold out"       */
   menu: [
-    {
-      name: "Strawberry Cow",
-      category: "signature",
-      description: "Fresh strawberries muddled into creamy milk tea with brown sugar boba.",
-      prices: { S: 5.75, M: 6.50, L: 7.25 },
-      tags: ["new"],
-      featured: true
-    },
-    {
-      name: "Mango Cow Swirl",
-      category: "signature",
-      description: "Alphonso mango purée layered over jasmine milk tea, topped with mango pearls.",
-      prices: { S: 6.00, M: 6.75, L: 7.50 },
-      featured: true
-    },
-    {
-      name: "Lychee Rose Milk Tea",
-      category: "signature",
-      description: "Lychee and rose syrup with oolong milk tea and aloe vera.",
-      prices: { S: 6.00, M: 6.75, L: 7.50 }
-    },
+    /* ------------------------------------------------------------ fruit */
+    { name: "Signature Organic Kale & Rice Yogurt Smoothie", category: "fruit", price: 9.99, featured: true },
+    { name: "Signature Honey Peach & Rice Yogurt",           category: "fruit", price: 11.99, featured: true },
+    { name: "Peach Apricot Gardenia & Rice Yogurt Smoothie", category: "fruit", price: 12.99 },
+    { name: "Special Peach & Rice Yogurt Smoothie",          category: "fruit", price: 12.99 },
+    { name: "Avocado and Honeydew Melon & Rice Smoothie",    category: "fruit", price: 11.99 },
+    { name: "Avocado and Almond & Rice Yogurt Smoothie",     category: "fruit", price: 11.99 },
 
-    {
-      name: "Classic Black Milk Tea",
-      category: "milktea",
-      description: "Assam black tea steeped 12 minutes, whole milk, your sweetness.",
-      prices: { S: 4.50, M: 5.25, L: 6.00 },
-      featured: true
-    },
-    {
-      name: "Brown Sugar Boba Milk",
-      category: "milktea",
-      description: "Tiger-striped brown sugar syrup, warm tapioca pearls, cold milk. No tea.",
-      prices: { S: 4.75, M: 5.50, L: 6.25 },
-      tags: ["gf"]
-    },
-    {
-      name: "Jasmine Green Milk Tea",
-      category: "milktea",
-      description: "Lightly floral jasmine green tea with a smooth milk finish.",
-      prices: { S: 4.50, M: 5.25, L: 6.00 }
-    },
-    {
-      name: "Taro Milk Tea",
-      category: "milktea",
-      description: "Creamy taro blended with black tea. Naturally purple, naturally good.",
-      prices: { S: 4.75, M: 5.50, L: 6.25 },
-      tags: ["vegan"]
-    },
-    {
-      name: "Matcha Milk Tea",
-      category: "milktea",
-      description: "Ceremonial-grade matcha whisked to order over your choice of milk.",
-      prices: { S: 5.25, M: 6.00, L: 6.75 }
-    },
+    /* ----------------------------------------------------------- yogurt */
+    { name: "Peach Yogurt Ice Cheese", category: "yogurt", price: 13.99 },
+    { name: "Kale Yogurt Ice Cheese",  category: "yogurt", price: 13.99 },
 
-    {
-      name: "Passion Fruit Green Tea",
-      category: "fruittea",
-      description: "Tart passion fruit and green tea with real seeds and aloe.",
-      prices: { S: 4.75, M: 5.50, L: 6.25 },
-      tags: ["vegan", "dairy-free"]
-    },
-    {
-      name: "Grapefruit Oolong",
-      category: "fruittea",
-      description: "Hand-peeled grapefruit segments in roasted oolong.",
-      prices: { S: 5.25, M: 6.00, L: 6.75 },
-      tags: ["vegan", "dairy-free"]
-    },
-    {
-      name: "Peach Blossom Tea",
-      category: "fruittea",
-      description: "White peach and osmanthus over chilled green tea.",
-      prices: { S: 4.75, M: 5.50, L: 6.25 },
-      tags: ["vegan", "dairy-free"],
-      soldOut: true
-    },
+    /* ------------------------------------------------------------- kale */
+    { name: "Kale & Cucumber White Glutinous Rice Yogurt Smoothie",                category: "kale", price: 10.99 },
+    { name: "Kale & Chia Seed, Cucumber & White Glutinous Rice Yogurt Smoothie",   category: "kale", price: 10.99 },
+    { name: "Kale & Rice Vine White Glutinous Rice Yogurt Smoothie",               category: "kale", price: 10.99 },
+    { name: "Countryside White Glutinous Rice Yogurt Smoothie",                    category: "kale", price: 10.99 },
 
-    {
-      name: "Strawberry Banana Smoothie",
-      category: "frozen",
-      description: "Whole strawberries, banana and oat milk. No added sugar.",
-      prices: { M: 6.50, L: 7.50 },
-      tags: ["vegan", "gf"]
-    },
-    {
-      name: "Mango Slush",
-      category: "frozen",
-      description: "Mango purée and lime, crushed ice, finished with popping boba.",
-      prices: { M: 6.00, L: 7.00 },
-      tags: ["vegan", "dairy-free"]
-    },
+    /* -------------------------------------------------------------- nut */
+    { name: "Pistachio White Glutinous Rice Yogurt Smoothie",              category: "nut", price: 11.99 },
+    { name: "Walnut White Glutinous Rice Yogurt Smoothie",                 category: "nut", price: 11.99 },
+    { name: "Snow Mountain Pine Nut White Glutinous Rice Yogurt Smoothie", category: "nut", price: 11.99 },
+    { name: "Sea Salt Hazelnut White Glutinous Rice Yogurt Smoothie",      category: "nut", price: 11.99 },
 
-    {
-      name: "Mochi Bites (3 pc)",
-      category: "snack",
-      description: "Choose mango, strawberry or matcha.",
-      price: 4.25,
-      tags: ["gf"]
-    },
-    {
-      name: "Egg Waffle",
-      category: "snack",
-      description: "Made to order, crisp outside, custardy inside. Add boba for $1.50.",
-      price: 5.50
-    }
+    /* ---------------------------------------------------------- burrito */
+    { name: "Salted Egg Yolk Rice Burrito",                 category: "burrito", price: 16 },
+    { name: "Lava Cheese Ham Rice Burrito",                 category: "burrito", price: 17 },
+    { name: "Boneless Chicken Cutlet Rice Burrito",         category: "burrito", price: 18 },
+    { name: "Spicy Pepper Chicken Tender Rice Burrito",     category: "burrito", price: 16 },
+    { name: "Crab Stick & Ham Rice Burrito",                category: "burrito", price: 14 },
+    { name: "Corn & Cheese Rice Burrito",                   category: "burrito", price: 15 },
+    { name: "Classic Ham Rice Burrito",                     category: "burrito", price: 15 },
+    { name: "Classic Original Rice Burrito",                category: "burrito", price: 12 },
+    { name: "Orleans Chicken Cutlet Rice Burrito",          category: "burrito", price: 15 },
+    { name: "Teriyaki Sauce Stir-Fried Sausage Rice Burrito", category: "burrito", price: 18 },
+    { name: "Korean Kimchi Rice Burrito",                   category: "burrito", price: 13 },
+    { name: "Japanese Chashu Rice Burrito",                 category: "burrito", price: 16 }
   ],
 
   /* ----------------------------------------------------------- customizations */
-  /* These show in the "Build your drink" section. `sizes` ids must match
-     the keys you use in each menu item's `prices`. */
+  /* These show in the "Build your drink" section and in the customiser.
+     The board prices one cup per drink and lists no add-ons, so there are no
+     size tiers, toppings or milk swaps here — only the free choices.
+
+     To offer add-ons, add a list back (e.g.
+       toppings: [{ id: "boba", label: "Tapioca boba", addPrice: 0.75 }]
+     ) and name it in a category's `options` above. Empty or missing lists
+     simply do not render.                                                   */
   customizations: {
-    sizes: [
-      { id: "S", label: "Small", detail: "12 oz" },
-      { id: "M", label: "Medium", detail: "16 oz" },
-      { id: "L", label: "Large", detail: "24 oz" }
-    ],
     sweetness: [
       { id: "s0",   label: "0%",   detail: "No sugar" },
       { id: "s25",  label: "25%",  detail: "Light" },
@@ -287,22 +226,7 @@ globalThis.SITE_CONTENT = {
       { id: "none",  label: "No ice" },
       { id: "light", label: "Light ice" },
       { id: "reg",   label: "Regular" },
-      { id: "extra", label: "Extra ice" },
-      { id: "hot",   label: "Hot" }
-    ],
-    toppings: [
-      { id: "boba",    label: "Tapioca boba",     addPrice: 0.75 },
-      { id: "popping", label: "Popping boba",     addPrice: 0.75 },
-      { id: "jelly",   label: "Coconut jelly",    addPrice: 0.75 },
-      { id: "aloe",    label: "Aloe vera",        addPrice: 0.75 },
-      { id: "pudding", label: "Egg pudding",      addPrice: 1.00 },
-      { id: "cream",   label: "Sea salt cream",   addPrice: 1.25 }
-    ],
-    milks: [
-      { id: "whole", label: "Whole milk" },
-      { id: "oat",   label: "Oat milk",     addPrice: 0.75 },
-      { id: "almond",label: "Almond milk",  addPrice: 0.75 },
-      { id: "soy",   label: "Soy milk",     addPrice: 0.75 }
+      { id: "extra", label: "Extra ice" }
     ]
   },
 
@@ -350,7 +274,7 @@ globalThis.SITE_CONTENT = {
 
   /* ------------------------------------------------------------------- footer */
   footer: {
-    note: "Prices and availability vary by location. Sample data — replace in assets/js/content.js",
+    note: "Menu and prices as printed on the Fruit Cow board. Edit them in assets/js/content.js",
     copyright: "Fruit Cow"
   }
 };

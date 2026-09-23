@@ -447,9 +447,12 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 500; letter-spacing:
 .fc-tag--gf { background: var(--azure-soft); color: var(--slate); }
 .fc-tag--out { background: var(--paper-2); color: var(--ink-soft); }
 
+/* `margin-top: auto` keeps the price on the card's foot whether or not the
+   item has a description, so prices stay on one line across a row of cards. */
 .fc-prices {
   list-style: none; margin: 6px 0 0; padding: 14px 0 0;
   border-top: 1px solid var(--line-soft); display: grid; gap: 7px;
+  margin-top: auto;
 }
 .fc-prices--single { padding-top: 10px; }
 .fc-prices__row { display: flex; align-items: baseline; justify-content: space-between; gap: 14px; font-size: .87rem; }
