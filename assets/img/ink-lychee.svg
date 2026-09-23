@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 190 200" role="img" aria-label="Lychee, ink wash">
+  <defs>
+    <filter id="lyWash" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="8"/>
+    </filter>
+    <filter id="lySoft" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="1.6"/>
+    </filter>
+    <radialGradient id="lySkin" cx="38%" cy="32%" r="74%">
+      <stop offset="0%" stop-color="#E08A5A" stop-opacity="0.95"/>
+      <stop offset="100%" stop-color="#A8382C" stop-opacity="0.85"/>
+    </radialGradient>
+  </defs>
+
+  <ellipse cx="96" cy="122" rx="60" ry="56" fill="#7A3A22" opacity="0.13" filter="url(#lyWash)"/>
+
+  <!-- leaf -->
+  <path d="M104 44 C 134 24, 170 30, 174 54 C 178 78, 146 90, 116 78 C 100 71, 94 54, 104 44 Z" fill="#2A2119" opacity="0.86"/>
+  <path d="M108 58 C 126 50, 148 47, 168 52" stroke="#F7F3EA" stroke-width="1.4" fill="none" opacity="0.3" stroke-linecap="round"/>
+
+  <!-- stem -->
+  <path d="M86 62 C 92 50, 100 45, 110 46" stroke="#241F1A" stroke-width="4" fill="none" stroke-linecap="round" opacity="0.9"/>
+
+  <!-- body -->
+  <ellipse cx="92" cy="122" rx="58" ry="60" fill="url(#lySkin)" filter="url(#lySoft)"/>
+  <ellipse cx="92" cy="122" rx="58" ry="60" fill="none" stroke="#2A2620" stroke-width="3.2" opacity="0.85"/>
+
+  <!-- knobbly skin, stippled in short brush dabs -->
+  <g stroke="#7E2A20" stroke-width="1.6" fill="none" opacity="0.5" stroke-linecap="round">
+    <path d="M58 96 c 6 -4, 12 -4, 16 1"/>
+    <path d="M84 84 c 6 -4, 13 -3, 17 2"/>
+    <path d="M112 94 c 6 -3, 12 -1, 15 4"/>
+    <path d="M48 122 c 6 -4, 12 -3, 16 2"/>
+    <path d="M74 112 c 6 -4, 13 -3, 17 2"/>
+    <path d="M102 120 c 6 -4, 13 -3, 17 2"/>
+    <path d="M126 130 c 5 -3, 11 -2, 14 3"/>
+    <path d="M58 150 c 6 -4, 12 -3, 16 2"/>
+    <path d="M86 142 c 6 -4, 13 -3, 17 2"/>
+    <path d="M114 154 c 5 -3, 11 -2, 14 3"/>
+    <path d="M74 172 c 6 -3, 12 -2, 15 3"/>
+    <path d="M100 178 c 5 -3, 10 -2, 13 2"/>
+  </g>
+
+  <!-- shading and highlight -->
+  <path d="M46 104 C 54 88, 70 78, 86 76 C 70 88, 58 104, 52 128 C 46 122, 43 112, 46 104 Z"
+        fill="#2A2620" opacity="0.2" filter="url(#lySoft)"/>
+  <ellipse cx="72" cy="100" rx="15" ry="9" fill="#FBEEDC" opacity="0.45" transform="rotate(-32 72 100)"/>
+</svg>

@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="420" height="420" viewBox="0 0 420 420">
+  <!-- Tileable walnut grain. Richer and darker than oak. -->
+  <defs>
+    <filter id="walGrain" x="0" y="0" width="100%" height="100%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.005 0.42" numOctaves="6" seed="31" result="n"/>
+      <feColorMatrix in="n" type="saturate" values="0" result="g"/>
+      <feComponentTransfer in="g">
+        <feFuncA type="table" tableValues="0 0.34"/>
+      </feComponentTransfer>
+    </filter>
+    <filter id="walSoft" x="0" y="0" width="100%" height="100%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.0018 0.04" numOctaves="3" seed="44" result="n"/>
+      <feColorMatrix in="n" type="saturate" values="0" result="g"/>
+      <feComponentTransfer in="g">
+        <feFuncA type="table" tableValues="0 0.26"/>
+      </feComponentTransfer>
+    </filter>
+  </defs>
+
+  <rect width="420" height="420" fill="#7A5B3E"/>
+  <rect width="420" height="420" filter="url(#walSoft)" style="mix-blend-mode:multiply"/>
+
+  <g fill="none" stroke="#4E3823" stroke-width="1.3" opacity="0.4">
+    <path d="M-10 30 C 130 12, 300 48, 430 22"/>
+    <path d="M-10 84 C 110 68, 320 100, 430 74"/>
+    <path d="M-10 140 C 150 122, 280 156, 430 130"/>
+    <path d="M-10 206 C 120 190, 310 222, 430 196"/>
+    <path d="M-10 268 C 140 250, 290 284, 430 258"/>
+    <path d="M-10 330 C 110 314, 320 348, 430 322"/>
+    <path d="M-10 392 C 150 376, 280 408, 430 384"/>
+  </g>
+
+  <g fill="none" stroke="#D9BE98" stroke-width="0.9" opacity="0.22">
+    <path d="M-10 58 C 140 44, 300 74, 430 50"/>
+    <path d="M-10 172 C 120 158, 310 190, 430 164"/>
+    <path d="M-10 300 C 150 286, 290 316, 430 292"/>
+  </g>
+
+  <rect width="420" height="420" filter="url(#walGrain)" style="mix-blend-mode:multiply"/>
+</svg>

@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="440" height="440" viewBox="0 0 440 440">
+  <!-- Tileable espresso wood print. Dense grain, high contrast, for the cover. -->
+  <defs>
+    <filter id="dkGrain" x="0" y="0" width="100%" height="100%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.004 0.5" numOctaves="6" seed="57" result="n"/>
+      <feColorMatrix in="n" type="saturate" values="0" result="g"/>
+      <feComponentTransfer in="g">
+        <feFuncA type="table" tableValues="0 0.42"/>
+      </feComponentTransfer>
+    </filter>
+    <filter id="dkSoft" x="0" y="0" width="100%" height="100%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.0016 0.035" numOctaves="3" seed="72" result="n"/>
+      <feColorMatrix in="n" type="saturate" values="0" result="g"/>
+      <feComponentTransfer in="g">
+        <feFuncA type="table" tableValues="0 0.3"/>
+      </feComponentTransfer>
+    </filter>
+  </defs>
+
+  <rect width="440" height="440" fill="#33210F"/>
+  <rect width="440" height="440" filter="url(#dkSoft)" style="mix-blend-mode:multiply"/>
+
+  <!-- long grain lines -->
+  <g fill="none" stroke="#170E06" stroke-width="1.5" opacity="0.5">
+    <path d="M-10 26 C 120 10, 300 42, 450 18"/>
+    <path d="M-10 72 C 140 56, 280 88, 450 62"/>
+    <path d="M-10 124 C 110 106, 320 140, 450 114"/>
+    <path d="M-10 180 C 150 164, 290 196, 450 170"/>
+    <path d="M-10 238 C 120 220, 310 254, 450 228"/>
+    <path d="M-10 296 C 140 280, 280 312, 450 286"/>
+    <path d="M-10 352 C 110 336, 320 368, 450 342"/>
+    <path d="M-10 410 C 150 394, 290 426, 450 400"/>
+  </g>
+
+  <!-- warm highlight grain, catches the light -->
+  <g fill="none" stroke="#C08B4E" stroke-width="1" opacity="0.2">
+    <path d="M-10 48 C 130 34, 300 62, 450 40"/>
+    <path d="M-10 152 C 120 138, 310 168, 450 146"/>
+    <path d="M-10 266 C 150 252, 290 282, 450 260"/>
+    <path d="M-10 380 C 130 366, 300 396, 450 374"/>
+  </g>
+
+  <!-- knots -->
+  <g opacity="0.3" fill="none" stroke="#1A1008" stroke-width="1.3">
+    <ellipse cx="96" cy="212" rx="26" ry="10"/>
+    <ellipse cx="96" cy="212" rx="15" ry="5.5"/>
+    <ellipse cx="356" cy="98" rx="20" ry="8"/>
+    <ellipse cx="356" cy="98" rx="11" ry="4"/>
+  </g>
+
+  <rect width="440" height="440" filter="url(#dkGrain)" style="mix-blend-mode:multiply"/>
+</svg>

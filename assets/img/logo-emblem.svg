@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 220" role="img" aria-label="Fruit Cow emblem — a cow on a meadow">
+  <defs>
+    <clipPath id="emCircle"><circle cx="110" cy="110" r="96"/></clipPath>
+    <linearGradient id="emSky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#c4e2de"/>
+      <stop offset="100%" stop-color="#a9d4d1"/>
+    </linearGradient>
+  </defs>
+
+  <g clip-path="url(#emCircle)">
+    <!-- sky -->
+    <rect x="10" y="10" width="200" height="200" fill="url(#emSky)"/>
+    <!-- meadow with a wavy horizon -->
+    <path d="M10 118 C 50 112, 90 122, 130 116 C 170 110, 190 118, 210 114 L210 210 L10 210 Z" fill="#d6cf63"/>
+
+    <!-- meadow swirls and tufts -->
+    <g fill="none" stroke="#7a6a22" stroke-width="2" stroke-linecap="round" opacity="0.55">
+      <path d="M24 148 C 56 142, 84 152, 112 146 C 136 142, 152 148, 158 154 C 162 159, 158 165, 151 164 C 145 163, 143 157, 148 153"/>
+      <path d="M120 178 C 150 172, 178 180, 200 174"/>
+      <path d="M20 186 C 46 180, 72 188, 96 182"/>
+    </g>
+    <g fill="none" stroke="#7a6a22" stroke-width="1.8" opacity="0.5">
+      <ellipse cx="46" cy="166" rx="4" ry="11"/>
+      <ellipse cx="96" cy="170" rx="4" ry="11"/>
+      <ellipse cx="156" cy="168" rx="4" ry="11"/>
+      <ellipse cx="188" cy="150" rx="4" ry="10"/>
+    </g>
+
+    <!-- ===== cow, facing left ===== -->
+    <g stroke-linecap="round">
+      <!-- legs -->
+      <g fill="#8a4a22">
+        <rect x="70" y="118" width="7" height="34" rx="3"/>
+        <rect x="88" y="122" width="7" height="32" rx="3"/>
+        <rect x="118" y="122" width="7" height="32" rx="3"/>
+        <rect x="134" y="118" width="7" height="34" rx="3"/>
+      </g>
+      <!-- tail, up like the logo -->
+      <path d="M146 96 C 156 90, 160 80, 158 70" fill="none" stroke="#8a4a22" stroke-width="4"/>
+      <ellipse cx="158" cy="66" rx="5" ry="6" fill="#8a4a22"/>
+      <!-- body -->
+      <path d="M66 96 C 64 82, 80 72, 104 72 C 130 72, 148 80, 148 96
+               C 148 112, 130 122, 104 122 C 80 122, 68 110, 66 96 Z"
+            fill="#e6a258" stroke="#a8501a" stroke-width="3"/>
+      <!-- patches -->
+      <g fill="#8a4a22">
+        <path d="M92 74 C 100 72, 108 74, 112 80 C 106 84, 96 84, 90 80 Z"/>
+        <ellipse cx="122" cy="98" rx="12" ry="9" transform="rotate(-18 122 98)"/>
+        <ellipse cx="84" cy="104" rx="9" ry="7" transform="rotate(14 84 104)"/>
+      </g>
+      <!-- head, lowered left -->
+      <path d="M52 84 C 46 78, 46 68, 54 64 C 64 60, 74 66, 76 76 C 77 84, 72 92, 62 94 C 56 95, 53 90, 52 84 Z"
+            fill="#8a4a22" stroke="#a8501a" stroke-width="3"/>
+      <!-- lighter muzzle -->
+      <ellipse cx="56" cy="88" rx="8" ry="6" fill="#e6a258"/>
+      <!-- horn + ear -->
+      <path d="M60 64 C 58 58, 60 54, 66 52" fill="none" stroke="#e6a258" stroke-width="3"/>
+      <path d="M74 66 C 80 62, 86 62, 90 66 C 86 70, 78 70, 74 66 Z" fill="#8a4a22"/>
+      <!-- eye -->
+      <circle cx="62" cy="76" r="2.2" fill="#3a2110"/>
+    </g>
+  </g>
+
+  <!-- broken hand-drawn ring, like the logo -->
+  <circle cx="110" cy="110" r="96" fill="none" stroke="#a8501a" stroke-width="3"
+          stroke-linecap="round" stroke-dasharray="120 14 210 12 260 16"/>
+</svg>

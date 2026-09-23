@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" role="img" aria-label="Mango, ink wash">
+  <defs>
+    <filter id="mWash" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="9"/>
+    </filter>
+    <filter id="mSoft" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="2"/>
+    </filter>
+    <radialGradient id="mFlesh" cx="40%" cy="34%" r="72%">
+      <stop offset="0%" stop-color="#EFC98A" stop-opacity="0.95"/>
+      <stop offset="100%" stop-color="#C98A3C" stop-opacity="0.8"/>
+    </radialGradient>
+    <linearGradient id="mLeaf" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#4A463E" stop-opacity="0.9"/>
+      <stop offset="100%" stop-color="#1D1A15" stop-opacity="0.95"/>
+    </linearGradient>
+  </defs>
+
+  <!-- wash bloom -->
+  <ellipse cx="102" cy="118" rx="66" ry="58" fill="#8A6A3A" opacity="0.14" filter="url(#mWash)"/>
+
+  <!-- leaf, brush stroke -->
+  <path d="M120 44 C 152 22, 188 26, 192 52 C 196 78, 162 92, 130 78 C 112 70, 108 54, 120 44 Z" fill="url(#mLeaf)"/>
+  <path d="M124 60 C 142 50, 166 46, 186 52" stroke="#F7F3EA" stroke-width="1.6" fill="none" opacity="0.34" stroke-linecap="round"/>
+
+  <!-- stem -->
+  <path d="M96 62 C 104 50, 116 44, 128 46" stroke="#241F1A" stroke-width="4.5" fill="none" stroke-linecap="round" opacity="0.9"/>
+
+  <!-- fruit body: ink outline over a warm wash -->
+  <path d="M92 58
+           C 132 52, 158 84, 152 120
+           C 146 158, 112 180, 78 172
+           C 42 164, 22 132, 30 100
+           C 38 68, 62 62, 92 58 Z" fill="url(#mFlesh)" filter="url(#mSoft)"/>
+  <path d="M92 58
+           C 132 52, 158 84, 152 120
+           C 146 158, 112 180, 78 172
+           C 42 164, 22 132, 30 100
+           C 38 68, 62 62, 92 58 Z"
+        fill="none" stroke="#2A2620" stroke-width="3.4" stroke-linecap="round" opacity="0.85"/>
+
+  <!-- dry-brush shading on the shaded side -->
+  <path d="M40 92 C 48 74, 66 62, 84 60 C 66 72, 52 90, 46 116 C 40 110, 37 100, 40 92 Z"
+        fill="#2A2620" opacity="0.22" filter="url(#mSoft)"/>
+
+  <!-- highlight -->
+  <ellipse cx="76" cy="96" rx="17" ry="10" fill="#F9F1DF" opacity="0.5" transform="rotate(-30 76 96)"/>
+</svg>

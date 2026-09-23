@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 300" role="img" aria-label="Terraced rice fields, ink wash">
+  <defs>
+    <filter id="terMist" x="-20%" y="-40%" width="140%" height="180%">
+      <feGaussianBlur stdDeviation="6"/>
+    </filter>
+    <filter id="terSoft" x="-20%" y="-40%" width="140%" height="180%">
+      <feGaussianBlur stdDeviation="1.8"/>
+    </filter>
+    <linearGradient id="paddy1" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#2C5282" stop-opacity="0.30"/>
+      <stop offset="100%" stop-color="#2C5282" stop-opacity="0.06"/>
+    </linearGradient>
+    <linearGradient id="paddy2" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1F3A5F" stop-opacity="0.42"/>
+      <stop offset="100%" stop-color="#1F3A5F" stop-opacity="0.10"/>
+    </linearGradient>
+    <linearGradient id="paddy3" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#16283F" stop-opacity="0.58"/>
+      <stop offset="100%" stop-color="#16283F" stop-opacity="0.16"/>
+    </linearGradient>
+  </defs>
+
+  <!-- terrace 1, highest and palest -->
+  <path d="M-10 74 C 90 40, 210 34, 320 58 C 430 82, 530 118, 650 108 L 650 300 L -10 300 Z"
+        fill="url(#paddy1)" filter="url(#terMist)"/>
+  <path d="M-10 74 C 90 40, 210 34, 320 58 C 430 82, 530 118, 650 108"
+        fill="none" stroke="#16283F" stroke-width="1.6" opacity="0.35"/>
+
+  <!-- terrace 2 -->
+  <path d="M-10 108 C 100 76, 220 70, 330 96 C 440 122, 540 152, 650 144 L 650 300 L -10 300 Z"
+        fill="url(#paddy1)" filter="url(#terSoft)"/>
+  <path d="M-10 108 C 100 76, 220 70, 330 96 C 440 122, 540 152, 650 144"
+        fill="none" stroke="#16283F" stroke-width="2" opacity="0.45"/>
+
+  <!-- terrace 3 -->
+  <path d="M-10 144 C 110 112, 230 108, 340 136 C 450 164, 545 190, 650 182 L 650 300 L -10 300 Z"
+        fill="url(#paddy2)" filter="url(#terSoft)"/>
+  <path d="M-10 144 C 110 112, 230 108, 340 136 C 450 164, 545 190, 650 182"
+        fill="none" stroke="#16283F" stroke-width="2.4" opacity="0.55"/>
+
+  <!-- terrace 4 -->
+  <path d="M-10 182 C 118 150, 240 148, 350 178 C 458 208, 548 228, 650 220 L 650 300 L -10 300 Z"
+        fill="url(#paddy2)"/>
+  <path d="M-10 182 C 118 150, 240 148, 350 178 C 458 208, 548 228, 650 220"
+        fill="none" stroke="#16283F" stroke-width="2.8" opacity="0.66"/>
+
+  <!-- terrace 5, nearest and darkest -->
+  <path d="M-10 222 C 124 190, 248 190, 358 220 C 464 250, 552 266, 650 258 L 650 300 L -10 300 Z"
+        fill="url(#paddy3)"/>
+  <path d="M-10 222 C 124 190, 248 190, 358 220 C 464 250, 552 266, 650 258"
+        fill="none" stroke="#16283F" stroke-width="3.2" opacity="0.78"/>
+
+  <!-- water glinting on the paddies -->
+  <g stroke="#F5EFE2" stroke-width="1.4" fill="none" opacity="0.4" stroke-linecap="round" filter="url(#terMist)">
+    <path d="M60 128 C 120 116, 180 114, 240 124"/>
+    <path d="M300 166 C 360 156, 420 156, 470 166"/>
+    <path d="M120 206 C 190 194, 260 194, 320 204"/>
+  </g>
+
+  <!-- mist between the steps -->
+  <g fill="#F5EFE2" opacity="0.4" filter="url(#terMist)">
+    <ellipse cx="180" cy="160" rx="150" ry="7"/>
+    <ellipse cx="470" cy="200" rx="170" ry="6"/>
+  </g>
+</svg>

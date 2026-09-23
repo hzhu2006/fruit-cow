@@ -1,2 +1,315 @@
-# fruit-cow
-Editable online milk tea ordering website for Fruit Cow.
+# Fruit Cow
+
+Editable online ordering website for Fruit Cow — handmade rice yogurt
+smoothies and rice burritos.
+
+No build step. Plain HTML, CSS and JavaScript — change a file, refresh the browser.
+
+## Run it
+
+```bash
+npm start          # dev server on http://localhost:8000 — reloads itself when you save
+npm test           # 79 checks against the real page
+npm run serve      # plain static server, no file watching
+```
+
+Or just open `index.html` in a browser.
+
+## Where your input goes
+
+**One file: [`assets/js/content.js`](assets/js/content.js).**
+
+Everything the site shows and sells comes from there — business name, menu
+items, prices, descriptions, sizes, sweetness levels, toppings, hours,
+locations, and how checkout behaves. Edit it, save, and the open page refreshes
+itself.
+
+The file now holds the **real Fruit Cow menu**, transcribed from the printed
+board: 28 items across five series — Fruit, Yogurt, Kale, Nut and Burrito — at
+one price each. The site validates the file on load and prints plain-English
+warnings to the browser console if an edit breaks something (wrong category, a
+quoted price, a size that doesn't exist, a duplicate name), rather than
+rendering a blank page.
+
+### Add an item
+
+```js
+{
+  name: "Signature Honey Peach & Rice Yogurt",
+  category: "fruit",          // must match an id in categories[]
+  price: 11.99,               // a plain number — no $ and no quotes
+  description: "What's in it.",  // optional
+  tags: ["new"],              // optional: vegan, gf, dairy-free, new
+  featured: true              // optional: floats to the top of its series
+}
+```
+
+If you ever sell by size again, use `prices` instead of `price` and add the
+tiers back under `customizations.sizes`:
+
+```js
+{ name: "Iced Peach", category: "fruit", prices: { S: 5.75, M: 6.50, L: 7.25 } }
+```
+
+Add `soldOut: true` to grey an item out — it also stops the item being
+orderable. Delete the whole block to remove an item.
+
+### Which choices an item offers
+
+Each series sets this once, with `options` in `categories`:
+
+```js
+{ id: "fruit",   name: "Fruit Series",   blurb: "…", options: ["sweetness", "ice", "toppings"] },
+{ id: "burrito", name: "Burrito Series", blurb: "…", options: [] }
+```
+
+So every drink offers sweetness, ice and the **glutinous-rice toppings**, and
+the burritos offer neither — they open straight to quantity and notes. A single
+item can override its series with its own `options: [...]`.
+
+The names you can use are `size`, `sweetness`, `ice`, `toppings` and `milk`.
+A group is only offered if the matching list under `customizations` actually
+has entries, so **deleting a list removes it everywhere** — from the item
+customizer, from the "Build your drink" band, and from the copy above the menu.
+Add the list back and the panel returns on its own. The house toppings put
+the grain front and centre:
+
+```js
+customizations: {
+  sweetness: [ … ],
+  ice: [ … ],
+  toppings: [
+    { id: "extra-rice",  label: "White Glutinous Rice",   addPrice: 1.00 },
+    { id: "rice-mochi",  label: "Handmade Rice Mochi",    addPrice: 1.50 },
+    { id: "mango-popping", label: "Mango Popping Boba",   addPrice: 1.00 },
+    // … crystal rice balls, red bean & rice, taro mochi, more boba
+  ]
+}
+```
+
+> **Emphasis on glutinous rice** — the first six toppings are all rice:
+> house-steamed white glutinous rice, handmade rice mochi (plain and brown
+> sugar), crystal glutinous rice balls, red bean & glutinous rice, and taro
+> rice mochi — plus popping boba and tapioca for texture contrast.
+
+
+### Rules that cause a blank menu if broken
+
+1. Strings in quotes: `"Brown Sugar Boba"`
+2. Commas between items — missing commas are the most common error
+3. `category` must match an `id` in `categories`
+4. Prices are bare numbers: `6.5` — not `"$6.50"`, not `"6.50"`
+5. Size keys must match the `id`s in `customizations.sizes`
+6. Two items can't share a name
+
+## Taking orders
+
+The `ordering` block in `content.js` controls checkout:
+
+```js
+ordering: {
+  enabled: true,        // false hides every Add button and the cart
+  mode: "slip",         // "slip" or "endpoint"
+  endpoint: "",         // used when mode is "endpoint"
+  prepTime: "10–15 minutes",
+  paymentMethods: ["Cash at pickup", "Card at pickup"]
+}
+```
+
+Two ways orders reach you:
+
+- **`"slip"`** — no server needed. The customer gets a formatted order slip they
+  can copy, email, or show at the counter. Works the moment you deploy.
+- **`"endpoint"`** — the order is POSTed as JSON to `endpoint`. Drop in a
+  Formspree or Google Form URL, or your own backend. Set the URL or checkout
+  will say so out loud instead of silently losing the order.
+
+Prices are always recomputed from `content.js`, so changing a price never
+leaves a customer's saved cart at a stale total, and a drink you delete
+disappears from anyone's cart.
+
+## Your graphic
+
+Drop files at these paths and they appear automatically — no code changes:
+
+| File | Used for |
+| --- | --- |
+| `assets/img/fruit-cow-logo.png` | Header logo + favicon (square, ~512×512) |
+| `assets/img/hero.png` | Homepage banner (wide, ~1600×900) |
+
+Until a file exists, that slot shows a dashed placeholder naming the exact path
+to drop it into. Replace the file and the placeholder disappears on its own.
+
+Any path works too — point `business.logo` or `hero.image` in `content.js` at
+whatever file you have, e.g. `"assets/img/my-logo.webp"`.
+
+## Keeping the live site up to date
+
+Two layers, both already set up:
+
+**While editing** — `npm start` runs [`dev-server.js`](dev-server.js), which
+watches `index.html` and `assets/`. Save a file and any open browser reloads
+itself within a second. Nothing to remember.
+
+**Publishing** — [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml)
+runs the tests and publishes the site to GitHub Pages on every push to `main`.
+So the path is:
+
+```bash
+# edit assets/js/content.js, save, watch it change in the browser
+git add -A && git commit -m "New menu"
+git push origin main
+```
+
+…the live site updates itself a minute later. Nothing to upload.
+
+One-time GitHub setup: **Settings → Pages → Source → GitHub Actions**.
+
+The pipeline copies only `index.html` and `assets/` — not tests or
+`node_modules` — and refuses to deploy if a test fails.
+
+## Contact & locations
+
+`business` holds the shop-wide line — phone, email, street address and hours —
+shown in the footer on every page. `locations` holds each outpost with its
+own address (linked to Google Maps via `mapsUrl`), phone and day-by-day hours
+grid. Edit both and the site follows; add a second address and a second card
+appears.
+
+```js
+business: {
+  phone: "(718) 555-0148",
+  email: "hello@fruitcow.nyc",
+  address: "136-20 38th Ave, Flushing, NY 11354",
+  hours: "Open daily · 10:00 AM – 9:30 PM"
+},
+locations: [
+  { name: "Flushing · Main Street (Flagship)", address: "136-20 38th Ave …", phone: "(718) 555-0148", mapsUrl: "https://maps.google.com/?q=…", hours: { mon: "10:00 AM – 9:30 PM", … } },
+  { name: "Manhattan · Koreatown", address: "25 W 32nd St …", phone: "(212) 555-0160", … }
+]
+```
+
+## Social placeholders
+
+The `business.social` list in `content.js` drives both the header icons and the
+footer block:
+
+```js
+social: [
+  {
+    id: "instagram",
+    label: "Instagram",
+    handle: "@fruitcow",
+    url: "https://instagram.com/yourhandle",   // "" = show the handle, no link
+    icon: "assets/img/icon-instagram.svg"
+  },
+  {
+    id: "wechat",
+    label: "WeChat",
+    handle: "FruitCowCN",
+    url: "",
+    qr: "assets/img/wechat-qr.png",            // optional, shown large in the footer
+    icon: "assets/img/icon-wechat.svg"
+  }
+]
+```
+
+Add a third platform by copying a block. **Drop your WeChat QR code at
+`assets/img/wechat-qr.png`** and it appears in the footer; until then that slot
+shows a dashed placeholder naming the exact file to drop in. Delete the whole
+`social` list and both the icons and the footer block disappear.
+
+## Look and feel
+
+Dark wood print, rice paper, and terraced fields, with **wood cross sections**
+(end grain) printed behind the locations band and the **logo's meadow** — swirling
+contour grass with upright tufts — printed behind the proof-point strip. The
+hand-drawn **emblem** is the brand mark and fills the cover slot. The palette runs a full
+complementary range — **indigo, azure, turquoise** against **orange, saffron,
+straw and gold** — but stays disciplined: orange carries the actions, indigo
+carries prices, and the rest appear only in tags, hairlines and the long curve
+divider. Curves throughout: arched card tops, pill buttons, circular steppers,
+and a cover that flows into the page on a curved foot. Type is **Fraunces**
+(display serif) over **Inter** (body), falling back to Georgia and system-ui.
+
+Three places to change it:
+
+**1. Colours and fonts** — the `:root` block at the top of
+[`assets/css/styles.css`](assets/css/styles.css). The palette is grouped:
+`--wood-*`, `--paper`, `--indigo-*`, `--turquoise-*`, `--azure-*`,
+`--orange-*`, `--saffron`, `--amber`, `--straw`, `--gold`, plus the ones taken
+straight off the logo: `--sky`, `--grass`, `--grass-soft`, `--grass-deep` and
+`--brand-brown` (which colours the wordmark and frames the emblem).
+
+**2. Artwork** — the `decor` block in `content.js`. Every entry is a file path;
+replace the file at that path with your own drawing, same filename, and it
+appears everywhere. Set an entry to `""` to switch that piece off.
+
+```js
+decor: {
+  seal: "assets/img/seal.svg",                        // stamp beside the brand
+  heroArt: "assets/img/ink-rice.svg",                 // large drawing in the cover
+  heroAccent: "assets/img/ink-plum.svg",              // smaller, opposite corner
+  heroFruit: "assets/img/ink-peach.svg",              // third cover drawing
+  terraces: "assets/img/ink-terraces.svg",            // 梯田 across the cover's foot
+  woodring: "assets/img/ink-woodring.svg",            // one large timber slice
+  divider: "assets/img/curve-wave.svg",               // long curve between sections
+  ricePattern: "assets/img/pattern-rice.svg",         // grains over the page paper
+  ringPattern: "assets/img/pattern-woodring.svg",     // end grain behind locations
+  grassPattern: "assets/img/pattern-grass.svg",       // the logo's meadow, behind values
+  coverWood: "assets/img/pattern-wood-dark.svg",      // dark print behind the cover
+  cardWood: "assets/img/pattern-wood-oak.svg",        // grain under each menu card
+  optionsWood: "assets/img/pattern-wood-walnut.svg",  // grain under each drink option
+  stickers: [
+    { src: "assets/img/sticker-rice.svg",   area: "cover",     rotate: -12 },
+    { src: "assets/img/sticker-citrus.svg", area: "cover",     rotate: 14 },
+    { src: "assets/img/sticker-lychee.svg", area: "values",    rotate: -8 },
+    { src: "assets/img/deco-cow.svg",       area: "values",    rotate: -4 },
+    { src: "assets/img/sticker-rice.svg",   area: "menu",      rotate: 10 },
+    { src: "assets/img/sticker-citrus.svg", area: "locations", rotate: -14 }
+  ]
+}
+```
+
+**3. Stickers** — `area` is one of `cover`, `values`, `menu`, `locations`, and
+`rotate` is degrees. Add as many as you like; the second one in any area is
+offset automatically. Empty the list and they all disappear.
+
+**4. Patterns** — the wood prints, the end grain, the rice scatter and the
+meadow are all tileable. The straight-grain prints are generated with
+`feTurbulence`; the end grain and the grass are drawn instead, because a filter
+warp would break the tile seam. No photos, so nothing to licence.
+
+**5. Brand** — `business.logo` points at `assets/img/fruit-cow-logo.jpg`, the original artwork, shown small in the header. **Drop your file at that path and the header updates with no code change** — `logoFallback` shows `assets/img/logo-emblem.svg` until it is there. The big cover logo was removed so the hero stays as dark wood, terraces and ink drawings; set `hero.image` to a banner path if you want a cover image again.
+
+**6. Series & menu photos** — each entry in `categories` carries `icon` (small 54 px illustration in the series header) and `photo` (category banner photo). Each item in `menu` carries `image` — per-item if you have a shot, or the category photo is reused so every card has a picture. Replace `assets/img/cat-fruit.svg` or `assets/img/menu/fruit.jpg` at those paths and the page updates; `image` can also be set per item for a unique shot.
+
+```
+categories: [
+  { id: "fruit", icon: "assets/img/cat-fruit.svg", photo: "assets/img/menu/fruit.jpg", ... },
+  { id: "burrito", icon: "assets/img/cat-burrito.svg", photo: "assets/img/menu/burrito.jpg", ... }
+],
+menu: [
+  { name: "Signature Honey Peach & Rice Yogurt", category: "fruit", price: 11.99, image: "assets/img/menu/fruit.jpg" }
+]
+```
+
+Available fruit, if you want to swap any of them in: `ink-mango`, `ink-lychee`,
+`ink-citrus`, `ink-peach`, `ink-plum`, plus `ink-rice`, `ink-bamboo`,
+`ink-terraces`, the `deco-cow` and the `logo-emblem`. The proof-point strip under the cover comes from the `values`
+block in `content.js`; delete it and the section disappears.
+
+## Layout
+
+```
+index.html                       page shell, loads the three scripts below
+assets/js/content.js             ← YOUR CONTENT
+assets/js/app.js                 renders content.js into the page
+assets/js/cart.js                cart, customizer, checkout
+assets/css/styles.css            colours and fonts in :root at the top
+assets/img/                      your logo & hero go here, plus the ink
+                                 artwork and tileable wood patterns
+dev-server.js                    static server with live reload
+.github/workflows/deploy.yml     test + publish to GitHub Pages
+tests/                           boots the real page in jsdom and checks it
+```

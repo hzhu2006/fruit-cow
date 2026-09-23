@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 190 200" role="img" aria-label="Peach, ink wash">
+  <defs>
+    <filter id="peWash" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="8"/>
+    </filter>
+    <filter id="peSoft" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="2"/>
+    </filter>
+    <radialGradient id="peSkin" cx="38%" cy="32%" r="74%">
+      <stop offset="0%" stop-color="#F6D9A8" stop-opacity="0.96"/>
+      <stop offset="58%" stop-color="#E9A96A" stop-opacity="0.92"/>
+      <stop offset="100%" stop-color="#C4693A" stop-opacity="0.86"/>
+    </radialGradient>
+  </defs>
+
+  <ellipse cx="96" cy="124" rx="60" ry="54" fill="#8A4A22" opacity="0.13" filter="url(#peWash)"/>
+
+  <!-- leaf -->
+  <path d="M100 46 C 128 22, 164 24, 170 46 C 176 70, 144 84, 114 74 C 98 68, 92 56, 100 46 Z" fill="#2A2119" opacity="0.85"/>
+  <path d="M104 58 C 124 48, 146 44, 164 48" stroke="#F7F3EA" stroke-width="1.4" fill="none" opacity="0.3" stroke-linecap="round"/>
+
+  <!-- stem -->
+  <path d="M88 64 C 92 52, 98 46, 106 46" stroke="#241F1A" stroke-width="4.2" fill="none" stroke-linecap="round" opacity="0.9"/>
+
+  <!-- body with the cleft -->
+  <path d="M92 62
+           C 60 62, 34 88, 36 122
+           C 38 158, 66 182, 96 182
+           C 128 182, 156 156, 154 120
+           C 152 86, 126 62, 96 62
+           C 94 74, 92 86, 92 62 Z" fill="url(#peSkin)" filter="url(#peSoft)"/>
+  <path d="M92 62
+           C 60 62, 34 88, 36 122
+           C 38 158, 66 182, 96 182
+           C 128 182, 156 156, 154 120
+           C 152 86, 126 62, 96 62
+           C 94 74, 92 86, 92 62 Z"
+        fill="none" stroke="#2A2620" stroke-width="3.2" stroke-linecap="round" opacity="0.85"/>
+
+  <!-- the seam -->
+  <path d="M94 66 C 84 92, 82 124, 90 160" fill="none" stroke="#A85A30" stroke-width="2" opacity="0.5" stroke-linecap="round"/>
+
+  <!-- blush -->
+  <path d="M112 74 C 136 82, 150 104, 148 128 C 140 106, 126 88, 106 78 Z"
+        fill="#C4482C" opacity="0.22" filter="url(#peSoft)"/>
+
+  <!-- fuzz and highlight -->
+  <g stroke="#B8825A" stroke-width="1" opacity="0.35" stroke-linecap="round">
+    <path d="M56 100 c 5 -3, 10 -2, 13 2"/>
+    <path d="M62 132 c 5 -3, 10 -2, 13 2"/>
+    <path d="M120 150 c 5 -3, 10 -2, 13 2"/>
+    <path d="M104 166 c 5 -3, 10 -2, 13 2"/>
+  </g>
+  <ellipse cx="70" cy="98" rx="16" ry="10" fill="#FDF3E0" opacity="0.5" transform="rotate(-30 70 98)"/>
+</svg>
