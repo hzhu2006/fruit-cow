@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" role="img" aria-label="Burrito series icon">
+  <ellipse cx="60" cy="84" rx="42" ry="16" fill="#E8DCC6" opacity="0.28"/>
+  <!-- burrito body -->
+  <rect x="14" y="46" width="92" height="36" rx="18" fill="#FDF9F0" stroke="#2A2620" stroke-width="3" />
+  <!-- seaweed outer hint (thin line) -->
+  <rect x="18" y="50" width="84" height="28" rx="14" fill="none" stroke="#1F3320" stroke-width="1.4" opacity="0.32"/>
+  <!-- cut face showing rice and filling -->
+  <ellipse cx="106" cy="64" rx="12" ry="18" fill="#FDF9F0" stroke="#2A2620" stroke-width="2.8"/>
+  <!-- rice grains on cut -->
+  <g fill="#E9D6A8" stroke="#8A6420" stroke-width="0.8" opacity="0.95">
+    <ellipse cx="102" cy="58" rx="3.2" ry="3.8"/>
+    <ellipse cx="106" cy="64" rx="3.2" ry="3.8"/>
+    <ellipse cx="102" cy="70" rx="3.2" ry="3.8"/>
+    <ellipse cx="108" cy="70" rx="2.8" ry="3.4"/>
+    <ellipse cx="108" cy="58" rx="2.8" ry="3.4"/>
+  </g>
+  <!-- fillings: ham, egg, etc -->
+  <g opacity="0.92">
+    <rect x="100" y="56" width="8" height="4" rx="2" fill="#D97B29" stroke="#8A4A22" stroke-width="0.9"/>
+    <rect x="100" y="62" width="10" height="3.6" rx="1.8" fill="#C4482C"/>
+    <rect x="100" y="68" width="8" height="3.6" rx="1.8" fill="#E8B23C" stroke="#8A5F2E" stroke-width="0.8"/>
+    <circle cx="104" cy="74" r="2.4" fill="#3E7CB1" opacity="0.9"/>
+  </g>
+  <!-- slight fold line -->
+  <path d="M24 58 C 36 54, 48 54, 60 58 C 72 62, 84 62, 96 58" stroke="#2A2620" stroke-width="1.4" fill="none" opacity="0.18" stroke-linecap="round"/>
+  <!-- sesame dots -->
+  <g fill="#2A2620" opacity="0.18">
+    <circle cx="32" cy="54" r="1.4"/>
+    <circle cx="42" cy="60" r="1.2"/>
+    <circle cx="68" cy="56" r="1.2"/>
+    <circle cx="78" cy="60" r="1.4"/>
+  </g>
+</svg>

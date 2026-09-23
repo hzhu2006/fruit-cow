@@ -9,7 +9,7 @@ No build step. Plain HTML, CSS and JavaScript — change a file, refresh the bro
 
 ```bash
 npm start          # dev server on http://localhost:8000 — reloads itself when you save
-npm test           # 75 checks against the real page
+npm test           # 79 checks against the real page
 npm run serve      # plain static server, no file watching
 ```
 
@@ -280,13 +280,19 @@ meadow are all tileable. The straight-grain prints are generated with
 `feTurbulence`; the end grain and the grass are drawn instead, because a filter
 warp would break the tile seam. No photos, so nothing to licence.
 
-**5. Brand** — `business.logo` and `hero.image` both point at
-`assets/img/fruit-cow-logo.jpg`, the original artwork. **Drop your file at that
-path and it appears in the header and the cover with no code change.** Until it
-is there, `logoFallback` / `imageFallback` show `assets/img/logo-emblem.svg`,
-the vector stand-in that ships with the repo, so the brand is never broken. A
-missing stand-in still falls back to the labelled placeholder. Use a different
-filename by changing `logo` / `image`.
+**5. Brand** — `business.logo` points at `assets/img/fruit-cow-logo.jpg`, the original artwork, shown small in the header. **Drop your file at that path and the header updates with no code change** — `logoFallback` shows `assets/img/logo-emblem.svg` until it is there. The big cover logo was removed so the hero stays as dark wood, terraces and ink drawings; set `hero.image` to a banner path if you want a cover image again.
+
+**6. Series & menu photos** — each entry in `categories` carries `icon` (small 54 px illustration in the series header) and `photo` (category banner photo). Each item in `menu` carries `image` — per-item if you have a shot, or the category photo is reused so every card has a picture. Replace `assets/img/cat-fruit.svg` or `assets/img/menu/fruit.jpg` at those paths and the page updates; `image` can also be set per item for a unique shot.
+
+```
+categories: [
+  { id: "fruit", icon: "assets/img/cat-fruit.svg", photo: "assets/img/menu/fruit.jpg", ... },
+  { id: "burrito", icon: "assets/img/cat-burrito.svg", photo: "assets/img/menu/burrito.jpg", ... }
+],
+menu: [
+  { name: "Signature Honey Peach & Rice Yogurt", category: "fruit", price: 11.99, image: "assets/img/menu/fruit.jpg" }
+]
+```
 
 Available fruit, if you want to swap any of them in: `ink-mango`, `ink-lychee`,
 `ink-citrus`, `ink-peach`, `ink-plum`, plus `ink-rice`, `ink-bamboo`,

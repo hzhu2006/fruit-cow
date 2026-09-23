@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" role="img" aria-label="Kale series icon">
+  <ellipse cx="60" cy="78" rx="36" ry="20" fill="#E2E9DD" opacity="0.34"/>
+  <!-- central stem -->
+  <path d="M60 102 C 60 86, 60 70, 60 38" stroke="#2A2119" stroke-width="3.2" fill="none" stroke-linecap="round" opacity="0.9"/>
+  <!-- three kale leaves, curly edges -->
+  <path d="M60 38 C 30 28, 14 46, 28 64 C 38 78, 52 72, 60 58 Z" fill="#4A6B4F" stroke="#1F3320" stroke-width="2" stroke-linejoin="round"/>
+  <path d="M60 38 C 90 28, 106 46, 92 64 C 82 78, 68 72, 60 58 Z" fill="#5E855E" stroke="#1F3320" stroke-width="2" stroke-linejoin="round"/>
+  <path d="M60 58 C 38 68, 34 90, 48 96 C 56 100, 60 84, 62 66 Z" fill="#3E5A3E" stroke="#1F3320" stroke-width="2" stroke-linejoin="round"/>
+  <!-- veins -->
+  <g stroke="#E9E5A4" stroke-width="1.2" fill="none" opacity="0.42" stroke-linecap="round">
+    <path d="M44 46 C 48 52, 54 56, 60 58"/>
+    <path d="M76 46 C 72 52, 66 56, 60 58"/>
+    <path d="M48 78 C 52 82, 56 86, 60 88"/>
+  </g>
+  <!-- rice pearls at base hinting white glutinous rice -->
+  <g fill="#FDF9F0" stroke="#8A6420" stroke-width="0.8" opacity="0.92">
+    <ellipse cx="52" cy="94" rx="4.5" ry="5.2"/>
+    <ellipse cx="60" cy="96" rx="4.5" ry="5.2"/>
+    <ellipse cx="68" cy="94" rx="4.5" ry="5.2"/>
+  </g>
+  <!-- small cucumber slice accent -->
+  <ellipse cx="84" cy="84" rx="10" ry="10" fill="#D3E9E8" stroke="#2F8F94" stroke-width="1.4"/>
+  <ellipse cx="84" cy="84" rx="4" ry="4" fill="#E9D6A8" stroke="#8A6420" stroke-width="0.8"/>
+</svg>

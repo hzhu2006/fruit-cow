@@ -294,18 +294,19 @@ test("the original artwork wins, with the vector emblem as stand-in", async () =
   img.dispatchEvent(new dom.window.Event("error"));
   assert.ok(host.querySelector(".fc-slot"), "a broken stand-in still shows a placeholder");
 
-  // The brand points at the original file; the stand-in must actually ship.
+  // The brand (header) points at the original file; the stand-in must actually ship.
+  // The big cover logo was removed per design — the hero stays as wood + terraces
+  // so the food comes first. `hero.image` is intentionally empty.
   const b = SITE_CONTENT.business;
   assert.equal(b.logo, "assets/img/fruit-cow-logo.jpg", "the original artwork is the brand mark");
   assert.ok(
     fs.existsSync(path.join(ROOT, b.logoFallback)),
     "the stand-in emblem must ship so the brand is never broken"
   );
-  assert.equal(SITE_CONTENT.hero.image, b.logo, "the cover slot shows the same original artwork");
-  assert.ok(
-    fs.existsSync(path.join(ROOT, SITE_CONTENT.hero.imageFallback)),
-    "the cover slot has a stand-in too"
-  );
+  assert.equal(SITE_CONTENT.hero.image, "", "the cover no longer shows a big logo — set hero.image to a path to add a banner again");
+  assert.equal(SITE_CONTENT.hero.imageFallback, "", "no fallback when the cover has no banner");
+  assert.equal(document.querySelector(".fc-hero__media"), null, "hero media is gone — no big logo in front");
+  assert.ok(document.querySelector(".fc-hero--no-banner"), "hero carries the no-banner modifier");
   dom.window.close();
 });
 
@@ -327,6 +328,71 @@ test("locations render hours for every day declared in content.js", async () => 
   const footer = document.querySelector(".fc-footer").textContent;
   assert.ok(footer.includes(c.business.address.slice(0, 10)));
   assert.ok(footer.includes("10:00 AM"));
+  dom.window.close();
+});
+
+
+test("every series carries a small illustration next to its title", async () => {
+  const dom = await bootPage();
+  const { document, SITE_CONTENT: c } = dom.window;
+  c.categories.forEach((cat) => {
+    assert.ok(cat.icon, cat.id + " needs an icon");
+    assert.ok(cat.photo, cat.id + " needs a photo");
+    const group = document.getElementById("cat-" + cat.id);
+    assert.ok(group, "group renders for " + cat.id);
+    const icon = group.querySelector(".fc-group__icon");
+    assert.ok(icon, "icon renders in header for " + cat.id);
+    assert.equal(icon.getAttribute("src"), cat.icon);
+    assert.equal(icon.getAttribute("aria-hidden"), "true");
+    assert.ok(fs.existsSync(path.join(ROOT, cat.icon)), "missing icon file: " + cat.icon);
+  });
+  dom.window.close();
+});
+
+test("every series header icon file exists on disk", async () => {
+  const dom = await bootPage();
+  const { SITE_CONTENT: c } = dom.window;
+  c.categories.forEach((cat) => {
+    assert.ok(fs.existsSync(path.join(ROOT, cat.icon)), "missing icon file: " + cat.icon);
+    const svg = fs.readFileSync(path.join(ROOT, cat.icon), "utf8");
+    assert.ok(svg.includes("<svg"), cat.icon + " is not SVG");
+  });
+  dom.window.close();
+});
+
+test("every drink and burrito shows a photo", async () => {
+  const dom = await bootPage();
+  const { document, SITE_CONTENT: c } = dom.window;
+  const cards = document.querySelectorAll(".fc-card");
+  assert.equal(cards.length, c.menu.length);
+  c.menu.forEach((item) => {
+    const card = [...cards].find((el) => el.querySelector(".fc-card__name").textContent.includes(item.name));
+    assert.ok(card, "no card for " + item.name);
+    const media = card.querySelector(".fc-card__media");
+    assert.ok(media, "card has media for " + item.name);
+    const img = media.querySelector("img");
+    assert.ok(img, "media has an img for " + item.name);
+    // item.image should resolve, or category photo fallback
+    const expected = item.image || c.categories.find((cat) => cat.id === item.category).photo;
+    assert.ok(expected, "expected photo for " + item.name);
+    assert.ok(img.getAttribute("src").endsWith(expected) || img.getAttribute("src").includes("menu/"), "photo src for " + item.name + " got " + img.getAttribute("src"));
+  });
+  // spot-check that the files actually exist
+  ["assets/img/menu/fruit.jpg","assets/img/menu/yogurt.jpg","assets/img/menu/kale.jpg","assets/img/menu/nut.jpg","assets/img/menu/burrito.jpg"].forEach((rel) => {
+    assert.ok(fs.existsSync(path.join(ROOT, rel)), "missing menu photo: " + rel);
+  });
+  dom.window.close();
+});
+
+test("the big cover logo is gone — hero is wood and ink only", async () => {
+  const dom = await bootPage();
+  const { document, SITE_CONTENT: c } = dom.window;
+  assert.equal(c.hero.image, "");
+  assert.equal(document.querySelector(".fc-hero__media"), null);
+  assert.ok(document.querySelector(".fc-hero--no-banner"));
+  assert.ok(document.querySelector(".fc-hero__copy--center"), "hero copy is centered without banner");
+  assert.ok(document.querySelector(".fc-terraces"), "terraces still there");
+  assert.ok(document.querySelector(".fc-decor--primary"));
   dom.window.close();
 });
 

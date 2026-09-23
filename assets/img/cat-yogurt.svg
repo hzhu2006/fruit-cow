@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" role="img" aria-label="Yogurt series icon">
+  <ellipse cx="60" cy="78" rx="38" ry="22" fill="#DCEAF5" opacity="0.32"/>
+  <!-- cup -->
+  <path d="M28 48 L36 96 C36 98, 44 102, 60 102 C76 102, 84 98, 84 96 L92 48 Z" fill="#FDF9F0" stroke="#2A2620" stroke-width="3" stroke-linejoin="round"/>
+  <!-- yogurt surface -->
+  <ellipse cx="60" cy="48" rx="32" ry="9" fill="#FDF9F0" stroke="#2A2620" stroke-width="2.8"/>
+  <!-- cheese foam swirl -->
+  <path d="M38 48 C 42 36, 56 34, 64 42 C 72 50, 86 44, 82 48" fill="#F3E6BD" stroke="#B9922C" stroke-width="1.6" stroke-linecap="round" opacity="0.9"/>
+  <path d="M48 44 C 52 40, 58 40, 60 44" stroke="#B9922C" stroke-width="1.2" fill="none" opacity="0.55" stroke-linecap="round"/>
+  <!-- glutinous rice pearls visible at cup side -->
+  <g fill="#E9D6A8" stroke="#8A6420" stroke-width="0.9" opacity="0.9">
+    <ellipse cx="48" cy="72" rx="5" ry="6" transform="rotate(16 48 72)"/>
+    <ellipse cx="60" cy="76" rx="5" ry="6" transform="rotate(10 60 76)"/>
+    <ellipse cx="72" cy="72" rx="5" ry="6" transform="rotate(-8 72 72)"/>
+  </g>
+  <!-- spoon hint -->
+  <path d="M88 20 C 90 20, 92 28, 84 36 L 74 48" stroke="#2A2620" stroke-width="2.2" fill="none" stroke-linecap="round" opacity="0.82"/>
+  <ellipse cx="88" cy="18" rx="8" ry="6" fill="#E8DCC6" stroke="#2A2620" stroke-width="1.8"/>
+</svg>

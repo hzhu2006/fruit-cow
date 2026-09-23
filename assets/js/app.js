@@ -303,16 +303,27 @@
     if (h.secondaryCta) {
       actions.appendChild(el("a", { class: "fc-btn fc-btn--ghost", href: h.secondaryCta.target, text: h.secondaryCta.label }));
     }
-    return el("section", { class: "fc-hero", id: "top" }, [
-      el("div", { class: "fc-shell fc-hero__inner" }, [
-        el("div", { class: "fc-hero__copy" }, [
-          h.eyebrow ? el("p", { class: "fc-eyebrow", text: h.eyebrow }) : null,
-          el("h1", { class: "fc-hero__heading", text: h.heading }),
-          el("p", { class: "fc-hero__sub", text: h.subheading }),
-          actions
-        ]),
-        el("div", { class: "fc-hero__media" }, [imageWithFallback(h.image, content.business.name + " banner", "hero", h.imageFallback)])
-      ]),
+    var hasBanner = !!(h.image && String(h.image).trim());
+    var heroInner = hasBanner
+      ? el("div", { class: "fc-shell fc-hero__inner" }, [
+          el("div", { class: "fc-hero__copy" }, [
+            h.eyebrow ? el("p", { class: "fc-eyebrow", text: h.eyebrow }) : null,
+            el("h1", { class: "fc-hero__heading", text: h.heading }),
+            el("p", { class: "fc-hero__sub", text: h.subheading }),
+            actions
+          ]),
+          el("div", { class: "fc-hero__media" }, [imageWithFallback(h.image, content.business.name + " banner", "hero", h.imageFallback)])
+        ])
+      : el("div", { class: "fc-shell fc-hero__inner fc-hero__inner--single" }, [
+          el("div", { class: "fc-hero__copy fc-hero__copy--center" }, [
+            h.eyebrow ? el("p", { class: "fc-eyebrow", text: h.eyebrow }) : null,
+            el("h1", { class: "fc-hero__heading", text: h.heading }),
+            el("p", { class: "fc-hero__sub", text: h.subheading }),
+            actions
+          ])
+        ]);
+    return el("section", { class: "fc-hero" + (hasBanner ? "" : " fc-hero--no-banner"), id: "top" }, [
+      heroInner,
       // Decorative ink artwork. Purely ornamental, so hidden from screen readers.
       decorImg(d.heroArt, "fc-decor fc-decor--primary"),
       decorImg(d.heroAccent, "fc-decor fc-decor--accent"),
@@ -378,11 +389,23 @@
       ]);
     }
 
+    // Photo for every drink and food. Per-item `image` wins; otherwise the
+    // series photo from categories[] is used so every card has a picture.
+    var cat = (content.categories || []).filter(function (c) { return c.id === item.category; })[0];
+    var photoSrc = item.image || (cat && cat.photo) || "";
+    var media = photoSrc
+      ? imageWithFallback(photoSrc, item.name, "menu")
+      : el("div", { class: "fc-slot fc-slot--menu" }, [
+          el("img", { src: "assets/img/placeholder.svg", alt: "", class: "fc-slot__art", "aria-hidden": "true" }),
+          el("p", { class: "fc-slot__path" }, [document.createElement("code")])
+        ]);
+
     var card = el("article", {
       class: "fc-card" + (item.soldOut ? " fc-card--out" : "") + (item.featured ? " fc-card--featured" : ""),
       "data-category": item.category,
       "data-item-id": item.id || slugify(item.name)
     }, [
+      el("div", { class: "fc-card__media" }, [media]),
       el("div", { class: "fc-card__head" }, [
         el("h3", { class: "fc-card__name" }, [
           document.createTextNode(item.name),
@@ -410,10 +433,16 @@
   function renderMenu(content) {
     var grid = el("div", { class: "fc-menu__groups", id: "fc-groups" },
       groupByCategory(content.menu, content.categories).map(function (group) {
+        var icon = group.category.icon
+          ? el("img", { class: "fc-group__icon", src: group.category.icon, alt: "", "aria-hidden": "true" })
+          : null;
         return el("section", { class: "fc-group", id: "cat-" + group.category.id }, [
           el("div", { class: "fc-group__head" }, [
-            el("h2", { class: "fc-group__title", text: group.category.name }),
-            group.category.blurb ? el("p", { class: "fc-group__blurb", text: group.category.blurb }) : null
+            icon,
+            el("div", { class: "fc-group__text" }, [
+              el("h2", { class: "fc-group__title", text: group.category.name }),
+              group.category.blurb ? el("p", { class: "fc-group__blurb", text: group.category.blurb }) : null
+            ])
           ]),
           el("div", { class: "fc-grid" }, group.items.map(function (item) { return renderMenuItem(item, content); }))
         ]);
