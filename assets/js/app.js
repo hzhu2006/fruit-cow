@@ -611,7 +611,8 @@
       ["optionsWood", "--fc-options-wood"],
       ["coverWood", "--fc-cover-wood"],
       ["ricePattern", "--fc-rice-pattern"],
-      ["ringPattern", "--fc-ring-pattern"]
+      ["ringPattern", "--fc-ring-pattern"],
+      ["grassPattern", "--fc-grass-pattern"]
     ].forEach(function (pair) {
       if (decor[pair[0]]) {
         document.documentElement.style.setProperty(pair[1], 'url("' + decor[pair[0]] + '")');

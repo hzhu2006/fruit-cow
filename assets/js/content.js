@@ -23,9 +23,9 @@ globalThis.SITE_CONTENT = {
   business: {
     name: "Fruit Cow",
     tagline: "Small-batch fruit & milk tea, naturally sweetened",
-    /* Drop your graphic at assets/img/fruit-cow-logo.png and it appears
-       automatically. Until then the site shows a labelled placeholder. */
-    logo: "assets/img/fruit-cow-logo.png",
+    /* The hand-drawn emblem is the default mark. Drop in your own file (PNG,
+       JPG or SVG) and point this at it to swap. */
+    logo: "assets/img/logo-emblem.svg",
     logoAlt: "Fruit Cow logo",
     phone: "(000) 000-0000",
     email: "hello@fruitcow.example",
@@ -65,9 +65,9 @@ globalThis.SITE_CONTENT = {
     subheading:
       "Single-origin leaves steeped in house, whole fruit pressed to order, " +
       "and sweetness you control. No artificial syrups, no shortcuts.",
-    /* Drop a wide banner at assets/img/hero.png (roughly 1600x900) and it
-       appears automatically. Placeholder shows until you do. */
-    image: "assets/img/hero.png",
+    /* The emblem fills the cover slot. Drop a wide banner at
+       assets/img/hero.png (roughly 1600x900) and point this at it to swap. */
+    image: "assets/img/logo-emblem.svg",
     primaryCta: { label: "View the menu", target: "#menu" },
     secondaryCta: { label: "Find a store", target: "#locations" }
   },
@@ -120,6 +120,8 @@ globalThis.SITE_CONTENT = {
     divider: "assets/img/curve-wave.svg",
     ricePattern: "assets/img/pattern-rice.svg",
     ringPattern: "assets/img/pattern-woodring.svg",
+    // The logo's meadow: swirling contour grass with upright tufts.
+    grassPattern: "assets/img/pattern-grass.svg",
     woodring: "assets/img/ink-woodring.svg",
     coverWood: "assets/img/pattern-wood-dark.svg",
     cardWood: "assets/img/pattern-wood-oak.svg",
@@ -128,6 +130,7 @@ globalThis.SITE_CONTENT = {
       { src: "assets/img/sticker-rice.svg",   area: "cover",     rotate: -12 },
       { src: "assets/img/sticker-citrus.svg", area: "cover",     rotate: 14 },
       { src: "assets/img/sticker-lychee.svg", area: "values",    rotate: -8 },
+      { src: "assets/img/deco-cow.svg",       area: "values",    rotate: -4 },
       { src: "assets/img/sticker-rice.svg",   area: "menu",      rotate: 10 },
       { src: "assets/img/sticker-citrus.svg", area: "locations", rotate: -14 }
     ]

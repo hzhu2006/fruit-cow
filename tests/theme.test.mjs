@@ -28,6 +28,8 @@ const ART = [
   "assets/img/sticker-rice.svg",
   "assets/img/sticker-citrus.svg",
   "assets/img/sticker-lychee.svg",
+  "assets/img/logo-emblem.svg",
+  "assets/img/deco-cow.svg",
   "assets/img/icon-instagram.svg",
   "assets/img/icon-wechat.svg",
   "assets/img/texture-grain.svg"
@@ -38,7 +40,8 @@ const PATTERNS = [
   "assets/img/pattern-wood-walnut.svg",
   "assets/img/pattern-wood-dark.svg",
   "assets/img/pattern-rice.svg",
-  "assets/img/pattern-woodring.svg"
+  "assets/img/pattern-woodring.svg",
+  "assets/img/pattern-grass.svg"
 ];
 
 /** Pull one rule block out of the stylesheet by selector. */
@@ -102,6 +105,23 @@ test("the wider blue and yellow families are defined", () => {
   });
 });
 
+test("the logo's palette is carried into the theme", () => {
+  // Sky, meadow grass, the grass contour lines and the wordmark brown.
+  [
+    ["--sky", "#a9d4d1"],
+    ["--grass", "#d6cf63"],
+    ["--grass-soft", "#e9e5a4"],
+    ["--grass-deep", "#7a6a22"],
+    ["--brand-brown", "#a8501a"]
+  ].forEach(([token, hex]) => {
+    assert.ok(CSS.includes(token + ":"), "missing logo token " + token);
+    assert.ok(CSS.toLowerCase().includes(hex.toLowerCase()),
+      token + " should keep the logo's own value " + hex);
+    const uses = CSS.split("var(" + token + ")").length - 1;
+    assert.ok(uses >= 2, token + " is declared but never used (" + uses + " uses)");
+  });
+});
+
 test("type pairs a display serif with a clean sans and degrades offline", () => {
   assert.ok(CSS.includes("--font-display:"));
   assert.ok(CSS.includes("--font-body:"));
@@ -148,6 +168,51 @@ test("every pattern exists and is tileable", () => {
   assert.ok(!ring.includes("feDisplacementMap"), "end grain must not warp, or the tile would not seam");
 });
 
+/* ------------------------------------------------------------- logo motifs */
+
+test("the logo's meadow band carries its swirling grass pattern", () => {
+  const values = rule(".fc-values {", ".fc-values__grid");
+  assert.ok(values.includes("var(--fc-grass-pattern)"), "values band uses the grass variable");
+  assert.ok(values.includes("var(--grass)"), "values band sits on the meadow colour");
+  assert.ok(values.includes("background-size"), "grass is sized to tile");
+
+  const app = fs.readFileSync(path.join(ROOT, "assets/js/app.js"), "utf8");
+  assert.ok(app.includes('"grassPattern", "--fc-grass-pattern"'),
+    "boot hands the grass pattern from decor to CSS");
+});
+
+test("the grass tile keeps the logo's swirls and tufts", () => {
+  const grass = fs.readFileSync(path.join(ROOT, "assets/img/pattern-grass.svg"), "utf8");
+  assert.ok(grass.includes("#d6cf63"), "tile uses the logo's meadow green");
+  assert.ok(grass.includes("#7a6a22"), "contour lines use the logo's olive");
+  // tufts are drawn as upright ovals, swirls as small arcs
+  assert.ok(/<ellipse[^>]*ry="1[0-9]"/.test(grass), "upright tufts are drawn as ovals");
+  assert.ok(grass.match(/<path/g).length >= 6, "flowing contour lines are drawn");
+  assert.ok(!grass.includes("feDisplacementMap"), "the tile must not warp, or it would not seam");
+});
+
+test("the emblem is the brand mark and fills the cover slot", () => {
+  const content = fs.readFileSync(path.join(ROOT, "assets/js/content.js"), "utf8");
+  assert.ok(/logo:\s*"assets\/img\/logo-emblem\.svg"/.test(content),
+    "business.logo points at the emblem");
+  assert.ok(/image:\s*"assets\/img\/logo-emblem\.svg"/.test(content),
+    "the cover slot shows the emblem");
+
+  const emblem = fs.readFileSync(path.join(ROOT, "assets/img/logo-emblem.svg"), "utf8");
+  assert.ok(emblem.includes("<circle"), "emblem is a circular badge, like the logo");
+  ["#a9d4d1", "#d6cf63", "#8a4a22"].forEach((hex) => {
+    assert.ok(emblem.toLowerCase().includes(hex), "emblem keeps the logo colour " + hex);
+  });
+  assert.ok(emblem.includes("clipPath"), "sky and meadow are clipped to the badge");
+});
+
+test("the wordmark wears the logo's brown", () => {
+  const name = rule(".fc-brand__name {", "}");
+  assert.ok(name.includes("var(--brand-brown)"), "wordmark uses the logo's brown");
+  const logo = rule(".fc-slot--logo {", "}");
+  assert.ok(logo.includes("var(--brand-brown)"), "the emblem frame echoes the logo's ring");
+});
+
 /* ---------------------------------------------------------- wood on surfaces */
 
 test("the cover is laid on the dark wood print", () => {
@@ -171,11 +236,8 @@ test("menu cards carry oak grain under a linen veil", () => {
   assert.ok(/linear-gradient\(rgba\(253, 249, 240/.test(card), "grain sits under a light veil");
 });
 
-test("the wood cross section is printed behind the values and locations bands", () => {
-  const values = rule(".fc-values {", ".fc-values__grid");
-  assert.ok(values.includes("var(--fc-ring-pattern)"), "values band uses the end-grain print");
-  assert.ok(/linear-gradient\(rgba\(253, 249, 240/.test(values), "grain sits under a light veil");
-
+test("the wood cross section is printed behind the locations band", () => {
+  // The values band became the meadow, so the end grain carries locations now.
   const loc = rule(".fc-locations {", ".fc-locations .fc-shell");
   assert.ok(loc.includes("var(--fc-ring-pattern)"), "locations band uses the end-grain print");
 

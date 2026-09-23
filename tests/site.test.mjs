@@ -7,7 +7,9 @@
 
 import test from "node:test";
 import assert from "node:assert/strict";
-import { bootPage, own } from "./helpers.mjs";
+import fs from "node:fs";
+import path from "node:path";
+import { ROOT, bootPage, own } from "./helpers.mjs";
 
 /* --------------------------------------------------------------- pure logic */
 
@@ -217,7 +219,7 @@ test("topping and milk add-on prices come straight from content.js", async () =>
   dom.window.close();
 });
 
-test("missing graphic shows a placeholder naming the exact drop-in path", async () => {
+test("missing graphic shows a placeholder; the shipped emblem resolves", async () => {
   const dom = await bootPage();
   const { document, FruitCow } = dom.window;
 
@@ -230,17 +232,19 @@ test("missing graphic shows a placeholder naming the exact drop-in path", async 
   assert.ok(slot, "placeholder slot should replace the broken image");
   assert.equal(slot.querySelector("code").textContent, "assets/img/fruit-cow-logo.png");
 
-  // The header logo slot must point at the path the user drops their file into,
-  // whether jsdom already swapped in the placeholder or not.
+  // The emblem ships with the repo now, so the header brand must resolve to a
+  // file that actually exists rather than naming a drop-in path.
   const brand = document.querySelector(".fc-brand");
   const brandImg = brand.querySelector("img.fc-img--logo");
   const brandSlot = brand.querySelector(".fc-slot--logo");
   assert.ok(brandImg || brandSlot, "brand shows either the logo image or its placeholder");
   const referenced = brandImg ? brandImg.getAttribute("src") : brandSlot.querySelector("code").textContent;
+  const logoPath = referenced.slice(referenced.indexOf("assets/img/"));
   assert.ok(
-    referenced.endsWith("assets/img/fruit-cow-logo.png"),
-    "expected the drop-in logo path, got " + referenced
+    fs.existsSync(path.join(ROOT, logoPath)),
+    "expected the brand mark to ship as a real file, got " + referenced
   );
+  assert.equal(logoPath, "assets/img/logo-emblem.svg", "the emblem is the default brand mark");
   dom.window.close();
 });
 

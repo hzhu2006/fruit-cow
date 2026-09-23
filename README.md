@@ -163,7 +163,9 @@ shows a dashed placeholder naming the exact file to drop in. Delete the whole
 ## Look and feel
 
 Dark wood print, rice paper, and terraced fields, with **wood cross sections**
-(end grain) printed behind the middle bands. The palette runs a full
+(end grain) printed behind the locations band and the **logo's meadow** — swirling
+contour grass with upright tufts — printed behind the proof-point strip. The
+hand-drawn **emblem** is the brand mark and fills the cover slot. The palette runs a full
 complementary range — **indigo, azure, turquoise** against **orange, saffron,
 straw and gold** — but stays disciplined: orange carries the actions, indigo
 carries prices, and the rest appear only in tags, hairlines and the long curve
@@ -176,7 +178,9 @@ Three places to change it:
 **1. Colours and fonts** — the `:root` block at the top of
 [`assets/css/styles.css`](assets/css/styles.css). The palette is grouped:
 `--wood-*`, `--paper`, `--indigo-*`, `--turquoise-*`, `--azure-*`,
-`--orange-*`, `--saffron`, `--amber`, `--straw`, `--gold`.
+`--orange-*`, `--saffron`, `--amber`, `--straw`, `--gold`, plus the ones taken
+straight off the logo: `--sky`, `--grass`, `--grass-soft`, `--grass-deep` and
+`--brand-brown` (which colours the wordmark and frames the emblem).
 
 **2. Artwork** — the `decor` block in `content.js`. Every entry is a file path;
 replace the file at that path with your own drawing, same filename, and it
@@ -192,7 +196,8 @@ decor: {
   woodring: "assets/img/ink-woodring.svg",            // one large timber slice
   divider: "assets/img/curve-wave.svg",               // long curve between sections
   ricePattern: "assets/img/pattern-rice.svg",         // grains over the page paper
-  ringPattern: "assets/img/pattern-woodring.svg",     // end grain behind sections
+  ringPattern: "assets/img/pattern-woodring.svg",     // end grain behind locations
+  grassPattern: "assets/img/pattern-grass.svg",       // the logo's meadow, behind values
   coverWood: "assets/img/pattern-wood-dark.svg",      // dark print behind the cover
   cardWood: "assets/img/pattern-wood-oak.svg",        // grain under each menu card
   optionsWood: "assets/img/pattern-wood-walnut.svg",  // grain under each drink option
@@ -200,6 +205,7 @@ decor: {
     { src: "assets/img/sticker-rice.svg",   area: "cover",     rotate: -12 },
     { src: "assets/img/sticker-citrus.svg", area: "cover",     rotate: 14 },
     { src: "assets/img/sticker-lychee.svg", area: "values",    rotate: -8 },
+    { src: "assets/img/deco-cow.svg",       area: "values",    rotate: -4 },
     { src: "assets/img/sticker-rice.svg",   area: "menu",      rotate: 10 },
     { src: "assets/img/sticker-citrus.svg", area: "locations", rotate: -14 }
   ]
@@ -210,14 +216,18 @@ decor: {
 `rotate` is degrees. Add as many as you like; the second one in any area is
 offset automatically. Empty the list and they all disappear.
 
-**4. Patterns** — the wood prints, the end grain and the rice scatter are all
-tileable. The straight-grain prints are generated with `feTurbulence`; the end
-grain is drawn as corner-centred rings instead, because a filter warp would
-break the tile seam. No photos, so nothing to licence.
+**4. Patterns** — the wood prints, the end grain, the rice scatter and the
+meadow are all tileable. The straight-grain prints are generated with
+`feTurbulence`; the end grain and the grass are drawn instead, because a filter
+warp would break the tile seam. No photos, so nothing to licence.
+
+**5. Brand** — `business.logo` points at `assets/img/logo-emblem.svg`, and
+`hero.image` shows the same emblem in the cover slot. Drop your own file in and
+point either one at it to swap.
 
 Available fruit, if you want to swap any of them in: `ink-mango`, `ink-lychee`,
-`ink-citrus`, `ink-peach`, `ink-plum`, plus `ink-rice`, `ink-bamboo` and
-`ink-terraces`. The proof-point strip under the cover comes from the `values`
+`ink-citrus`, `ink-peach`, `ink-plum`, plus `ink-rice`, `ink-bamboo`,
+`ink-terraces`, the `deco-cow` and the `logo-emblem`. The proof-point strip under the cover comes from the `values`
 block in `content.js`; delete it and the section disappears.
 
 ## Layout

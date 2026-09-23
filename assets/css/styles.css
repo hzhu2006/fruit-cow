@@ -48,6 +48,14 @@
   --gold:      #b9922c;
   --gold-soft: #f3e6bd;
 
+  /* straight off the logo: sky, meadow grass, its olive contour lines, and
+     the wordmark brown */
+  --sky:         #a9d4d1;
+  --grass:       #d6cf63;
+  --grass-soft:  #e9e5a4;
+  --grass-deep:  #7a6a22;
+  --brand-brown: #a8501a;
+
   /* neutrals */
   --ink:      #241a10;
   --ink-2:    #42342a;
@@ -63,6 +71,7 @@
   --fc-cover-wood: url("../img/pattern-wood-dark.svg");
   --fc-rice-pattern: url("../img/pattern-rice.svg");
   --fc-ring-pattern: url("../img/pattern-woodring.svg");
+  --fc-grass-pattern: url("../img/pattern-grass.svg");
 
   --font-display: "Fraunces", "Songti SC", "Iowan Old Style", Georgia, serif;
   --font-body: "Inter", system-ui, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
@@ -144,7 +153,10 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 500; letter-spacing:
   background: var(--linen); border: 1px solid var(--line); border-radius: 6px;
   padding: 3px 7px; font-size: .72rem; word-break: break-all;
 }
-.fc-slot--logo { width: 44px; height: 44px; flex: 0 0 auto; padding: 3px; }
+.fc-slot--logo {
+  width: 44px; height: 44px; flex: 0 0 auto; padding: 3px;
+  border: 1px solid var(--brand-brown); border-radius: 999px; background: var(--linen);
+}
 .fc-slot--logo .fc-slot__art { max-width: 100%; }
 .fc-slot--logo .fc-slot__path { display: none; }
 .fc-slot--hero { min-height: 380px; }
@@ -180,7 +192,7 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 500; letter-spacing:
 .fc-brand__text { display: flex; flex-direction: column; line-height: 1.25; }
 .fc-brand__name {
   font-family: var(--font-display); font-size: 1.3rem; font-weight: 600;
-  letter-spacing: -.008em; color: var(--wood-deep);
+  letter-spacing: -.008em; color: var(--brand-brown);
 }
 .fc-brand__tagline {
   font-size: .62rem; letter-spacing: .16em; color: var(--ink-soft); text-transform: uppercase;
@@ -298,6 +310,7 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 500; letter-spacing:
 
 /* ---------------------------------------------------------------- stickers */
 /* Little paper stickers. Positioned per area; rotation comes from content.js. */
+.fc-slot--hero { background: var(--sky); }
 .fc-sticker {
   position: absolute; z-index: 2;
   width: 78px; height: 78px;
@@ -327,23 +340,32 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 500; letter-spacing:
 
 /* ------------------------------------------------------------------ values */
 /* Wood cross section printed faintly behind the proof points. */
+/* A meadow: the logo's swirling grass, washed down so the cards stay legible */
 .fc-values {
   position: relative; overflow: hidden;
   padding: 62px 0 56px;
-  background-color: var(--linen);
-  background-image:
-    linear-gradient(rgba(253, 249, 240, .9), rgba(253, 249, 240, .9)),
-    var(--fc-ring-pattern);
-  background-size: auto, 400px 400px;
+  background-color: var(--grass);
+  background-image: var(--fc-grass-pattern);
+  background-size: 480px 170px;
   border-top: 1px solid var(--line);
   border-bottom: 1px solid var(--line);
 }
+.fc-values::before {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(var(--grass-soft), var(--grass)); opacity: .8;
+}
+.fc-values::after {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(180deg, transparent 55%, var(--sky)); opacity: .5;
+}
+.fc-values .fc-eyebrow { color: var(--grass-deep); }
+.fc-values .fc-section-title { border-bottom: 1px solid var(--grass-deep); padding-bottom: 4px; }
 .fc-values__grid { position: relative; z-index: 1; display: grid; grid-template-columns: repeat(3, 1fr); gap: 26px; }
 /* arched tops — the curve language */
 .fc-value {
   display: grid; gap: 9px; align-content: start;
   padding: 38px 26px 28px;
-  background: var(--linen);
+  background: linear-gradient(var(--linen), var(--grass-soft));
   border: 1px solid var(--line);
   border-radius: 130px 130px var(--radius) var(--radius);
   box-shadow: var(--shadow-sm);
