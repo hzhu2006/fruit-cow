@@ -542,6 +542,8 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 500; letter-spacing:
 }
 .fc-loc__name { margin: 0 0 8px; font-size: 1.2rem; color: var(--wood-deep); text-align: center; }
 .fc-loc__addr { margin: 0 0 4px; font-size: .9rem; color: var(--ink-soft); text-align: center; }
+.fc-loc__addr a { color: var(--ink-soft); text-decoration: none; border-bottom: 1px solid var(--line-soft); }
+.fc-loc__addr a:hover { color: var(--orange-deep); border-color: var(--orange-deep); }
 .fc-loc__phone { margin: 0 0 18px; font-size: .9rem; text-align: center; }
 .fc-loc__phone a { text-decoration: none; color: var(--orange-deep); font-weight: 600; }
 .fc-hours { margin: 0; display: grid; gap: 7px; padding-top: 16px; border-top: 1px solid var(--line-soft); }
@@ -563,7 +565,9 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 500; letter-spacing:
 }
 .fc-footer__inner { display: grid; gap: 26px; }
 .fc-footer__brand { margin: 0; font-family: var(--font-display); font-size: 1.4rem; font-weight: 600; color: #fbf6ea; }
-.fc-footer__note { margin: 6px 0 0; font-size: .82rem; color: rgba(240, 228, 208, .55); max-width: 56ch; }
+.fc-footer__addr { margin: 8px 0 0; font-size: .86rem; color: rgba(240, 228, 208, .78); }
+.fc-footer__hours { margin: 4px 0 0; font-size: .82rem; color: rgba(240, 228, 208, .55); }
+.fc-footer__note { margin: 14px 0 0; font-size: .82rem; color: rgba(240, 228, 208, .55); max-width: 56ch; }
 .fc-footer__contact { display: flex; flex-wrap: wrap; gap: 22px; font-size: .86rem; }
 .fc-footer__contact p { margin: 0; }
 .fc-footer__contact a { color: #f0e4d0; text-decoration: none; border-bottom: 1px solid rgba(240, 228, 208, .28); }

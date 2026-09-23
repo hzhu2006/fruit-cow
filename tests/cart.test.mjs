@@ -18,7 +18,7 @@ const BURRITO = "classic-original-rice-burrito";                  // $12
 
 /* ------------------------------------------------------------ pricing math */
 
-test("a drink prices from its single `price`; sweetness and ice stay free", async () => {
+test("a drink prices from its single `price`; sweetness and ice stay free, rice toppings add their price", async () => {
   const dom = await bootPage();
   const { SITE_CONTENT: c, FruitCowCart: Cart } = dom.window;
 
@@ -30,17 +30,25 @@ test("a drink prices from its single `price`; sweetness and ice stay free", asyn
     { itemId: SMOOTHIE, sweetnessId: "s100", iceId: "extra" },
     c
   );
-  assert.equal(fussy.unitPrice, 9.99, "choices on the board are free");
+  assert.equal(fussy.unitPrice, 9.99, "sweetness and ice are free");
 
-  // The board sells no sizes, toppings or milks, so asking for them changes
-  // neither the price nor the line.
+  // Glutinous-rice toppings are priced — one and two together.
+  const withRice = Cart.createLine({ itemId: SMOOTHIE, toppingIds: ["extra-rice"] }, c);
+  assert.equal(withRice.unitPrice, 10.99);
+  assert.deepEqual(own(withRice.toppingIds), ["extra-rice"]);
+
+  const withTwo = Cart.createLine({ itemId: SMOOTHIE, toppingIds: ["extra-rice", "tapioca"] }, c);
+  // 9.99 + 1.00 + 0.75
+  assert.equal(withTwo.unitPrice, 11.74);
+
+  // The board sells no sizes or milks, so asking for them changes neither the
+  // price nor the line; toppings that exist are kept.
   const impossible = Cart.createLine(
-    { itemId: SMOOTHIE, sizeId: "L", toppingIds: ["boba"], milkId: "oat" },
+    { itemId: SMOOTHIE, sizeId: "L", milkId: "oat" },
     c
   );
   assert.equal(impossible.unitPrice, 9.99);
   assert.equal(impossible.sizeId, null, "no size tiers on this menu");
-  assert.deepEqual(own(impossible.toppingIds), [], "no toppings on this menu");
   assert.equal(impossible.milkId, null, "no milk swaps on this menu");
   dom.window.close();
 });
@@ -112,6 +120,12 @@ test("describeLine names the choices a customer picked", async () => {
   );
   assert.equal(Cart.describeLine(line, c), "25% sweet \u00b7 Light ice");
 
+  const withTopping = Cart.createLine(
+    { itemId: SMOOTHIE, sweetnessId: "s25", iceId: "light", toppingIds: ["extra-rice", "tapioca"] },
+    c
+  );
+  assert.equal(Cart.describeLine(withTopping, c), "25% sweet \u00b7 Light ice \u00b7 +White Glutinous Rice \u00b7 +Tapioca Pearls");
+
   const plain = Cart.createLine({ itemId: BURRITO }, c);
   assert.equal(Cart.describeLine(plain, c), "", "a burrito has nothing to describe");
   dom.window.close();
@@ -121,11 +135,11 @@ test("option groups follow the series, and only ones the menu really has", async
   const dom = await bootPage();
   const { SITE_CONTENT: c, FruitCowCart: Cart } = dom.window;
 
-  // Drinks: the two free choices the board offers, and nothing invented.
+  // Drinks: sweetness, ice and the glutinous-rice toppings.
   ["fruit", "yogurt", "kale", "nut"].forEach((catId) => {
     const drink = c.menu.find((m) => m.category === catId);
-    assert.deepEqual(own(Cart.optionsFor(drink, c)), ["sweetness", "ice"],
-      catId + " should offer sweetness and ice only");
+    assert.deepEqual(own(Cart.optionsFor(drink, c)), ["sweetness", "ice", "toppings"],
+      catId + " should offer sweetness, ice and toppings");
   });
 
   const burrito = c.menu.find((m) => m.category === "burrito");
@@ -137,7 +151,7 @@ test("option groups follow the series, and only ones the menu really has", async
 
   // And a group the menu does not stock is dropped even when asked for.
   const greedy = Object.assign({}, c.menu[0], { options: ["size", "toppings", "milk", "ice"] });
-  assert.deepEqual(own(Cart.optionsFor(greedy, c)), ["ice"],
+  assert.deepEqual(own(Cart.optionsFor(greedy, c)), ["toppings", "ice"],
     "groups with no entries in customizations are not offered");
   dom.window.close();
 });
@@ -250,16 +264,28 @@ test("clicking Add opens the customizer with only the choices the board offers",
   );
   assert.ok(modal.querySelector('input[name="fc-opt-sweetness"]'), "sweetness offered");
   assert.ok(modal.querySelector('input[name="fc-opt-ice"]'), "ice offered");
+  assert.ok(modal.querySelector('input[name="fc-opt-toppings"]'), "glutinous-rice toppings offered");
   assert.equal(modal.querySelector('input[name="fc-opt-size"]'), null, "no sizes on this menu");
-  assert.equal(modal.querySelector('input[name="fc-opt-toppings"]'), null, "no toppings on this menu");
   assert.equal(modal.querySelector('input[name="fc-opt-milk"]'), null, "no milk swaps on this menu");
+  // Toppings are listed with their prices; sweetness/ice are not.
+  assert.ok(modal.textContent.includes("White Glutinous Rice"));
+  assert.ok(modal.textContent.includes("+$1.00"));
 
   assert.equal(modal.querySelector("#fc-customizer-price").textContent, "$9.99");
 
-  // Choices are free, so the price only moves with quantity.
+  // Sweetness and ice are free, so the price only moves when toppings or quantity change.
   const full = modal.querySelector('input[name="fc-opt-sweetness"][value="s100"]');
   full.checked = true;
   full.dispatchEvent(new dom.window.Event("change", { bubbles: true }));
+  assert.equal(modal.querySelector("#fc-customizer-price").textContent, "$9.99");
+
+  const topping = modal.querySelector('input[name="fc-opt-toppings"][value="extra-rice"]');
+  topping.checked = true;
+  topping.dispatchEvent(new dom.window.Event("change", { bubbles: true }));
+  assert.equal(modal.querySelector("#fc-customizer-price").textContent, "$10.99");
+
+  topping.checked = false;
+  topping.dispatchEvent(new dom.window.Event("change", { bubbles: true }));
   assert.equal(modal.querySelector("#fc-customizer-price").textContent, "$9.99");
 
   click(dom, modal.querySelector('[data-act="inc"]'));

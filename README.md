@@ -9,7 +9,7 @@ No build step. Plain HTML, CSS and JavaScript — change a file, refresh the bro
 
 ```bash
 npm start          # dev server on http://localhost:8000 — reloads itself when you save
-npm test           # 74 checks against the real page
+npm test           # 75 checks against the real page
 npm run serve      # plain static server, no file watching
 ```
 
@@ -59,27 +59,39 @@ orderable. Delete the whole block to remove an item.
 Each series sets this once, with `options` in `categories`:
 
 ```js
-{ id: "fruit",   name: "Fruit Series",   blurb: "…", options: ["sweetness", "ice"] },
+{ id: "fruit",   name: "Fruit Series",   blurb: "…", options: ["sweetness", "ice", "toppings"] },
 { id: "burrito", name: "Burrito Series", blurb: "…", options: [] }
 ```
 
-So every drink offers sweetness and ice, and the burritos offer neither — they
-open straight to quantity and notes. A single item can override its series with
-its own `options: [...]`.
+So every drink offers sweetness, ice and the **glutinous-rice toppings**, and
+the burritos offer neither — they open straight to quantity and notes. A single
+item can override its series with its own `options: [...]`.
 
 The names you can use are `size`, `sweetness`, `ice`, `toppings` and `milk`.
 A group is only offered if the matching list under `customizations` actually
 has entries, so **deleting a list removes it everywhere** — from the item
 customizer, from the "Build your drink" band, and from the copy above the menu.
-Add the list back and the panel returns on its own:
+Add the list back and the panel returns on its own. The house toppings put
+the grain front and centre:
 
 ```js
 customizations: {
   sweetness: [ … ],
   ice: [ … ],
-  toppings: [{ id: "boba", label: "Tapioca boba", addPrice: 0.75 }]  // now on offer
+  toppings: [
+    { id: "extra-rice",  label: "White Glutinous Rice",   addPrice: 1.00 },
+    { id: "rice-mochi",  label: "Handmade Rice Mochi",    addPrice: 1.50 },
+    { id: "mango-popping", label: "Mango Popping Boba",   addPrice: 1.00 },
+    // … crystal rice balls, red bean & rice, taro mochi, more boba
+  ]
 }
 ```
+
+> **Emphasis on glutinous rice** — the first six toppings are all rice:
+> house-steamed white glutinous rice, handmade rice mochi (plain and brown
+> sugar), crystal glutinous rice balls, red bean & glutinous rice, and taro
+> rice mochi — plus popping boba and tapioca for texture contrast.
+
 
 ### Rules that cause a blank menu if broken
 
@@ -155,6 +167,27 @@ One-time GitHub setup: **Settings → Pages → Source → GitHub Actions**.
 
 The pipeline copies only `index.html` and `assets/` — not tests or
 `node_modules` — and refuses to deploy if a test fails.
+
+## Contact & locations
+
+`business` holds the shop-wide line — phone, email, street address and hours —
+shown in the footer on every page. `locations` holds each outpost with its
+own address (linked to Google Maps via `mapsUrl`), phone and day-by-day hours
+grid. Edit both and the site follows; add a second address and a second card
+appears.
+
+```js
+business: {
+  phone: "(718) 555-0148",
+  email: "hello@fruitcow.nyc",
+  address: "136-20 38th Ave, Flushing, NY 11354",
+  hours: "Open daily · 10:00 AM – 9:30 PM"
+},
+locations: [
+  { name: "Flushing · Main Street (Flagship)", address: "136-20 38th Ave …", phone: "(718) 555-0148", mapsUrl: "https://maps.google.com/?q=…", hours: { mon: "10:00 AM – 9:30 PM", … } },
+  { name: "Manhattan · Koreatown", address: "25 W 32nd St …", phone: "(212) 555-0160", … }
+]
+```
 
 ## Social placeholders
 

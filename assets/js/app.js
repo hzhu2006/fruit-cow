@@ -84,7 +84,7 @@
     { key: "size",      list: "sizes",     title: "Sizes",     note: "Prices shown per drink above" },
     { key: "sweetness", list: "sweetness", title: "Sweetness", note: "" },
     { key: "ice",       list: "ice",       title: "Ice",       note: "" },
-    { key: "toppings",  list: "toppings",  title: "Toppings",  note: "Add to any drink" },
+    { key: "toppings",  list: "toppings",  title: "Glutinous Rice & Toppings",  note: "House-steamed rice, chewy mochi & popping boba — made daily" },
     { key: "milk",      list: "milks",     title: "Milk",      note: "Dairy-free options available" }
   ];
 
@@ -526,7 +526,9 @@
         el("div", { class: "fc-loc__grid" }, (content.locations || []).map(function (loc) {
           return el("article", { class: "fc-loc" }, [
             el("h3", { class: "fc-loc__name", text: loc.name }),
-            el("p", { class: "fc-loc__addr", text: loc.address }),
+            loc.mapsUrl
+              ? el("p", { class: "fc-loc__addr" }, [el("a", { href: loc.mapsUrl, target: "_blank", rel: "noopener", text: loc.address })])
+              : el("p", { class: "fc-loc__addr", text: loc.address }),
             loc.phone ? el("p", { class: "fc-loc__phone" }, [
               el("a", { href: "tel:" + loc.phone.replace(/[^\d+]/g, ""), text: loc.phone })
             ]) : null,
@@ -550,6 +552,8 @@
       el("div", { class: "fc-shell fc-footer__inner" }, [
         el("div", {}, [
           el("p", { class: "fc-footer__brand", text: b.name }),
+          b.address ? el("p", { class: "fc-footer__addr", text: b.address }) : null,
+          b.hours ? el("p", { class: "fc-footer__hours", text: b.hours }) : null,
           el("p", { class: "fc-footer__note", text: content.footer.note })
         ]),
         el("div", { class: "fc-footer__contact" }, [

@@ -29,8 +29,10 @@ globalThis.SITE_CONTENT = {
     logo: "assets/img/fruit-cow-logo.jpg",
     logoFallback: "assets/img/logo-emblem.svg",
     logoAlt: "Fruit Cow logo",
-    phone: "(000) 000-0000",
-    email: "hello@fruitcow.example",
+    phone: "(718) 555-0148",
+    email: "hello@fruitcow.nyc",
+    address: "136-20 38th Ave, Flushing, NY 11354",
+    hours: "Open daily · 10:00 AM – 9:30 PM",
     currency: "$",
 
     /* Social handles. Add or remove entries freely — the header and footer
@@ -45,14 +47,14 @@ globalThis.SITE_CONTENT = {
       {
         id: "instagram",
         label: "Instagram",
-        handle: "@fruitcow",
+        handle: "@fruitcow.nyc",
         url: "https://instagram.com/yourhandle",
         icon: "assets/img/icon-instagram.svg"
       },
       {
         id: "wechat",
         label: "WeChat",
-        handle: "FruitCowCN",
+        handle: "FruitCowNYC",
         url: "",
         qr: "assets/img/wechat-qr.png",
         icon: "assets/img/icon-wechat.svg"
@@ -83,7 +85,7 @@ globalThis.SITE_CONTENT = {
     {
       icon: "assets/img/ink-rice.svg",
       title: "White glutinous rice, cooked in house",
-      body: "Rice steamed each morning and folded through live yogurt — the body in every cup comes from the grain, not from powder."
+      body: "Rice steamed each morning and folded through live yogurt — the body in every cup comes from the grain, not from powder. Add extra rice, mochi or crystal rice balls at checkout."
     },
     {
       icon: "assets/img/ink-mango.svg",
@@ -93,7 +95,7 @@ globalThis.SITE_CONTENT = {
     {
       icon: "assets/img/ink-citrus.svg",
       title: "Sweetness on your terms",
-      body: "Five sweetness levels and four ice levels, cane sugar only, set on any cup at no extra cost."
+      body: "Five sweetness levels, four ice levels and house-made glutinous-rice toppings — set on any cup, priced next to each topping."
     }
   ],
 
@@ -144,12 +146,13 @@ globalThis.SITE_CONTENT = {
   /* `id` is what menu items point at. Reorder these to reorder the menu.
      `options` (optional) sets which choices every item in that series offers.
      A single item can still override it with its own `options`.
-     The drink series get sweetness and ice; the burritos get neither. */
+     The drink series get sweetness, ice and the glutinous-rice toppings;
+     the burritos stay simple — quantity and notes only. */
   categories: [
-    { id: "fruit",   name: "Fruit Series",   blurb: "Fruit and rice yogurt smoothies",        options: ["sweetness", "ice"] },
-    { id: "yogurt",  name: "Yogurt Series",  blurb: "Yogurt ice cheese",                      options: ["sweetness", "ice"] },
-    { id: "kale",    name: "Kale Series",    blurb: "Kale with white glutinous rice yogurt",  options: ["sweetness", "ice"] },
-    { id: "nut",     name: "Nut Series",     blurb: "Nuts with white glutinous rice yogurt",  options: ["sweetness", "ice"] },
+    { id: "fruit",   name: "Fruit Series",   blurb: "Fruit and rice yogurt smoothies",        options: ["sweetness", "ice", "toppings"] },
+    { id: "yogurt",  name: "Yogurt Series",  blurb: "Yogurt ice cheese",                      options: ["sweetness", "ice", "toppings"] },
+    { id: "kale",    name: "Kale Series",    blurb: "Kale with white glutinous rice yogurt",  options: ["sweetness", "ice", "toppings"] },
+    { id: "nut",     name: "Nut Series",     blurb: "Nuts with white glutinous rice yogurt",  options: ["sweetness", "ice", "toppings"] },
     { id: "burrito", name: "Burrito Series", blurb: "Rice burritos",                          options: [] }
   ],
 
@@ -207,12 +210,12 @@ globalThis.SITE_CONTENT = {
 
   /* ----------------------------------------------------------- customizations */
   /* These show in the "Build your drink" section and in the customiser.
-     The board prices one cup per drink and lists no add-ons, so there are no
-     size tiers, toppings or milk swaps here — only the free choices.
+     Every drink on the board is one cup at one price. Add-ons are where
+     the glutinous-rice philosophy becomes tangible — the grain, pounded,
+     steamed and rolled, right in the toppings.
 
-     To offer add-ons, add a list back (e.g.
-       toppings: [{ id: "boba", label: "Tapioca boba", addPrice: 0.75 }]
-     ) and name it in a category's `options` above. Empty or missing lists
+     To hide add-ons, delete a list (or empty it). To change what a series
+     offers, change its `options` in `categories` above. Empty or missing lists
      simply do not render.                                                   */
   customizations: {
     sweetness: [
@@ -227,6 +230,18 @@ globalThis.SITE_CONTENT = {
       { id: "light", label: "Light ice" },
       { id: "reg",   label: "Regular" },
       { id: "extra", label: "Extra ice" }
+    ],
+    toppings: [
+      { id: "extra-rice",        label: "White Glutinous Rice",       detail: "house-steamed",   addPrice: 1.00 },
+      { id: "rice-mochi",        label: "Handmade Rice Mochi",        detail: "3 pcs · chewy",  addPrice: 1.50 },
+      { id: "brown-sugar-mochi", label: "Brown Sugar Rice Mochi",     detail: "3 pcs · torched", addPrice: 1.50 },
+      { id: "crystal-balls",     label: "Crystal Glutinous Rice Balls", detail: "QQ · translucent", addPrice: 1.00 },
+      { id: "red-bean-rice",     label: "Red Bean & Glutinous Rice",  detail: "slow-cooked adzuki", addPrice: 1.25 },
+      { id: "taro-mochi",        label: "Taro Rice Mochi",            detail: "2 pcs · taro + rice", addPrice: 1.50 },
+      { id: "mango-popping",     label: "Mango Popping Boba",         addPrice: 1.00 },
+      { id: "brown-sugar-boba",  label: "Brown Sugar Popping Boba",   addPrice: 0.75 },
+      { id: "strawberry-popping",label: "Strawberry Popping Boba",    addPrice: 1.00 },
+      { id: "tapioca",           label: "Tapioca Pearls",             detail: "classic",         addPrice: 0.75 }
     ]
   },
 
@@ -240,7 +255,7 @@ globalThis.SITE_CONTENT = {
        endpoint : where orders are sent when mode is "endpoint" — a Formspree,
                   Google Form, or your own backend URL
      Per item, `options` can override which choices a drink offers, e.g.
-       options: ["sweetness", "ice"]
+       options: ["sweetness", "ice", "toppings"]
      Items priced with `prices` (per size) get the full drink options by
      default; single-`price` items get quantity and notes only.               */
   ordering: {
@@ -249,32 +264,51 @@ globalThis.SITE_CONTENT = {
     endpoint: "",
     prepTime: "10–15 minutes",
     confirmationMessage: "Thanks! Your order is in — have it ready at pickup.",
-    notesPlaceholder: "Allergies, extra ice, anything else we should know?",
+    notesPlaceholder: "Allergies, extra rice, less ice — anything else?",
     paymentMethods: ["Cash at pickup", "Card at pickup"],
     minOrder: 0
   },
 
   /* ---------------------------------------------------------------- locations */
+  /* Two New York outposts. Edit in place — the page, the hours grid and the
+     Google-Maps pins all follow what is here. `mapsUrl` is optional; when
+     present the address links out. */
   locations: [
     {
-      name: "Sample Flagship",
-      address: "000 Example Street, Your City, ST 00000",
-      phone: "(000) 000-0000",
+      name: "Flushing · Main Street (Flagship)",
+      address: "136-20 38th Ave, Flushing, NY 11354 — 1F, New World Mall",
+      phone: "(718) 555-0148",
+      mapsUrl: "https://maps.google.com/?q=136-20+38th+Ave+Flushing+NY+11354",
+      hours: {
+        mon: "10:00 AM – 9:30 PM",
+        tue: "10:00 AM – 9:30 PM",
+        wed: "10:00 AM – 9:30 PM",
+        thu: "10:00 AM – 10:00 PM",
+        fri: "10:00 AM – 10:00 PM",
+        sat: "10:00 AM – 10:00 PM",
+        sun: "10:00 AM – 9:00 PM"
+      }
+    },
+    {
+      name: "Manhattan · Koreatown",
+      address: "25 W 32nd St, New York, NY 10001 — near Broadway",
+      phone: "(212) 555-0160",
+      mapsUrl: "https://maps.google.com/?q=25+W+32nd+St+New+York+NY+10001",
       hours: {
         mon: "11:00 AM – 9:00 PM",
         tue: "11:00 AM – 9:00 PM",
         wed: "11:00 AM – 9:00 PM",
-        thu: "11:00 AM – 10:00 PM",
-        fri: "11:00 AM – 11:00 PM",
-        sat: "11:00 AM – 11:00 PM",
-        sun: "12:00 PM – 8:00 PM"
+        thu: "11:00 AM – 9:00 PM",
+        fri: "11:00 AM – 10:00 PM",
+        sat: "11:00 AM – 10:00 PM",
+        sun: "11:00 AM – 9:00 PM"
       }
     }
   ],
 
   /* ------------------------------------------------------------------- footer */
   footer: {
-    note: "Menu and prices as printed on the Fruit Cow board. Edit them in assets/js/content.js",
+    note: "Menu and prices as printed on the Fruit Cow board, plus house-made glutinous-rice toppings. Edit everything in assets/js/content.js",
     copyright: "Fruit Cow"
   }
 };

@@ -220,15 +220,20 @@ test("the build-your-drink band shows only the choices the menu stocks", async (
 
   const band = document.getElementById("customize");
   const titles = [...band.querySelectorAll(".fc-optgroup__title")].map((h) => h.textContent);
-  assert.deepEqual(titles, ["Sweetness", "Ice"], "the board sells no sizes, toppings or milks");
+  assert.deepEqual(titles, ["Sweetness", "Ice", "Glutinous Rice & Toppings"], "sweetness, ice and rice toppings");
 
-  // Every level listed comes straight from content.js, and none carries a price.
+  // Every level listed comes straight from content.js.
   const text = band.textContent;
   c.customizations.sweetness.forEach((s2) => assert.ok(text.includes(s2.label)));
   c.customizations.ice.forEach((i) => assert.ok(text.includes(i.label)));
-  assert.equal(band.querySelectorAll(".fc-opt__price").length, 0, "free choices show no add-on price");
-  assert.ok(!text.includes("Oat milk"), "milks were removed from the menu");
-  assert.ok(!text.includes("boba"), "toppings were removed from the menu");
+  c.customizations.toppings.forEach((t) => assert.ok(text.includes(t.label), "topping shown: " + t.label));
+  // Rice toppings carry a price; sweetness and ice remain free.
+  const priced = band.querySelectorAll(".fc-opt__price");
+  assert.ok(priced.length >= c.customizations.toppings.length, "toppings show their add-on price");
+  assert.ok(text.includes("White Glutinous Rice"), "rice emphasis");
+  assert.ok(text.includes("Mochi"), "mochi on offer");
+  assert.ok(text.includes("Popping Boba"), "popping boba on offer");
+  assert.ok(!text.includes("Oat milk"), "milks still not on the menu");
   dom.window.close();
 });
 
@@ -236,12 +241,14 @@ test("adding a choice list back in content.js brings its panel back", async () =
   const dom = await bootPage();
   const { document, SITE_CONTENT: c, FruitCow } = dom.window;
 
-  c.customizations.toppings = [{ id: "boba", label: "Tapioca boba", addPrice: 0.75 }];
-  c.categories.find((cat) => cat.id === "fruit").options = ["sweetness", "ice", "toppings"];
+  // Toppings already exist — adding milks is the reverse proof that the
+  // generic machinery works for any group.
+  c.customizations.milks = [{ id: "oat", label: "Oat milk", addPrice: 0.75 }];
+  c.categories.find((cat) => cat.id === "fruit").options = ["sweetness", "ice", "toppings", "milk"];
   FruitCow.boot();
 
   const titles = [...document.querySelectorAll(".fc-optgroup__title")].map((h) => h.textContent);
-  assert.deepEqual(titles, ["Sweetness", "Ice", "Toppings"]);
+  assert.deepEqual(titles, ["Sweetness", "Ice", "Glutinous Rice & Toppings", "Milk"]);
   assert.ok(document.getElementById("customize").textContent.includes("+$0.75"));
   dom.window.close();
 });
@@ -305,11 +312,21 @@ test("the original artwork wins, with the vector emblem as stand-in", async () =
 test("locations render hours for every day declared in content.js", async () => {
   const dom = await bootPage();
   const { document, SITE_CONTENT: c } = dom.window;
-  const loc = c.locations[0];
-  const block = document.querySelector(".fc-loc");
-  assert.equal(block.querySelector(".fc-loc__name").textContent, loc.name);
-  assert.equal(block.querySelectorAll(".fc-hours__row").length, Object.keys(loc.hours).length);
-  assert.ok(block.textContent.includes("11:00 AM – 9:00 PM"));
+  // Every location declared in content.js gets a card, with its own hours grid.
+  const blocks = document.querySelectorAll(".fc-loc");
+  assert.equal(blocks.length, c.locations.length, "one card per location");
+  c.locations.forEach((loc, idx) => {
+    const block = blocks[idx];
+    assert.equal(block.querySelector(".fc-loc__name").textContent, loc.name);
+    assert.equal(block.querySelectorAll(".fc-hours__row").length, Object.keys(loc.hours).length);
+    assert.ok(block.textContent.includes(loc.address.slice(0, 12)));
+  });
+  // Business-level address and hours are echoed in the footer.
+  assert.ok(c.business.address, "business has an address");
+  assert.ok(c.business.hours, "business has hours");
+  const footer = document.querySelector(".fc-footer").textContent;
+  assert.ok(footer.includes(c.business.address.slice(0, 10)));
+  assert.ok(footer.includes("10:00 AM"));
   dom.window.close();
 });
 
