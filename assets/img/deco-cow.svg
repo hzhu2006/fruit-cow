@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 160" role="img" aria-label="Cow">
+  <g stroke-linecap="round">
+    <!-- legs -->
+    <g fill="#8a4a22">
+      <rect x="52" y="98" width="8" height="40" rx="3.5"/>
+      <rect x="72" y="102" width="8" height="38" rx="3.5"/>
+      <rect x="106" y="102" width="8" height="38" rx="3.5"/>
+      <rect x="124" y="98" width="8" height="40" rx="3.5"/>
+    </g>
+    <!-- tail, up -->
+    <path d="M140 76 C 152 70, 156 58, 154 46" fill="none" stroke="#8a4a22" stroke-width="4.5"/>
+    <ellipse cx="154" cy="42" rx="6" ry="7" fill="#8a4a22"/>
+    <!-- body -->
+    <path d="M48 78 C 46 60, 64 48, 92 48 C 122 48, 142 58, 142 78
+             C 142 96, 122 108, 92 108 C 64 108, 50 94, 48 78 Z"
+          fill="#e6a258" stroke="#a8501a" stroke-width="3.4"/>
+    <!-- patches -->
+    <g fill="#8a4a22">
+      <path d="M78 50 C 88 47, 98 50, 102 57 C 95 62, 83 62, 76 57 Z"/>
+      <ellipse cx="112" cy="80" rx="14" ry="10" transform="rotate(-18 112 80)"/>
+      <ellipse cx="66" cy="86" rx="10" ry="8" transform="rotate(14 66 86)"/>
+    </g>
+    <!-- head, lowered left -->
+    <path d="M32 64 C 25 57, 25 45, 34 40 C 46 35, 57 42, 59 54 C 60 63, 54 72, 43 74 C 36 75, 33 70, 32 64 Z"
+          fill="#8a4a22" stroke="#a8501a" stroke-width="3.4"/>
+    <ellipse cx="36" cy="68" rx="9" ry="7" fill="#e6a258"/>
+    <path d="M41 40 C 39 33, 41 28, 48 26" fill="none" stroke="#e6a258" stroke-width="3.4"/>
+    <path d="M57 42 C 64 37, 71 37, 75 42 C 71 46, 61 46, 57 42 Z" fill="#8a4a22"/>
+    <circle cx="43" cy="54" r="2.6" fill="#3a2110"/>
+  </g>
+</svg>

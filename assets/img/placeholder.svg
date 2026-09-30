@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="400" viewBox="0 0 400 400" role="img" aria-label="Graphic placeholder">
+  <rect width="400" height="400" rx="28" fill="#FFF6EC"/>
+  <rect x="6" y="6" width="388" height="388" rx="24" fill="none" stroke="#E2708A" stroke-width="3" stroke-dasharray="14 12"/>
+  <g transform="translate(200 158)">
+    <ellipse cx="0" cy="0" rx="74" ry="62" fill="#FFFFFF" stroke="#2F2A26" stroke-width="4"/>
+    <ellipse cx="-40" cy="-34" rx="20" ry="16" fill="#2F2A26"/>
+    <ellipse cx="34" cy="-30" rx="16" ry="13" fill="#2F2A26"/>
+    <ellipse cx="0" cy="26" rx="40" ry="28" fill="#F7C6CE" stroke="#2F2A26" stroke-width="4"/>
+    <ellipse cx="-14" cy="24" rx="5" ry="6" fill="#2F2A26"/>
+    <ellipse cx="14" cy="24" rx="5" ry="6" fill="#2F2A26"/>
+    <circle cx="-26" cy="-6" r="6" fill="#2F2A26"/>
+    <circle cx="26" cy="-6" r="6" fill="#2F2A26"/>
+    <path d="M-62 -46 q-26 -18 -12 -40 q22 -8 30 16 z" fill="#FFFFFF" stroke="#2F2A26" stroke-width="4"/>
+    <path d="M62 -46 q26 -18 12 -40 q-22 -8 -30 16 z" fill="#FFFFFF" stroke="#2F2A26" stroke-width="4"/>
+  </g>
+  <circle cx="292" cy="242" r="30" fill="#E2708A" stroke="#2F2A26" stroke-width="4"/>
+  <path d="M292 212 q16 12 0 30 q-16 -12 0 -30" fill="#7FB069" stroke="#2F2A26" stroke-width="4"/>
+  <text x="200" y="316" text-anchor="middle" font-family="system-ui, -apple-system, Segoe UI, sans-serif" font-size="22" font-weight="700" fill="#2F2A26">YOUR GRAPHIC HERE</text>
+  <text x="200" y="344" text-anchor="middle" font-family="system-ui, -apple-system, Segoe UI, sans-serif" font-size="14" fill="#7A6E64">replace the file at this slot</text>
+</svg>

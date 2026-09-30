@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="480" height="170" viewBox="0 0 480 170">
+  <!-- Tileable meadow, matching the logo's grass: flowing contour lines that
+       loop into little swirls, with scattered upright tufts. -->
+  <rect width="480" height="170" fill="#d6cf63"/>
+
+  <!-- broad tonal bands -->
+  <path d="M0 40 C 90 30, 190 46, 280 38 C 370 30, 430 42, 480 36 L480 60 C 420 66, 360 54, 270 62 C 180 70, 90 56, 0 64 Z"
+        fill="#cfc85c" opacity="0.7"/>
+  <path d="M0 118 C 100 110, 200 126, 300 118 C 390 110, 440 122, 480 116 L480 142 C 420 148, 360 136, 260 144 C 170 152, 90 138, 0 146 Z"
+        fill="#c9c24e" opacity="0.6"/>
+
+  <!-- flowing contour lines that spiral, like the logo -->
+  <g fill="none" stroke="#7a6a22" stroke-width="2.2" stroke-linecap="round" opacity="0.62">
+    <path d="M0 34 C 70 26, 130 40, 190 34 C 240 30, 268 36, 282 44 C 292 50, 288 58, 278 58 C 270 58, 266 50, 272 44"/>
+    <path d="M480 30 C 420 24, 372 34, 330 30"/>
+    <path d="M0 84 C 60 76, 120 92, 180 86 C 230 82, 262 88, 276 96 C 286 102, 282 110, 272 110 C 264 110, 260 102, 266 96"/>
+    <path d="M480 88 C 430 82, 380 92, 336 86 C 300 82, 270 88, 258 96"/>
+    <path d="M0 132 C 80 124, 150 140, 220 132 C 280 126, 316 132, 330 140 C 340 146, 336 154, 326 154 C 318 154, 314 146, 320 140"/>
+    <path d="M480 134 C 420 128, 372 138, 340 132"/>
+  </g>
+
+  <!-- small swirls -->
+  <g fill="none" stroke="#7a6a22" stroke-width="1.6" opacity="0.5">
+    <path d="M96 52 a 6 5 0 1 1 6 5"/>
+    <path d="M384 108 a 6 5 0 1 1 6 5"/>
+    <path d="M180 150 a 6 5 0 1 1 6 5"/>
+    <path d="M300 20 a 6 5 0 1 1 6 5"/>
+  </g>
+
+  <!-- upright tufts, the little ovals from the logo -->
+  <g fill="none" stroke="#7a6a22" stroke-width="2" opacity="0.55">
+    <ellipse cx="44" cy="60" rx="5" ry="14"/>
+    <ellipse cx="140" cy="110" rx="5" ry="13"/>
+    <ellipse cx="228" cy="62" rx="5" ry="14"/>
+    <ellipse cx="316" cy="116" rx="5" ry="13"/>
+    <ellipse cx="404" cy="64" rx="5" ry="14"/>
+    <ellipse cx="452" cy="120" rx="5" ry="12"/>
+  </g>
+</svg>

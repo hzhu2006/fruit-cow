@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" role="img" aria-label="Lychee sticker">
+  <defs>
+    <filter id="lsEdge" x="-10%" y="-10%" width="120%" height="120%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.5" numOctaves="3" seed="21" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="1.6" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+    <radialGradient id="lsSkin" cx="38%" cy="32%" r="74%">
+      <stop offset="0%" stop-color="#E4906A"/>
+      <stop offset="100%" stop-color="#AE3E2C"/>
+    </radialGradient>
+  </defs>
+
+  <g filter="url(#lsEdge)">
+    <circle cx="60" cy="60" r="54" fill="#FCF6E8"/>
+    <circle cx="60" cy="60" r="54" fill="none" stroke="#D9CBAE" stroke-width="2"/>
+    <circle cx="60" cy="60" r="46" fill="none" stroke="#D97B29" stroke-width="1.4" opacity="0.6"
+            stroke-dasharray="5 6"/>
+  </g>
+
+  <path d="M62 30 C 74 22, 90 26, 90 36 C 90 46, 76 52, 66 47 C 58 43, 56 34, 62 30 Z" fill="#2A2119" opacity="0.8"/>
+  <path d="M58 40 C 60 34, 64 31, 70 31" stroke="#241F1A" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+
+  <ellipse cx="58" cy="68" rx="28" ry="29" fill="url(#lsSkin)"/>
+  <ellipse cx="58" cy="68" rx="28" ry="29" fill="none" stroke="#2A2620" stroke-width="2.2" opacity="0.85"/>
+
+  <g stroke="#7E2A20" stroke-width="1.2" fill="none" opacity="0.5" stroke-linecap="round">
+    <path d="M42 56 c 4 -2, 8 -2, 10 1"/>
+    <path d="M60 52 c 4 -2, 8 -2, 10 1"/>
+    <path d="M38 72 c 4 -2, 8 -2, 10 1"/>
+    <path d="M56 70 c 4 -2, 8 -2, 10 1"/>
+    <path d="M72 76 c 4 -2, 8 -2, 10 1"/>
+    <path d="M46 86 c 4 -2, 8 -2, 10 1"/>
+    <path d="M64 86 c 4 -2, 8 -2, 10 1"/>
+  </g>
+
+  <ellipse cx="48" cy="58" rx="8" ry="5" fill="#FBEEDC" opacity="0.4" transform="rotate(-32 48 58)"/>
+</svg>
